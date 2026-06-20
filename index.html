@@ -1,0 +1,1987 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RefBlock</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23d85b3b'/%3E%3Ctext x='16' y='22' font-size='18' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'%3ER%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: oklch(1 0 0);
+      --surface: oklch(0.972 0.004 32);
+      --surface-2: oklch(0.94 0.006 32);
+      --ink: oklch(0.19 0.026 32);
+      --muted: oklch(0.43 0.024 32);
+      --line: oklch(0.875 0.008 32);
+      --line-strong: oklch(0.74 0.018 32);
+      --primary: oklch(0.58 0.15 32);
+      --primary-strong: oklch(0.49 0.145 32);
+      --primary-soft: oklch(0.94 0.035 32);
+      --accent: oklch(0.55 0.118 190);
+      --accent-soft: oklch(0.94 0.04 190);
+      --danger: oklch(0.55 0.18 24);
+      --success: oklch(0.52 0.12 145);
+      --focus: oklch(0.66 0.13 190);
+      --stage-scale: 1;
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--ink);
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+
+    button:hover {
+      border-color: var(--line-strong);
+      background: var(--surface);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 3px solid color-mix(in oklch, var(--focus), transparent 72%);
+      outline-offset: 2px;
+    }
+
+    button:disabled {
+      color: var(--muted);
+      cursor: not-allowed;
+      opacity: 0.62;
+    }
+
+    .app-shell {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      background:
+        linear-gradient(180deg, color-mix(in oklch, var(--primary-soft), transparent 72%), transparent 270px),
+        var(--bg);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px clamp(12px, 3vw, 24px);
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in oklch, var(--bg), transparent 5%);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--primary);
+      color: white;
+      font-weight: 800;
+    }
+
+    .brand-title {
+      display: grid;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .brand-title strong {
+      font-size: 16px;
+      line-height: 1.1;
+    }
+
+    .status-line {
+      max-width: 42vw;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 12px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .primary-btn {
+      border-color: transparent;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      padding: 0 14px;
+    }
+
+    .primary-btn:hover {
+      border-color: transparent;
+      background: var(--primary-strong);
+    }
+
+    .ghost-btn {
+      padding: 0 12px;
+    }
+
+    .workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(230px, 280px) minmax(0, 1fr) minmax(260px, 320px);
+      gap: 12px;
+      padding: 12px;
+      min-height: 0;
+    }
+
+    .panel {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: color-mix(in oklch, var(--bg), var(--surface) 54%);
+      overflow: hidden;
+    }
+
+    .panel-inner {
+      display: grid;
+      gap: 14px;
+      padding: 14px;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .panel-title h2 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    .panel-title span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .upload-card {
+      position: relative;
+      display: grid;
+      gap: 9px;
+      padding: 14px;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .upload-card strong {
+      font-size: 14px;
+    }
+
+    .upload-card small {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .upload-card input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .project-list {
+      display: grid;
+      gap: 8px;
+      max-height: calc(100svh - 286px);
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .project-item {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .project-item.active {
+      border-color: color-mix(in oklch, var(--primary), white 38%);
+      background: var(--primary-soft);
+    }
+
+    .project-thumb {
+      width: 44px;
+      height: 56px;
+      border-radius: 7px;
+      background: var(--surface-2);
+      object-fit: cover;
+    }
+
+    .project-copy {
+      min-width: 0;
+      display: grid;
+      gap: 3px;
+    }
+
+    .project-copy strong,
+    .project-copy small {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .project-copy small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .delete-project {
+      width: 34px;
+      min-height: 34px;
+      color: var(--danger);
+    }
+
+    .canvas-zone {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    .tool-strip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: color-mix(in oklch, var(--bg), var(--surface) 60%);
+      overflow-x: auto;
+    }
+
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+
+    .tool-btn {
+      min-height: 36px;
+      padding: 0 10px;
+      white-space: nowrap;
+    }
+
+    .analyze-btn {
+      border-color: color-mix(in oklch, var(--accent), white 62%);
+      background: var(--accent-soft);
+      color: color-mix(in oklch, var(--accent), black 22%);
+      font-weight: 700;
+    }
+
+    .canvas-scroll {
+      min-height: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: auto;
+      padding: 10px 4px 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(90deg, color-mix(in oklch, var(--line), transparent 72%) 1px, transparent 1px),
+        linear-gradient(0deg, color-mix(in oklch, var(--line), transparent 72%) 1px, transparent 1px),
+        var(--surface-2);
+      background-size: 24px 24px;
+    }
+
+    .stage-viewport {
+      position: relative;
+      width: 390px;
+      height: 844px;
+      flex: 0 0 auto;
+    }
+
+    .phone-stage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 390px;
+      height: 844px;
+      overflow: hidden;
+      border: 1px solid oklch(0.2 0 0);
+      border-radius: 22px;
+      background: white;
+      transform: scale(var(--stage-scale));
+      transform-origin: top left;
+    }
+
+    .reference-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .grid-layer {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(color-mix(in oklch, var(--accent), transparent 72%) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in oklch, var(--accent), transparent 72%) 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+
+    .grid-layer.visible {
+      opacity: 1;
+    }
+
+    .blocks-layer {
+      position: absolute;
+      inset: 0;
+    }
+
+    .empty-stage {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+      color: var(--muted);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .empty-stage strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-size: 18px;
+    }
+
+    .block {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      min-width: 22px;
+      min-height: 22px;
+      padding: 6px 8px;
+      border: 1px solid transparent;
+      overflow: hidden;
+      color: var(--ink);
+      line-height: 1.15;
+      touch-action: none;
+      user-select: none;
+      white-space: pre-wrap;
+    }
+
+    .block.text {
+      padding: 0;
+    }
+
+    .block.button,
+    .block.badge {
+      justify-content: center;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .block.input {
+      align-items: center;
+      border-color: color-mix(in oklch, var(--ink), transparent 78%);
+    }
+
+    .block.selected {
+      border-color: var(--primary);
+      outline: 1px solid color-mix(in oklch, var(--primary), transparent 38%);
+      outline-offset: 1px;
+    }
+
+    .resize-handle {
+      position: absolute;
+      right: -5px;
+      bottom: -5px;
+      width: 14px;
+      height: 14px;
+      border: 2px solid white;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: nwse-resize;
+    }
+
+    .field-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label,
+    .field-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--ink);
+      padding: 8px 10px;
+    }
+
+    .field textarea {
+      min-height: 74px;
+      resize: vertical;
+    }
+
+    .field input[type="range"] {
+      min-height: auto;
+      padding: 0;
+      accent-color: var(--primary);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .segmented label {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 38px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .segmented input {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .segmented label:has(input:checked) {
+      background: var(--ink);
+      color: white;
+      font-weight: 800;
+    }
+
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 7px;
+    }
+
+    .swatch {
+      min-height: 34px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      padding: 0;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-row button {
+      flex: 1 1 110px;
+      padding: 0 10px;
+    }
+
+    .danger-btn {
+      color: var(--danger);
+    }
+
+    .empty-panel {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .empty-panel strong {
+      color: var(--ink);
+    }
+
+    .hint-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1080px) {
+      .workspace {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .project-list {
+        max-height: 220px;
+      }
+
+      .canvas-zone {
+        min-height: 720px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        align-items: flex-start;
+        padding: 9px 10px;
+      }
+
+      .brand-mark {
+        width: 32px;
+        height: 32px;
+      }
+
+      .status-line {
+        max-width: 48vw;
+      }
+
+      .top-actions .ghost-btn {
+        display: none;
+      }
+
+      .primary-btn {
+        padding: 0 10px;
+      }
+
+      .workspace {
+        padding: 8px;
+        gap: 8px;
+      }
+
+      .panel-inner {
+        padding: 12px;
+      }
+
+      .canvas-zone {
+        min-height: 640px;
+      }
+
+      .canvas-scroll {
+        padding-top: 8px;
+      }
+
+      .tool-strip {
+        padding: 7px;
+      }
+
+      .tool-btn {
+        min-height: 38px;
+        padding: 0 9px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 1ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="RefBlock">
+        <div class="brand-mark">R</div>
+        <div class="brand-title">
+          <strong>RefBlock</strong>
+          <span class="status-line" id="statusLine">พร้อมเริ่ม trace reference</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="ghost-btn" id="saveBtn" type="button">Save</button>
+        <button class="primary-btn" id="exportBtn" type="button">Export PNG</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="panel" aria-label="Projects">
+        <div class="panel-inner">
+          <div class="panel-title">
+            <h2>Projects</h2>
+            <span id="projectCount">0 saved</span>
+          </div>
+
+          <label class="upload-card">
+            <strong>Upload reference</strong>
+            <small>รองรับ screenshot, mockup, รูปจากเว็บ หรือภาพที่วาดเอง</small>
+            <input id="imageInput" type="file" accept="image/*">
+          </label>
+
+          <div class="action-row">
+            <button id="newBlankBtn" type="button">New blank</button>
+            <button id="clearBlocksBtn" type="button">Clear blocks</button>
+          </div>
+
+          <div class="project-list" id="projectList" aria-label="Saved projects"></div>
+        </div>
+      </aside>
+
+      <main class="canvas-zone" aria-label="Editor">
+        <div class="tool-strip" aria-label="Tools">
+          <div class="tool-group">
+            <button class="tool-btn" data-add="card" type="button">Card</button>
+            <button class="tool-btn" data-add="text" type="button">Text</button>
+            <button class="tool-btn" data-add="button" type="button">Button</button>
+            <button class="tool-btn" data-add="badge" type="button">Badge</button>
+            <button class="tool-btn" data-add="input" type="button">Input</button>
+          </div>
+          <div class="tool-group">
+            <button class="tool-btn analyze-btn" id="analyzeBtn" type="button">วิเคราะห์เป็นบล็อก</button>
+            <button class="tool-btn" id="duplicateBtn" type="button">Duplicate</button>
+            <button class="tool-btn" id="gridBtn" type="button">Grid on</button>
+          </div>
+        </div>
+
+        <div class="canvas-scroll" id="canvasScroll">
+          <div class="stage-viewport" id="stageViewport">
+            <div class="phone-stage" id="stage" aria-label="Mobile canvas">
+              <img class="reference-image" id="referenceImage" alt="">
+              <div class="grid-layer" id="gridLayer"></div>
+              <div class="blocks-layer" id="blocksLayer"></div>
+              <div class="empty-stage" id="emptyStage">
+                <div>
+                  <strong>อัปโหลดรูปเพื่อเริ่ม</strong>
+                  <span>จากนั้นวางบล็อกทับ reference แล้ว export เป็น PNG</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <aside class="panel" aria-label="Inspector">
+        <div class="panel-inner">
+          <div class="panel-title">
+            <h2>Inspector</h2>
+            <span id="selectedLabel">No block</span>
+          </div>
+
+          <div class="field-stack">
+            <div class="field">
+              <label for="projectName">Project name</label>
+              <input id="projectName" type="text" placeholder="RefBlock project">
+            </div>
+
+            <div class="two-col">
+              <div class="field">
+                <label for="refOpacity">Ref opacity</label>
+                <input id="refOpacity" type="range" min="0" max="1" step="0.01" value="0.55">
+              </div>
+              <div class="field">
+                <label for="imageFit">Image fit</label>
+                <select id="imageFit">
+                  <option value="cover">Cover</option>
+                  <option value="contain">Contain</option>
+                  <option value="fill">Fill</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="emptyInspector" class="empty-panel">
+            <strong>เลือกบล็อกเพื่อแก้ไข</strong>
+            <ul class="hint-list">
+              <li>ลากบล็อกเพื่อย้ายตำแหน่ง</li>
+              <li>จับจุดมุมขวาล่างเพื่อ resize</li>
+              <li>ใช้ palette จากรูปเพื่อเปลี่ยนสีไวขึ้น</li>
+            </ul>
+          </div>
+
+          <div id="blockInspector" class="field-stack hidden">
+            <div class="field">
+              <label for="blockText">Text</label>
+              <textarea id="blockText" placeholder="ข้อความบนบล็อก"></textarea>
+            </div>
+
+            <div class="three-col">
+              <div class="field">
+                <label for="blockX">X</label>
+                <input id="blockX" type="number" min="0" max="390" step="1">
+              </div>
+              <div class="field">
+                <label for="blockY">Y</label>
+                <input id="blockY" type="number" min="0" max="844" step="1">
+              </div>
+              <div class="field">
+                <label for="blockZ">Layer</label>
+                <input id="blockZ" type="number" step="1">
+              </div>
+            </div>
+
+            <div class="two-col">
+              <div class="field">
+                <label for="blockW">Width</label>
+                <input id="blockW" type="number" min="8" max="390" step="1">
+              </div>
+              <div class="field">
+                <label for="blockH">Height</label>
+                <input id="blockH" type="number" min="8" max="844" step="1">
+              </div>
+            </div>
+
+            <div class="two-col">
+              <div class="field">
+                <label for="fontSize">Font size</label>
+                <input id="fontSize" type="number" min="8" max="72" step="1">
+              </div>
+              <div class="field">
+                <label for="radius">Radius</label>
+                <input id="radius" type="range" min="0" max="36" step="1">
+              </div>
+            </div>
+
+            <div class="two-col">
+              <div class="field">
+                <label for="bgColor">Fill</label>
+                <input id="bgColor" type="color" value="#ffffff">
+              </div>
+              <div class="field">
+                <label for="textColor">Text color</label>
+                <input id="textColor" type="color" value="#111111">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="blockOpacity">Block opacity</label>
+              <input id="blockOpacity" type="range" min="0.1" max="1" step="0.01">
+            </div>
+
+            <div class="field">
+              <div class="field-label">Palette target</div>
+              <div class="segmented">
+                <label><input type="radio" name="colorTarget" value="bg" checked> Fill</label>
+                <label><input type="radio" name="colorTarget" value="text"> Text</label>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field-label">Colors from reference</div>
+              <div class="palette" id="palette"></div>
+            </div>
+
+            <div class="action-row">
+              <button id="eyeDropperBtn" type="button">Pick screen color</button>
+              <button id="sendBackBtn" type="button">Send back</button>
+              <button id="bringFrontBtn" type="button">Bring front</button>
+              <button class="danger-btn" id="deleteBlockBtn" type="button">Delete</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const CANVAS_W = 390;
+    const CANVAS_H = 844;
+    const DB_NAME = "refblock-db";
+    const DB_VERSION = 1;
+    const STORE = "projects";
+    const DEFAULT_PALETTE = ["#ffffff", "#111111", "#d85b3b", "#1d8b8f", "#ece7e3", "#667085"];
+
+    const els = {
+      statusLine: document.getElementById("statusLine"),
+      saveBtn: document.getElementById("saveBtn"),
+      exportBtn: document.getElementById("exportBtn"),
+      imageInput: document.getElementById("imageInput"),
+      newBlankBtn: document.getElementById("newBlankBtn"),
+      clearBlocksBtn: document.getElementById("clearBlocksBtn"),
+      projectList: document.getElementById("projectList"),
+      projectCount: document.getElementById("projectCount"),
+      canvasScroll: document.getElementById("canvasScroll"),
+      stageViewport: document.getElementById("stageViewport"),
+      stage: document.getElementById("stage"),
+      referenceImage: document.getElementById("referenceImage"),
+      gridLayer: document.getElementById("gridLayer"),
+      blocksLayer: document.getElementById("blocksLayer"),
+      emptyStage: document.getElementById("emptyStage"),
+      analyzeBtn: document.getElementById("analyzeBtn"),
+      duplicateBtn: document.getElementById("duplicateBtn"),
+      gridBtn: document.getElementById("gridBtn"),
+      selectedLabel: document.getElementById("selectedLabel"),
+      projectName: document.getElementById("projectName"),
+      refOpacity: document.getElementById("refOpacity"),
+      imageFit: document.getElementById("imageFit"),
+      emptyInspector: document.getElementById("emptyInspector"),
+      blockInspector: document.getElementById("blockInspector"),
+      blockText: document.getElementById("blockText"),
+      blockX: document.getElementById("blockX"),
+      blockY: document.getElementById("blockY"),
+      blockW: document.getElementById("blockW"),
+      blockH: document.getElementById("blockH"),
+      blockZ: document.getElementById("blockZ"),
+      fontSize: document.getElementById("fontSize"),
+      radius: document.getElementById("radius"),
+      bgColor: document.getElementById("bgColor"),
+      textColor: document.getElementById("textColor"),
+      blockOpacity: document.getElementById("blockOpacity"),
+      palette: document.getElementById("palette"),
+      eyeDropperBtn: document.getElementById("eyeDropperBtn"),
+      sendBackBtn: document.getElementById("sendBackBtn"),
+      bringFrontBtn: document.getElementById("bringFrontBtn"),
+      deleteBlockBtn: document.getElementById("deleteBlockBtn")
+    };
+
+    let dbPromise;
+    let projects = [];
+    let currentProject = null;
+    let selectedId = null;
+    let saveTimer = null;
+    let interaction = null;
+    let gridEnabled = true;
+
+    function openDB() {
+      if (dbPromise) return dbPromise;
+      dbPromise = new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(STORE)) {
+            db.createObjectStore(STORE, { keyPath: "id" });
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      return dbPromise;
+    }
+
+    async function dbPut(project) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE, "readwrite");
+        tx.objectStore(STORE).put(project);
+        tx.oncomplete = resolve;
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    async function dbGetAll() {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE, "readonly");
+        const request = tx.objectStore(STORE).getAll();
+        request.onsuccess = () => resolve(request.result || []);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function dbDelete(id) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE, "readwrite");
+        tx.objectStore(STORE).delete(id);
+        tx.oncomplete = resolve;
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    function uid(prefix = "id") {
+      return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function pxToXPct(px) {
+      return (px / CANVAS_W) * 100;
+    }
+
+    function pxToYPct(px) {
+      return (px / CANVAS_H) * 100;
+    }
+
+    function pctToX(px) {
+      return Math.round((px / 100) * CANVAS_W);
+    }
+
+    function pctToY(px) {
+      return Math.round((px / 100) * CANVAS_H);
+    }
+
+    function snapPct(value, axis) {
+      if (!gridEnabled) return value;
+      const size = axis === "x" ? CANVAS_W : CANVAS_H;
+      const px = (value / 100) * size;
+      return (Math.round(px / 4) * 4 / size) * 100;
+    }
+
+    function getSelectedBlock() {
+      if (!currentProject || !selectedId) return null;
+      return currentProject.blocks.find((block) => block.id === selectedId) || null;
+    }
+
+    function nextZ() {
+      if (!currentProject || currentProject.blocks.length === 0) return 1;
+      return Math.max(...currentProject.blocks.map((block) => block.z || 1)) + 1;
+    }
+
+    function setStatus(message) {
+      els.statusLine.textContent = message;
+    }
+
+    function scheduleSave() {
+      if (!currentProject) return;
+      currentProject.updatedAt = new Date().toISOString();
+      setStatus("Saving...");
+      window.clearTimeout(saveTimer);
+      saveTimer = window.setTimeout(saveCurrentProject, 260);
+    }
+
+    async function saveCurrentProject() {
+      if (!currentProject) return;
+      try {
+        await dbPut(currentProject);
+        await loadProjects(currentProject.id);
+        setStatus("Saved locally");
+      } catch (error) {
+        console.error(error);
+        setStatus("Save failed");
+      }
+    }
+
+    function createProject({ name, imageData = "", palette = DEFAULT_PALETTE }) {
+      const now = new Date().toISOString();
+      return {
+        id: uid("project"),
+        name: name || "Untitled RefBlock",
+        imageData,
+        imageFit: "cover",
+        refOpacity: imageData ? 0.58 : 0,
+        palette,
+        blocks: [],
+        createdAt: now,
+        updatedAt: now
+      };
+    }
+
+    function createBlock(type) {
+      const base = {
+        id: uid("block"),
+        type,
+        x: pxToXPct(46),
+        y: pxToYPct(116),
+        w: pxToXPct(298),
+        h: pxToYPct(92),
+        text: "",
+        bg: "#ffffff",
+        color: "#171717",
+        fontSize: 16,
+        radius: 12,
+        opacity: 1,
+        z: nextZ(),
+        fontWeight: 600,
+        align: "center"
+      };
+
+      if (type === "text") {
+        return {
+          ...base,
+          w: pxToXPct(250),
+          h: pxToYPct(44),
+          text: "Headline text",
+          bg: "transparent",
+          color: "#181818",
+          fontSize: 22,
+          radius: 0,
+          fontWeight: 800,
+          align: "left"
+        };
+      }
+
+      if (type === "button") {
+        return {
+          ...base,
+          x: pxToXPct(86),
+          y: pxToYPct(590),
+          w: pxToXPct(218),
+          h: pxToYPct(52),
+          text: "Action button",
+          bg: "#d85b3b",
+          color: "#ffffff",
+          radius: 12,
+          fontWeight: 800
+        };
+      }
+
+      if (type === "badge") {
+        return {
+          ...base,
+          x: pxToXPct(42),
+          y: pxToYPct(78),
+          w: pxToXPct(124),
+          h: pxToYPct(34),
+          text: "Badge",
+          bg: "#eaf7f6",
+          color: "#146467",
+          fontSize: 13,
+          radius: 17,
+          fontWeight: 800
+        };
+      }
+
+      if (type === "input") {
+        return {
+          ...base,
+          x: pxToXPct(32),
+          y: pxToYPct(670),
+          w: pxToXPct(326),
+          h: pxToYPct(52),
+          text: "Input placeholder",
+          bg: "#ffffff",
+          color: "#686868",
+          radius: 10,
+          fontWeight: 500
+        };
+      }
+
+      return base;
+    }
+
+    function renderApp() {
+      renderProjectList();
+      renderStage();
+      renderInspector();
+      updateStageScale();
+    }
+
+    function renderProjectList() {
+      els.projectList.innerHTML = "";
+      els.projectCount.textContent = `${projects.length} saved`;
+
+      if (projects.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty-panel";
+        empty.innerHTML = "<strong>ยังไม่มีโปรเจกต์</strong><span>อัปโหลดรูป reference เพื่อสร้างงานแรก</span>";
+        els.projectList.appendChild(empty);
+        return;
+      }
+
+      projects
+        .slice()
+        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+        .forEach((project) => {
+          const row = document.createElement("div");
+          row.className = `project-item ${currentProject && project.id === currentProject.id ? "active" : ""}`;
+          row.role = "button";
+          row.tabIndex = 0;
+          row.addEventListener("click", () => selectProject(project.id));
+          row.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              selectProject(project.id);
+            }
+          });
+
+          const thumb = document.createElement("img");
+          thumb.className = "project-thumb";
+          thumb.alt = "";
+          if (project.imageData) thumb.src = project.imageData;
+
+          const copy = document.createElement("span");
+          copy.className = "project-copy";
+          const title = document.createElement("strong");
+          title.textContent = project.name || "Untitled RefBlock";
+          const meta = document.createElement("small");
+          meta.textContent = `${project.blocks.length} blocks · ${formatDate(project.updatedAt)}`;
+          copy.append(title, meta);
+
+          const del = document.createElement("button");
+          del.className = "delete-project";
+          del.type = "button";
+          del.textContent = "Del";
+          del.setAttribute("aria-label", `Delete ${project.name}`);
+          del.addEventListener("click", async (event) => {
+            event.stopPropagation();
+            await deleteProject(project.id);
+          });
+
+          row.append(thumb, copy, del);
+          els.projectList.appendChild(row);
+        });
+    }
+
+    function renderStage() {
+      const project = currentProject;
+      els.emptyStage.classList.toggle("hidden", !!project);
+      els.referenceImage.classList.toggle("hidden", !project || !project.imageData);
+      els.analyzeBtn.disabled = !project || !project.imageData;
+      els.clearBlocksBtn.disabled = !project || project.blocks.length === 0;
+      els.duplicateBtn.disabled = !getSelectedBlock();
+      els.exportBtn.disabled = !project;
+      els.saveBtn.disabled = !project;
+
+      if (!project) {
+        els.referenceImage.removeAttribute("src");
+        els.blocksLayer.innerHTML = "";
+        return;
+      }
+
+      els.referenceImage.src = project.imageData || "";
+      els.referenceImage.style.opacity = String(project.refOpacity);
+      els.referenceImage.style.objectFit = project.imageFit;
+      els.gridLayer.classList.toggle("visible", gridEnabled);
+      els.blocksLayer.innerHTML = "";
+
+      project.blocks
+        .slice()
+        .sort((a, b) => (a.z || 0) - (b.z || 0))
+        .forEach((block) => {
+          const el = document.createElement("div");
+          el.className = `block ${block.type} ${block.id === selectedId ? "selected" : ""}`;
+          el.dataset.id = block.id;
+          el.style.left = `${block.x}%`;
+          el.style.top = `${block.y}%`;
+          el.style.width = `${block.w}%`;
+          el.style.height = `${block.h}%`;
+          el.style.background = block.bg === "transparent" ? "transparent" : block.bg;
+          el.style.color = block.color;
+          el.style.borderRadius = `${block.radius}px`;
+          el.style.fontSize = `${block.fontSize}px`;
+          el.style.fontWeight = String(block.fontWeight || 600);
+          el.style.opacity = String(block.opacity);
+          el.style.zIndex = String(block.z || 1);
+          el.style.justifyContent = block.align === "left" ? "flex-start" : "center";
+          el.style.textAlign = block.align === "left" ? "left" : "center";
+          el.textContent = block.text;
+          el.addEventListener("pointerdown", onBlockPointerDown);
+
+          if (block.id === selectedId) {
+            const handle = document.createElement("span");
+            handle.className = "resize-handle";
+            handle.title = "Resize";
+            el.appendChild(handle);
+          }
+
+          els.blocksLayer.appendChild(el);
+        });
+    }
+
+    function renderInspector() {
+      const project = currentProject;
+      const selected = getSelectedBlock();
+      els.projectName.disabled = !project;
+      els.refOpacity.disabled = !project || !project.imageData;
+      els.imageFit.disabled = !project || !project.imageData;
+      els.selectedLabel.textContent = selected ? `${selected.type} selected` : "No block";
+
+      if (project) {
+        els.projectName.value = project.name || "";
+        els.refOpacity.value = String(project.refOpacity);
+        els.imageFit.value = project.imageFit;
+      } else {
+        els.projectName.value = "";
+      }
+
+      els.emptyInspector.classList.toggle("hidden", !!selected);
+      els.blockInspector.classList.toggle("hidden", !selected);
+
+      renderPalette(project ? project.palette : DEFAULT_PALETTE);
+
+      if (!selected) return;
+
+      els.blockText.value = selected.text || "";
+      els.blockX.value = String(pctToX(selected.x));
+      els.blockY.value = String(pctToY(selected.y));
+      els.blockW.value = String(pctToX(selected.w));
+      els.blockH.value = String(pctToY(selected.h));
+      els.blockZ.value = String(selected.z || 1);
+      els.fontSize.value = String(selected.fontSize || 16);
+      els.radius.value = String(selected.radius || 0);
+      els.bgColor.value = normalizeColorForInput(selected.bg);
+      els.textColor.value = normalizeColorForInput(selected.color);
+      els.blockOpacity.value = String(selected.opacity ?? 1);
+    }
+
+    function renderPalette(colors) {
+      els.palette.innerHTML = "";
+      (colors && colors.length ? colors : DEFAULT_PALETTE).slice(0, 12).forEach((color) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "swatch";
+        button.style.background = color;
+        button.title = color;
+        button.addEventListener("click", () => applyPaletteColor(color));
+        els.palette.appendChild(button);
+      });
+    }
+
+    function normalizeColorForInput(value) {
+      if (!value || value === "transparent") return "#ffffff";
+      return value.startsWith("#") ? value : "#ffffff";
+    }
+
+    function formatDate(value) {
+      if (!value) return "now";
+      return new Intl.DateTimeFormat("th-TH", {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date(value));
+    }
+
+    async function loadProjects(preferredId) {
+      projects = await dbGetAll();
+      if (preferredId) {
+        currentProject = projects.find((project) => project.id === preferredId) || currentProject;
+      }
+      renderProjectList();
+    }
+
+    async function selectProject(id) {
+      const project = projects.find((item) => item.id === id);
+      if (!project) return;
+      currentProject = structuredClone(project);
+      selectedId = null;
+      setStatus(`Opened ${currentProject.name}`);
+      renderApp();
+    }
+
+    async function deleteProject(id) {
+      await dbDelete(id);
+      if (currentProject && currentProject.id === id) {
+        currentProject = null;
+        selectedId = null;
+      }
+      projects = await dbGetAll();
+      renderApp();
+      setStatus("Project deleted");
+    }
+
+    function onBlockPointerDown(event) {
+      if (!currentProject) return;
+      event.preventDefault();
+      const blockEl = event.currentTarget;
+      const block = currentProject.blocks.find((item) => item.id === blockEl.dataset.id);
+      if (!block) return;
+      selectedId = block.id;
+      const mode = event.target.classList.contains("resize-handle") ? "resize" : "drag";
+      const rect = els.stage.getBoundingClientRect();
+      interaction = {
+        mode,
+        blockId: block.id,
+        startClientX: event.clientX,
+        startClientY: event.clientY,
+        start: { ...block },
+        stageRect: rect
+      };
+      blockEl.setPointerCapture(event.pointerId);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp, { once: true });
+      renderStage();
+      renderInspector();
+    }
+
+    function onPointerMove(event) {
+      if (!interaction || !currentProject) return;
+      const block = currentProject.blocks.find((item) => item.id === interaction.blockId);
+      if (!block) return;
+      const dx = ((event.clientX - interaction.startClientX) / interaction.stageRect.width) * 100;
+      const dy = ((event.clientY - interaction.startClientY) / interaction.stageRect.height) * 100;
+
+      if (interaction.mode === "drag") {
+        block.x = clamp(snapPct(interaction.start.x + dx, "x"), 0, 100 - block.w);
+        block.y = clamp(snapPct(interaction.start.y + dy, "y"), 0, 100 - block.h);
+      } else {
+        const minW = pxToXPct(22);
+        const minH = pxToYPct(22);
+        block.w = clamp(snapPct(interaction.start.w + dx, "x"), minW, 100 - block.x);
+        block.h = clamp(snapPct(interaction.start.h + dy, "y"), minH, 100 - block.y);
+      }
+
+      renderStage();
+      renderInspector();
+    }
+
+    function onPointerUp() {
+      if (interaction) {
+        scheduleSave();
+        interaction = null;
+      }
+      window.removeEventListener("pointermove", onPointerMove);
+    }
+
+    function addBlock(type) {
+      if (!currentProject) {
+        currentProject = createProject({ name: "Untitled RefBlock" });
+      }
+      const block = createBlock(type);
+      currentProject.blocks.push(block);
+      selectedId = block.id;
+      renderApp();
+      scheduleSave();
+    }
+
+    function updateSelected(patch) {
+      const selected = getSelectedBlock();
+      if (!selected) return;
+      Object.assign(selected, patch);
+      renderApp();
+      scheduleSave();
+    }
+
+    function applyPaletteColor(color) {
+      const selected = getSelectedBlock();
+      if (!selected) return;
+      const target = document.querySelector("input[name='colorTarget']:checked")?.value || "bg";
+      updateSelected(target === "text" ? { color } : { bg: color });
+    }
+
+    function duplicateSelected() {
+      const selected = getSelectedBlock();
+      if (!currentProject || !selected) return;
+      const clone = {
+        ...structuredClone(selected),
+        id: uid("block"),
+        x: clamp(selected.x + pxToXPct(12), 0, 100 - selected.w),
+        y: clamp(selected.y + pxToYPct(12), 0, 100 - selected.h),
+        z: nextZ()
+      };
+      currentProject.blocks.push(clone);
+      selectedId = clone.id;
+      renderApp();
+      scheduleSave();
+    }
+
+    function deleteSelected() {
+      if (!currentProject || !selectedId) return;
+      currentProject.blocks = currentProject.blocks.filter((block) => block.id !== selectedId);
+      selectedId = null;
+      renderApp();
+      scheduleSave();
+    }
+
+    function sendSelectedBack() {
+      const selected = getSelectedBlock();
+      if (!currentProject || !selected) return;
+      selected.z = Math.min(1, ...currentProject.blocks.map((block) => block.z || 1)) - 1;
+      renderApp();
+      scheduleSave();
+    }
+
+    function bringSelectedFront() {
+      const selected = getSelectedBlock();
+      if (!selected) return;
+      selected.z = nextZ();
+      renderApp();
+      scheduleSave();
+    }
+
+    function clearBlocks() {
+      if (!currentProject) return;
+      currentProject.blocks = [];
+      selectedId = null;
+      renderApp();
+      scheduleSave();
+    }
+
+    function updateStageScale() {
+      const available = els.canvasScroll.clientWidth - 14;
+      const scale = clamp(available / CANVAS_W, 0.62, 1);
+      document.documentElement.style.setProperty("--stage-scale", String(scale));
+      els.stageViewport.style.width = `${CANVAS_W * scale}px`;
+      els.stageViewport.style.height = `${CANVAS_H * scale}px`;
+    }
+
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    async function handleImageUpload(file) {
+      if (!file) return;
+      setStatus("Reading image...");
+      const imageData = await readFileAsDataURL(file);
+      const palette = await extractPalette(imageData);
+      currentProject = createProject({
+        name: file.name.replace(/\.[^.]+$/, "") || "RefBlock reference",
+        imageData,
+        palette
+      });
+      selectedId = null;
+      renderApp();
+      await saveCurrentProject();
+      setStatus("Reference ready");
+      els.imageInput.value = "";
+    }
+
+    async function extractPalette(src) {
+      try {
+        const img = await loadImage(src);
+        const canvas = document.createElement("canvas");
+        const width = 96;
+        const height = Math.max(96, Math.round((img.height / img.width) * width));
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        ctx.drawImage(img, 0, 0, width, height);
+        const data = ctx.getImageData(0, 0, width, height).data;
+        const buckets = new Map();
+
+        for (let i = 0; i < data.length; i += 16) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const a = data[i + 3];
+          if (a < 180) continue;
+          const key = `${r >> 4},${g >> 4},${b >> 4}`;
+          const item = buckets.get(key) || { count: 0, r: 0, g: 0, b: 0 };
+          item.count += 1;
+          item.r += r;
+          item.g += g;
+          item.b += b;
+          buckets.set(key, item);
+        }
+
+        const candidates = Array.from(buckets.values())
+          .map((item) => ({
+            count: item.count,
+            color: rgbToHex(
+              Math.round(item.r / item.count),
+              Math.round(item.g / item.count),
+              Math.round(item.b / item.count)
+            )
+          }))
+          .sort((a, b) => b.count - a.count);
+
+        const picked = [];
+        for (const candidate of candidates) {
+          if (picked.every((color) => colorDistance(color, candidate.color) > 38)) {
+            picked.push(candidate.color);
+          }
+          if (picked.length >= 10) break;
+        }
+        return picked.length ? picked : DEFAULT_PALETTE;
+      } catch (error) {
+        console.warn(error);
+        return DEFAULT_PALETTE;
+      }
+    }
+
+    function rgbToHex(r, g, b) {
+      return `#${[r, g, b].map((value) => value.toString(16).padStart(2, "0")).join("")}`;
+    }
+
+    function hexToRgb(hex) {
+      const clean = hex.replace("#", "");
+      const value = parseInt(clean.length === 3 ? clean.split("").map((x) => x + x).join("") : clean, 16);
+      return {
+        r: (value >> 16) & 255,
+        g: (value >> 8) & 255,
+        b: value & 255
+      };
+    }
+
+    function colorDistance(a, b) {
+      const ca = hexToRgb(a);
+      const cb = hexToRgb(b);
+      return Math.hypot(ca.r - cb.r, ca.g - cb.g, ca.b - cb.b);
+    }
+
+    function readableTextColor(bg) {
+      const { r, g, b } = hexToRgb(bg);
+      const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      return luminance > 0.58 ? "#161616" : "#ffffff";
+    }
+
+    async function analyzeImageToBlocks() {
+      if (!currentProject || !currentProject.imageData) return;
+      setStatus("Analyzing reference...");
+      const img = await loadImage(currentProject.imageData);
+      const canvas = document.createElement("canvas");
+      canvas.width = CANVAS_W;
+      canvas.height = CANVAS_H;
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+      drawImageFit(ctx, img, 0, 0, CANVAS_W, CANVAS_H, currentProject.imageFit);
+      const data = ctx.getImageData(0, 0, CANVAS_W, CANVAS_H).data;
+      const rows = [];
+
+      for (let y = 0; y < CANVAS_H; y += 4) {
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        let count = 0;
+        for (let x = 0; x < CANVAS_W; x += 8) {
+          const i = (y * CANVAS_W + x) * 4;
+          r += data[i];
+          g += data[i + 1];
+          b += data[i + 2];
+          count += 1;
+        }
+        rows.push({ y, r: r / count, g: g / count, b: b / count });
+      }
+
+      const boundaries = [0];
+      for (let i = 1; i < rows.length; i += 1) {
+        const prev = rows[i - 1];
+        const row = rows[i];
+        const diff = Math.abs(row.r - prev.r) + Math.abs(row.g - prev.g) + Math.abs(row.b - prev.b);
+        const last = boundaries[boundaries.length - 1];
+        if (diff > 42 && row.y - last > 42) boundaries.push(row.y);
+      }
+      boundaries.push(CANVAS_H);
+
+      let bands = [];
+      for (let i = 0; i < boundaries.length - 1; i += 1) {
+        const y = boundaries[i];
+        const h = boundaries[i + 1] - y;
+        if (h >= 30) bands.push({ y, h });
+      }
+
+      if (bands.length < 4) {
+        bands = [
+          { y: 24, h: 64 },
+          { y: 118, h: 148 },
+          { y: 292, h: 94 },
+          { y: 410, h: 94 },
+          { y: 708, h: 82 }
+        ];
+      }
+
+      const blocks = bands.slice(0, 8).map((band, index) => {
+        const inset = band.h < 74 ? 18 : 24;
+        const avg = averageColor(data, inset, band.y + 4, CANVAS_W - inset * 2, Math.max(16, band.h - 8));
+        return {
+          id: uid("block"),
+          type: "card",
+          x: pxToXPct(inset),
+          y: pxToYPct(clamp(band.y + 4, 0, CANVAS_H - 24)),
+          w: pxToXPct(CANVAS_W - inset * 2),
+          h: pxToYPct(clamp(band.h - 8, 28, 180)),
+          text: "",
+          bg: avg,
+          color: readableTextColor(avg),
+          fontSize: 15,
+          radius: band.h < 60 ? 9 : 14,
+          opacity: 0.86,
+          z: index + 1,
+          fontWeight: 600,
+          align: "center"
+        };
+      });
+
+      currentProject.blocks = blocks;
+      selectedId = blocks[0]?.id || null;
+      renderApp();
+      scheduleSave();
+      setStatus("Starter blocks ready");
+    }
+
+    function averageColor(data, startX, startY, width, height) {
+      let r = 0;
+      let g = 0;
+      let b = 0;
+      let count = 0;
+      const endX = clamp(startX + width, 1, CANVAS_W);
+      const endY = clamp(startY + height, 1, CANVAS_H);
+
+      for (let y = clamp(startY, 0, CANVAS_H - 1); y < endY; y += 6) {
+        for (let x = clamp(startX, 0, CANVAS_W - 1); x < endX; x += 6) {
+          const i = (Math.floor(y) * CANVAS_W + Math.floor(x)) * 4;
+          r += data[i];
+          g += data[i + 1];
+          b += data[i + 2];
+          count += 1;
+        }
+      }
+
+      if (!count) return "#ffffff";
+      return rgbToHex(Math.round(r / count), Math.round(g / count), Math.round(b / count));
+    }
+
+    function drawImageFit(ctx, img, x, y, width, height, fit) {
+      if (fit === "fill") {
+        ctx.drawImage(img, x, y, width, height);
+        return;
+      }
+      const scale = fit === "contain"
+        ? Math.min(width / img.width, height / img.height)
+        : Math.max(width / img.width, height / img.height);
+      const drawW = img.width * scale;
+      const drawH = img.height * scale;
+      const dx = x + (width - drawW) / 2;
+      const dy = y + (height - drawH) / 2;
+      ctx.drawImage(img, dx, dy, drawW, drawH);
+    }
+
+    async function exportPNG() {
+      if (!currentProject) return;
+      setStatus("Rendering PNG...");
+      const canvas = await renderProjectToCanvas(currentProject);
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = `${safeFileName(currentProject.name || "RefBlock")}.png`;
+      link.click();
+      setStatus("PNG exported");
+    }
+
+    async function renderProjectToCanvas(project) {
+      const scale = 2;
+      const canvas = document.createElement("canvas");
+      canvas.width = CANVAS_W * scale;
+      canvas.height = CANVAS_H * scale;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(scale, scale);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+
+      if (project.imageData && project.refOpacity > 0) {
+        const img = await loadImage(project.imageData);
+        ctx.save();
+        ctx.globalAlpha = project.refOpacity;
+        drawImageFit(ctx, img, 0, 0, CANVAS_W, CANVAS_H, project.imageFit);
+        ctx.restore();
+      }
+
+      project.blocks
+        .slice()
+        .sort((a, b) => (a.z || 0) - (b.z || 0))
+        .forEach((block) => drawBlock(ctx, block));
+
+      return canvas;
+    }
+
+    function drawBlock(ctx, block) {
+      const x = (block.x / 100) * CANVAS_W;
+      const y = (block.y / 100) * CANVAS_H;
+      const w = (block.w / 100) * CANVAS_W;
+      const h = (block.h / 100) * CANVAS_H;
+      ctx.save();
+      ctx.globalAlpha = block.opacity ?? 1;
+
+      if (block.bg && block.bg !== "transparent") {
+        ctx.fillStyle = block.bg;
+        roundRect(ctx, x, y, w, h, block.radius || 0);
+        ctx.fill();
+      }
+
+      if (block.type === "input") {
+        ctx.strokeStyle = "rgba(20, 20, 20, 0.18)";
+        ctx.lineWidth = 1;
+        roundRect(ctx, x, y, w, h, block.radius || 0);
+        ctx.stroke();
+      }
+
+      if (block.text) {
+        ctx.fillStyle = block.color || "#171717";
+        ctx.font = `${block.fontWeight || 600} ${block.fontSize || 16}px Inter, system-ui, sans-serif`;
+        ctx.textBaseline = "middle";
+        ctx.textAlign = block.align === "left" ? "left" : "center";
+        const padding = block.type === "text" ? 0 : 10;
+        const textX = block.align === "left" ? x + padding : x + w / 2;
+        wrapText(ctx, block.text, textX, y + h / 2, w - padding * 2, (block.fontSize || 16) * 1.25, h, block.align);
+      }
+
+      ctx.restore();
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      const r = Math.min(radius, width / 2, height / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + width - r, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+      ctx.lineTo(x + width, y + height - r);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+      ctx.lineTo(x + r, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function wrapText(ctx, text, x, centerY, maxWidth, lineHeight, maxHeight, align) {
+      const words = String(text).split(/\s+/);
+      const lines = [];
+      let line = "";
+
+      words.forEach((word) => {
+        const test = line ? `${line} ${word}` : word;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line);
+          line = word;
+        } else {
+          line = test;
+        }
+      });
+      if (line) lines.push(line);
+
+      const maxLines = Math.max(1, Math.floor(maxHeight / lineHeight));
+      const visible = lines.slice(0, maxLines);
+      if (lines.length > maxLines) {
+        visible[visible.length - 1] = `${visible[visible.length - 1].replace(/\s+\S*$/, "")}...`;
+      }
+
+      const startY = centerY - ((visible.length - 1) * lineHeight) / 2;
+      visible.forEach((lineText, index) => {
+        ctx.fillText(lineText, x, startY + index * lineHeight);
+      });
+    }
+
+    function safeFileName(value) {
+      return String(value)
+        .trim()
+        .replace(/[\\/:*?"<>|]+/g, "-")
+        .replace(/\s+/g, "_")
+        .slice(0, 80) || "RefBlock";
+    }
+
+    function bindControls() {
+      document.querySelectorAll("[data-add]").forEach((button) => {
+        button.addEventListener("click", () => addBlock(button.dataset.add));
+      });
+
+      els.stage.addEventListener("pointerdown", (event) => {
+        if (event.target === els.stage || event.target === els.blocksLayer) {
+          selectedId = null;
+          renderApp();
+        }
+      });
+
+      els.imageInput.addEventListener("change", (event) => handleImageUpload(event.target.files[0]));
+
+      els.newBlankBtn.addEventListener("click", () => {
+        currentProject = createProject({ name: "Blank RefBlock", imageData: "" });
+        selectedId = null;
+        renderApp();
+        scheduleSave();
+      });
+
+      els.clearBlocksBtn.addEventListener("click", clearBlocks);
+      els.analyzeBtn.addEventListener("click", analyzeImageToBlocks);
+      els.duplicateBtn.addEventListener("click", duplicateSelected);
+      els.deleteBlockBtn.addEventListener("click", deleteSelected);
+      els.sendBackBtn.addEventListener("click", sendSelectedBack);
+      els.bringFrontBtn.addEventListener("click", bringSelectedFront);
+      els.exportBtn.addEventListener("click", exportPNG);
+      els.saveBtn.addEventListener("click", saveCurrentProject);
+
+      els.gridBtn.addEventListener("click", () => {
+        gridEnabled = !gridEnabled;
+        els.gridBtn.textContent = gridEnabled ? "Grid on" : "Grid off";
+        renderStage();
+      });
+
+      els.projectName.addEventListener("input", () => {
+        if (!currentProject) return;
+        currentProject.name = els.projectName.value || "Untitled RefBlock";
+        renderProjectList();
+        scheduleSave();
+      });
+
+      els.refOpacity.addEventListener("input", () => {
+        if (!currentProject) return;
+        currentProject.refOpacity = Number(els.refOpacity.value);
+        renderStage();
+        scheduleSave();
+      });
+
+      els.imageFit.addEventListener("change", () => {
+        if (!currentProject) return;
+        currentProject.imageFit = els.imageFit.value;
+        renderStage();
+        scheduleSave();
+      });
+
+      els.blockText.addEventListener("input", () => updateSelected({ text: els.blockText.value }));
+      els.fontSize.addEventListener("input", () => updateSelected({ fontSize: Number(els.fontSize.value) }));
+      els.radius.addEventListener("input", () => updateSelected({ radius: Number(els.radius.value) }));
+      els.bgColor.addEventListener("input", () => updateSelected({ bg: els.bgColor.value }));
+      els.textColor.addEventListener("input", () => updateSelected({ color: els.textColor.value }));
+      els.blockOpacity.addEventListener("input", () => updateSelected({ opacity: Number(els.blockOpacity.value) }));
+      els.blockZ.addEventListener("input", () => updateSelected({ z: Number(els.blockZ.value) }));
+
+      [
+        [els.blockX, "x", CANVAS_W, "x"],
+        [els.blockY, "y", CANVAS_H, "y"],
+        [els.blockW, "w", CANVAS_W, "x"],
+        [els.blockH, "h", CANVAS_H, "y"]
+      ].forEach(([input, key, size, axis]) => {
+        input.addEventListener("change", () => {
+          const selected = getSelectedBlock();
+          if (!selected) return;
+          const value = clamp(Number(input.value), 0, size);
+          const pct = (value / size) * 100;
+          const patch = {};
+          patch[key] = snapPct(pct, axis);
+          if (key === "x") patch.x = clamp(patch.x, 0, 100 - selected.w);
+          if (key === "y") patch.y = clamp(patch.y, 0, 100 - selected.h);
+          if (key === "w") patch.w = clamp(patch.w, pxToXPct(22), 100 - selected.x);
+          if (key === "h") patch.h = clamp(patch.h, pxToYPct(22), 100 - selected.y);
+          updateSelected(patch);
+        });
+      });
+
+      els.eyeDropperBtn.disabled = !("EyeDropper" in window);
+      els.eyeDropperBtn.addEventListener("click", async () => {
+        if (!("EyeDropper" in window)) return;
+        try {
+          const result = await new EyeDropper().open();
+          applyPaletteColor(result.sRGBHex);
+        } catch (error) {
+          setStatus("Color picking canceled");
+        }
+      });
+
+      window.addEventListener("resize", updateStageScale);
+      window.addEventListener("keydown", (event) => {
+        const active = document.activeElement;
+        const typing = active && ["INPUT", "TEXTAREA", "SELECT"].includes(active.tagName);
+        if (typing) return;
+        const selected = getSelectedBlock();
+        if (!selected) return;
+        if (event.key === "Delete" || event.key === "Backspace") {
+          deleteSelected();
+          return;
+        }
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "d") {
+          event.preventDefault();
+          duplicateSelected();
+          return;
+        }
+        const stepX = pxToXPct(event.shiftKey ? 8 : 1);
+        const stepY = pxToYPct(event.shiftKey ? 8 : 1);
+        if (event.key === "ArrowLeft") updateSelected({ x: clamp(selected.x - stepX, 0, 100 - selected.w) });
+        if (event.key === "ArrowRight") updateSelected({ x: clamp(selected.x + stepX, 0, 100 - selected.w) });
+        if (event.key === "ArrowUp") updateSelected({ y: clamp(selected.y - stepY, 0, 100 - selected.h) });
+        if (event.key === "ArrowDown") updateSelected({ y: clamp(selected.y + stepY, 0, 100 - selected.h) });
+      });
+    }
+
+    async function init() {
+      bindControls();
+      try {
+        projects = await dbGetAll();
+        const latest = projects.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))[0];
+        if (latest) currentProject = structuredClone(latest);
+        renderApp();
+        setStatus(latest ? `Opened ${latest.name}` : "พร้อมเริ่ม trace reference");
+      } catch (error) {
+        console.error(error);
+        setStatus("IndexedDB unavailable");
+        renderApp();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
