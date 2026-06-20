@@ -329,6 +329,13 @@
       white-space: nowrap;
     }
 
+    .tool-btn.active {
+      border-color: color-mix(in oklch, var(--primary), white 45%);
+      background: var(--primary-soft);
+      color: var(--primary-strong);
+      font-weight: 800;
+    }
+
     .analyze-btn {
       border-color: color-mix(in oklch, var(--accent), white 62%);
       background: var(--accent-soft);
@@ -380,6 +387,7 @@
       height: 100%;
       object-fit: cover;
       pointer-events: none;
+      transform-origin: center center;
       user-select: none;
     }
 
@@ -401,6 +409,19 @@
     .blocks-layer {
       position: absolute;
       inset: 0;
+    }
+
+    .slice-overlay {
+      position: absolute;
+      display: none;
+      border: 2px solid var(--accent);
+      background: color-mix(in oklch, var(--accent), transparent 82%);
+      pointer-events: none;
+      z-index: 30;
+    }
+
+    .slice-overlay.visible {
+      display: block;
     }
 
     .empty-stage {
@@ -451,6 +472,21 @@
     .block.input {
       align-items: center;
       border-color: color-mix(in oklch, var(--ink), transparent 78%);
+    }
+
+    .block.image {
+      display: block;
+      padding: 0;
+      background: transparent;
+    }
+
+    .block.image img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: fill;
+      pointer-events: none;
+      user-select: none;
     }
 
     .block.selected {
@@ -728,6 +764,8 @@
           </div>
           <div class="tool-group">
             <button class="tool-btn analyze-btn" id="analyzeBtn" type="button">วิเคราะห์เป็นบล็อก</button>
+            <button class="tool-btn" id="moveRefBtn" type="button">Move ref</button>
+            <button class="tool-btn" id="sliceBtn" type="button">Slice ref</button>
             <button class="tool-btn" id="duplicateBtn" type="button">Duplicate</button>
             <button class="tool-btn" id="gridBtn" type="button">Grid on</button>
           </div>
@@ -739,6 +777,7 @@
               <img class="reference-image" id="referenceImage" alt="">
               <div class="grid-layer" id="gridLayer"></div>
               <div class="blocks-layer" id="blocksLayer"></div>
+              <div class="slice-overlay" id="sliceOverlay"></div>
               <div class="empty-stage" id="emptyStage">
                 <div>
                   <strong>อัปโหลดรูปเพื่อเริ่ม</strong>
@@ -776,6 +815,25 @@
                   <option value="fill">Fill</option>
                 </select>
               </div>
+            </div>
+
+            <div class="three-col">
+              <div class="field">
+                <label for="refX">Ref X</label>
+                <input id="refX" type="number" step="1">
+              </div>
+              <div class="field">
+                <label for="refY">Ref Y</label>
+                <input id="refY" type="number" step="1">
+              </div>
+              <div class="field">
+                <label for="refScale">Zoom</label>
+                <input id="refScale" type="number" min="0.5" max="3" step="0.05">
+              </div>
+            </div>
+
+            <div class="action-row">
+              <button id="resetRefBtn" type="button">Reset ref</button>
             </div>
           </div>
 
@@ -897,12 +955,19 @@
       blocksLayer: document.getElementById("blocksLayer"),
       emptyStage: document.getElementById("emptyStage"),
       analyzeBtn: document.getElementById("analyzeBtn"),
+      moveRefBtn: document.getElementById("moveRefBtn"),
+      sliceBtn: document.getElementById("sliceBtn"),
+      sliceOverlay: document.getElementById("sliceOverlay"),
       duplicateBtn: document.getElementById("duplicateBtn"),
       gridBtn: document.getElementById("gridBtn"),
       selectedLabel: document.getElementById("selectedLabel"),
       projectName: document.getElementById("projectName"),
       refOpacity: document.getElementById("refOpacity"),
       imageFit: document.getElementById("imageFit"),
+      refX: document.getElementById("refX"),
+      refY: document.getElementById("refY"),
+      refScale: document.getElementById("refScale"),
+      resetRefBtn: document.getElementById("resetRefBtn"),
       emptyInspector: document.getElementById("emptyInspector"),
       blockInspector: document.getElementById("blockInspector"),
       blockText: document.getElementById("blockText"),
@@ -930,6 +995,8 @@
     let saveTimer = null;
     let interaction = null;
     let gridEnabled = true;
+    let refMoveMode = false;
+    let sliceMode = false;
 
     function openDB() {
       if (dbPromise) return dbPromise;
@@ -1018,6 +1085,25 @@
       return Math.max(...currentProject.blocks.map((block) => block.z || 1)) + 1;
     }
 
+    function normalizeProject(project) {
+      if (!project) return project;
+      return {
+        ...project,
+        imageFit: project.imageFit || "cover",
+        refOpacity: typeof project.refOpacity === "number" ? project.refOpacity : (project.imageData ? 0.58 : 0),
+        refX: typeof project.refX === "number" ? project.refX : 0,
+        refY: typeof project.refY === "number" ? project.refY : 0,
+        refScale: typeof project.refScale === "number" ? project.refScale : 1,
+        palette: project.palette && project.palette.length ? project.palette : DEFAULT_PALETTE,
+        blocks: (project.blocks || []).map((block) => ({
+          radius: 0,
+          opacity: 1,
+          z: 1,
+          ...block
+        }))
+      };
+    }
+
     function setStatus(message) {
       els.statusLine.textContent = message;
     }
@@ -1050,6 +1136,9 @@
         imageData,
         imageFit: "cover",
         refOpacity: imageData ? 0.58 : 0,
+        refX: 0,
+        refY: 0,
+        refScale: 1,
         palette,
         blocks: [],
         createdAt: now,
@@ -1208,6 +1297,10 @@
       els.emptyStage.classList.toggle("hidden", !!project);
       els.referenceImage.classList.toggle("hidden", !project || !project.imageData);
       els.analyzeBtn.disabled = !project || !project.imageData;
+      els.moveRefBtn.disabled = !project || !project.imageData;
+      els.sliceBtn.disabled = !project || !project.imageData;
+      els.moveRefBtn.classList.toggle("active", refMoveMode);
+      els.sliceBtn.classList.toggle("active", sliceMode);
       els.clearBlocksBtn.disabled = !project || project.blocks.length === 0;
       els.duplicateBtn.disabled = !getSelectedBlock();
       els.exportBtn.disabled = !project;
@@ -1215,6 +1308,8 @@
 
       if (!project) {
         els.referenceImage.removeAttribute("src");
+        els.referenceImage.style.transform = "";
+        els.sliceOverlay.classList.remove("visible");
         els.blocksLayer.innerHTML = "";
         return;
       }
@@ -1222,6 +1317,7 @@
       els.referenceImage.src = project.imageData || "";
       els.referenceImage.style.opacity = String(project.refOpacity);
       els.referenceImage.style.objectFit = project.imageFit;
+      els.referenceImage.style.transform = `translate(${project.refX}px, ${project.refY}px) scale(${project.refScale})`;
       els.gridLayer.classList.toggle("visible", gridEnabled);
       els.blocksLayer.innerHTML = "";
 
@@ -1245,7 +1341,16 @@
           el.style.zIndex = String(block.z || 1);
           el.style.justifyContent = block.align === "left" ? "flex-start" : "center";
           el.style.textAlign = block.align === "left" ? "left" : "center";
-          el.textContent = block.text;
+
+          if (block.type === "image" && block.imageData) {
+            const image = document.createElement("img");
+            image.src = block.imageData;
+            image.alt = "";
+            el.appendChild(image);
+          } else {
+            el.textContent = block.text;
+          }
+
           el.addEventListener("pointerdown", onBlockPointerDown);
 
           if (block.id === selectedId) {
@@ -1265,14 +1370,24 @@
       els.projectName.disabled = !project;
       els.refOpacity.disabled = !project || !project.imageData;
       els.imageFit.disabled = !project || !project.imageData;
+      els.refX.disabled = !project || !project.imageData;
+      els.refY.disabled = !project || !project.imageData;
+      els.refScale.disabled = !project || !project.imageData;
+      els.resetRefBtn.disabled = !project || !project.imageData;
       els.selectedLabel.textContent = selected ? `${selected.type} selected` : "No block";
 
       if (project) {
         els.projectName.value = project.name || "";
         els.refOpacity.value = String(project.refOpacity);
         els.imageFit.value = project.imageFit;
+        els.refX.value = String(Math.round(project.refX));
+        els.refY.value = String(Math.round(project.refY));
+        els.refScale.value = String(Number(project.refScale).toFixed(2));
       } else {
         els.projectName.value = "";
+        els.refX.value = "";
+        els.refY.value = "";
+        els.refScale.value = "";
       }
 
       els.emptyInspector.classList.toggle("hidden", !!selected);
@@ -1282,7 +1397,12 @@
 
       if (!selected) return;
 
-      els.blockText.value = selected.text || "";
+      const imageSelected = selected.type === "image";
+      els.blockText.disabled = imageSelected;
+      els.fontSize.disabled = imageSelected;
+      els.bgColor.disabled = imageSelected;
+      els.textColor.disabled = imageSelected;
+      els.blockText.value = imageSelected ? "Image slice" : (selected.text || "");
       els.blockX.value = String(pctToX(selected.x));
       els.blockY.value = String(pctToY(selected.y));
       els.blockW.value = String(pctToX(selected.w));
@@ -1324,7 +1444,7 @@
     }
 
     async function loadProjects(preferredId) {
-      projects = await dbGetAll();
+      projects = (await dbGetAll()).map(normalizeProject);
       if (preferredId) {
         currentProject = projects.find((project) => project.id === preferredId) || currentProject;
       }
@@ -1334,7 +1454,7 @@
     async function selectProject(id) {
       const project = projects.find((item) => item.id === id);
       if (!project) return;
-      currentProject = structuredClone(project);
+      currentProject = normalizeProject(structuredClone(project));
       selectedId = null;
       setStatus(`Opened ${currentProject.name}`);
       renderApp();
@@ -1346,9 +1466,71 @@
         currentProject = null;
         selectedId = null;
       }
-      projects = await dbGetAll();
+      projects = (await dbGetAll()).map(normalizeProject);
       renderApp();
       setStatus("Project deleted");
+    }
+
+    function getStagePoint(event, rect = els.stage.getBoundingClientRect()) {
+      return {
+        x: clamp(((event.clientX - rect.left) / rect.width) * CANVAS_W, 0, CANVAS_W),
+        y: clamp(((event.clientY - rect.top) / rect.height) * CANVAS_H, 0, CANVAS_H)
+      };
+    }
+
+    function getSliceRect(start, end) {
+      const x = Math.min(start.x, end.x);
+      const y = Math.min(start.y, end.y);
+      return {
+        x,
+        y,
+        w: Math.abs(end.x - start.x),
+        h: Math.abs(end.y - start.y)
+      };
+    }
+
+    function updateSliceOverlay(rect) {
+      els.sliceOverlay.style.left = `${rect.x}px`;
+      els.sliceOverlay.style.top = `${rect.y}px`;
+      els.sliceOverlay.style.width = `${rect.w}px`;
+      els.sliceOverlay.style.height = `${rect.h}px`;
+      els.sliceOverlay.classList.toggle("visible", rect.w > 0 && rect.h > 0);
+    }
+
+    function startRefMove(event) {
+      const rect = els.stage.getBoundingClientRect();
+      interaction = {
+        mode: "refmove",
+        startClientX: event.clientX,
+        startClientY: event.clientY,
+        start: {
+          refX: currentProject.refX,
+          refY: currentProject.refY
+        },
+        stageRect: rect
+      };
+      els.stage.setPointerCapture(event.pointerId);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp, { once: true });
+      setStatus("Move reference");
+    }
+
+    function startSlice(event) {
+      const rect = els.stage.getBoundingClientRect();
+      const point = getStagePoint(event, rect);
+      interaction = {
+        mode: "slice",
+        startClientX: event.clientX,
+        startClientY: event.clientY,
+        start: point,
+        current: point,
+        stageRect: rect
+      };
+      updateSliceOverlay({ x: point.x, y: point.y, w: 0, h: 0 });
+      els.stage.setPointerCapture(event.pointerId);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp, { once: true });
+      setStatus("Drag to slice reference");
     }
 
     function onBlockPointerDown(event) {
@@ -1377,10 +1559,25 @@
 
     function onPointerMove(event) {
       if (!interaction || !currentProject) return;
-      const block = currentProject.blocks.find((item) => item.id === interaction.blockId);
-      if (!block) return;
       const dx = ((event.clientX - interaction.startClientX) / interaction.stageRect.width) * 100;
       const dy = ((event.clientY - interaction.startClientY) / interaction.stageRect.height) * 100;
+
+      if (interaction.mode === "refmove") {
+        currentProject.refX = Math.round(interaction.start.refX + (dx / 100) * CANVAS_W);
+        currentProject.refY = Math.round(interaction.start.refY + (dy / 100) * CANVAS_H);
+        renderStage();
+        renderInspector();
+        return;
+      }
+
+      if (interaction.mode === "slice") {
+        interaction.current = getStagePoint(event, interaction.stageRect);
+        updateSliceOverlay(getSliceRect(interaction.start, interaction.current));
+        return;
+      }
+
+      const block = currentProject.blocks.find((item) => item.id === interaction.blockId);
+      if (!block) return;
 
       if (interaction.mode === "drag") {
         block.x = clamp(snapPct(interaction.start.x + dx, "x"), 0, 100 - block.w);
@@ -1396,9 +1593,19 @@
       renderInspector();
     }
 
-    function onPointerUp() {
+    async function onPointerUp() {
       if (interaction) {
-        scheduleSave();
+        if (interaction.mode === "slice") {
+          const rect = getSliceRect(interaction.start, interaction.current || interaction.start);
+          els.sliceOverlay.classList.remove("visible");
+          if (rect.w >= 8 && rect.h >= 8) {
+            await createImageSliceBlock(rect);
+          } else {
+            setStatus("Slice too small");
+          }
+        } else {
+          scheduleSave();
+        }
         interaction = null;
       }
       window.removeEventListener("pointermove", onPointerMove);
@@ -1610,7 +1817,7 @@
       const ctx = canvas.getContext("2d", { willReadFrequently: true });
       ctx.fillStyle = "#ffffff";
       ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
-      drawImageFit(ctx, img, 0, 0, CANVAS_W, CANVAS_H, currentProject.imageFit);
+      drawTransformedReference(ctx, img, currentProject, 1);
       const data = ctx.getImageData(0, 0, CANVAS_W, CANVAS_H).data;
       const rows = [];
 
@@ -1722,6 +1929,73 @@
       ctx.drawImage(img, dx, dy, drawW, drawH);
     }
 
+    function drawTransformedReference(ctx, img, project, opacity = project.refOpacity) {
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      ctx.translate(CANVAS_W / 2 + (project.refX || 0), CANVAS_H / 2 + (project.refY || 0));
+      ctx.scale(project.refScale || 1, project.refScale || 1);
+      drawImageFit(ctx, img, -CANVAS_W / 2, -CANVAS_H / 2, CANVAS_W, CANVAS_H, project.imageFit || "cover");
+      ctx.restore();
+    }
+
+    async function renderReferenceToCanvas(project, scale = 2, opacity = 1) {
+      const img = await loadImage(project.imageData);
+      const canvas = document.createElement("canvas");
+      canvas.width = CANVAS_W * scale;
+      canvas.height = CANVAS_H * scale;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(scale, scale);
+      drawTransformedReference(ctx, img, project, opacity);
+      return canvas;
+    }
+
+    async function createImageSliceBlock(rect) {
+      if (!currentProject || !currentProject.imageData) return;
+      setStatus("Creating image slice...");
+      const scale = 2;
+      const source = await renderReferenceToCanvas(currentProject, scale, 1);
+      const crop = document.createElement("canvas");
+      crop.width = Math.max(1, Math.round(rect.w * scale));
+      crop.height = Math.max(1, Math.round(rect.h * scale));
+      const ctx = crop.getContext("2d");
+      ctx.drawImage(
+        source,
+        Math.round(rect.x * scale),
+        Math.round(rect.y * scale),
+        crop.width,
+        crop.height,
+        0,
+        0,
+        crop.width,
+        crop.height
+      );
+
+      const block = {
+        id: uid("block"),
+        type: "image",
+        imageData: crop.toDataURL("image/png"),
+        x: pxToXPct(rect.x),
+        y: pxToYPct(rect.y),
+        w: pxToXPct(rect.w),
+        h: pxToYPct(rect.h),
+        text: "",
+        bg: "transparent",
+        color: "#171717",
+        fontSize: 16,
+        radius: 0,
+        opacity: 1,
+        z: nextZ(),
+        fontWeight: 600,
+        align: "center"
+      };
+
+      currentProject.blocks.push(block);
+      selectedId = block.id;
+      renderApp();
+      scheduleSave();
+      setStatus("Image slice ready");
+    }
+
     async function exportPNG() {
       if (!currentProject) return;
       setStatus("Rendering PNG...");
@@ -1745,27 +2019,38 @@
 
       if (project.imageData && project.refOpacity > 0) {
         const img = await loadImage(project.imageData);
-        ctx.save();
-        ctx.globalAlpha = project.refOpacity;
-        drawImageFit(ctx, img, 0, 0, CANVAS_W, CANVAS_H, project.imageFit);
-        ctx.restore();
+        drawTransformedReference(ctx, img, project, project.refOpacity);
       }
 
-      project.blocks
+      const sortedBlocks = project.blocks
         .slice()
-        .sort((a, b) => (a.z || 0) - (b.z || 0))
-        .forEach((block) => drawBlock(ctx, block));
+        .sort((a, b) => (a.z || 0) - (b.z || 0));
+
+      for (const block of sortedBlocks) {
+        await drawBlock(ctx, block);
+      }
 
       return canvas;
     }
 
-    function drawBlock(ctx, block) {
+    async function drawBlock(ctx, block) {
       const x = (block.x / 100) * CANVAS_W;
       const y = (block.y / 100) * CANVAS_H;
       const w = (block.w / 100) * CANVAS_W;
       const h = (block.h / 100) * CANVAS_H;
       ctx.save();
       ctx.globalAlpha = block.opacity ?? 1;
+
+      if (block.type === "image" && block.imageData) {
+        const img = await loadImage(block.imageData);
+        if (block.radius) {
+          roundRect(ctx, x, y, w, h, block.radius);
+          ctx.clip();
+        }
+        ctx.drawImage(img, x, y, w, h);
+        ctx.restore();
+        return;
+      }
 
       if (block.bg && block.bg !== "transparent") {
         ctx.fillStyle = block.bg;
@@ -1850,6 +2135,20 @@
       });
 
       els.stage.addEventListener("pointerdown", (event) => {
+        if (!currentProject || event.target.closest(".block")) return;
+
+        if (sliceMode && currentProject.imageData) {
+          event.preventDefault();
+          startSlice(event);
+          return;
+        }
+
+        if (refMoveMode && currentProject.imageData) {
+          event.preventDefault();
+          startRefMove(event);
+          return;
+        }
+
         if (event.target === els.stage || event.target === els.blocksLayer) {
           selectedId = null;
           renderApp();
@@ -1867,6 +2166,18 @@
 
       els.clearBlocksBtn.addEventListener("click", clearBlocks);
       els.analyzeBtn.addEventListener("click", analyzeImageToBlocks);
+      els.moveRefBtn.addEventListener("click", () => {
+        refMoveMode = !refMoveMode;
+        if (refMoveMode) sliceMode = false;
+        setStatus(refMoveMode ? "Drag canvas to move reference" : "Move ref off");
+        renderStage();
+      });
+      els.sliceBtn.addEventListener("click", () => {
+        sliceMode = !sliceMode;
+        if (sliceMode) refMoveMode = false;
+        setStatus(sliceMode ? "Drag on reference to create an image slice" : "Slice ref off");
+        renderStage();
+      });
       els.duplicateBtn.addEventListener("click", duplicateSelected);
       els.deleteBlockBtn.addEventListener("click", deleteSelected);
       els.sendBackBtn.addEventListener("click", sendSelectedBack);
@@ -1898,6 +2209,37 @@
         if (!currentProject) return;
         currentProject.imageFit = els.imageFit.value;
         renderStage();
+        scheduleSave();
+      });
+
+      els.refX.addEventListener("change", () => {
+        if (!currentProject) return;
+        currentProject.refX = Number(els.refX.value) || 0;
+        renderStage();
+        scheduleSave();
+      });
+
+      els.refY.addEventListener("change", () => {
+        if (!currentProject) return;
+        currentProject.refY = Number(els.refY.value) || 0;
+        renderStage();
+        scheduleSave();
+      });
+
+      els.refScale.addEventListener("change", () => {
+        if (!currentProject) return;
+        currentProject.refScale = clamp(Number(els.refScale.value) || 1, 0.5, 3);
+        renderStage();
+        renderInspector();
+        scheduleSave();
+      });
+
+      els.resetRefBtn.addEventListener("click", () => {
+        if (!currentProject) return;
+        currentProject.refX = 0;
+        currentProject.refY = 0;
+        currentProject.refScale = 1;
+        renderApp();
         scheduleSave();
       });
 
@@ -1946,6 +2288,14 @@
         const active = document.activeElement;
         const typing = active && ["INPUT", "TEXTAREA", "SELECT"].includes(active.tagName);
         if (typing) return;
+        if (event.key === "Escape") {
+          refMoveMode = false;
+          sliceMode = false;
+          els.sliceOverlay.classList.remove("visible");
+          renderStage();
+          setStatus("Tool mode off");
+          return;
+        }
         const selected = getSelectedBlock();
         if (!selected) return;
         if (event.key === "Delete" || event.key === "Backspace") {
@@ -1969,9 +2319,9 @@
     async function init() {
       bindControls();
       try {
-        projects = await dbGetAll();
+        projects = (await dbGetAll()).map(normalizeProject);
         const latest = projects.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))[0];
-        if (latest) currentProject = structuredClone(latest);
+        if (latest) currentProject = normalizeProject(structuredClone(latest));
         renderApp();
         setStatus(latest ? `Opened ${latest.name}` : "พร้อมเริ่ม trace reference");
       } catch (error) {
