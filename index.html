@@ -3,96 +3,75 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>RefBlock</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23d85b3b'/%3E%3Ctext x='16' y='22' font-size='18' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'%3ER%3C/text%3E%3C/svg%3E">
+  <title>ครัวของฉัน</title>
   <style>
     :root {
       color-scheme: light;
       --bg: oklch(1 0 0);
-      --surface: oklch(0.972 0.004 32);
-      --surface-2: oklch(0.94 0.006 32);
-      --ink: oklch(0.19 0.026 32);
-      --muted: oklch(0.43 0.024 32);
-      --line: oklch(0.875 0.008 32);
-      --line-strong: oklch(0.74 0.018 32);
-      --primary: oklch(0.58 0.15 32);
-      --primary-strong: oklch(0.49 0.145 32);
-      --primary-soft: oklch(0.94 0.035 32);
-      --accent: oklch(0.55 0.118 190);
-      --accent-soft: oklch(0.94 0.04 190);
-      --danger: oklch(0.55 0.18 24);
-      --success: oklch(0.52 0.12 145);
-      --focus: oklch(0.66 0.13 190);
-      --stage-scale: 1;
-      --radius: 8px;
-      --radius-lg: 12px;
+      --surface: oklch(0.974 0.006 80);
+      --surface-strong: oklch(0.94 0.012 78);
+      --ink: oklch(0.21 0.025 78);
+      --muted: oklch(0.48 0.025 78);
+      --line: oklch(0.88 0.014 78);
+      --primary: oklch(0.58 0.12 60);
+      --primary-dark: oklch(0.44 0.11 62);
+      --primary-soft: oklch(0.94 0.055 72);
+      --accent: oklch(0.48 0.12 155);
+      --accent-soft: oklch(0.93 0.052 155);
+      --danger: oklch(0.56 0.16 28);
+      --danger-soft: oklch(0.94 0.04 28);
+      --warning: oklch(0.78 0.12 85);
+      --shadow: 0 6px 14px oklch(0.24 0.03 80 / 0.08);
+      --radius: 12px;
+      --tap: 44px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html,
-    body {
-      min-height: 100%;
-    }
-
     body {
       margin: 0;
+      min-height: 100vh;
       background: var(--bg);
       color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 15px;
-      letter-spacing: 0;
+      font-size: 16px;
+      line-height: 1.45;
+      overflow-x: hidden;
     }
 
     button,
     input,
-    textarea,
-    select {
+    select,
+    textarea {
       font: inherit;
     }
 
     button {
-      min-height: 40px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--bg);
-      color: var(--ink);
+      min-height: var(--tap);
+      border: 0;
       cursor: pointer;
-      transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
-    }
-
-    button:hover {
-      border-color: var(--line-strong);
-      background: var(--surface);
-    }
-
-    button:active {
-      transform: translateY(1px);
-    }
-
-    button:focus-visible,
-    input:focus-visible,
-    textarea:focus-visible,
-    select:focus-visible {
-      outline: 3px solid color-mix(in oklch, var(--focus), transparent 72%);
-      outline-offset: 2px;
     }
 
     button:disabled {
-      color: var(--muted);
       cursor: not-allowed;
-      opacity: 0.62;
+      opacity: 0.55;
     }
 
-    .app-shell {
-      min-height: 100svh;
-      display: flex;
-      flex-direction: column;
-      background:
-        linear-gradient(180deg, color-mix(in oklch, var(--primary-soft), transparent 72%), transparent 270px),
-        var(--bg);
+    a {
+      color: var(--primary-dark);
+      text-decoration-thickness: 0.08em;
+      text-underline-offset: 0.18em;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding-bottom: 92px;
+      overflow-x: hidden;
     }
 
     .topbar {
@@ -103,2235 +82,1652 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 10px clamp(12px, 3vw, 24px);
+      width: 100%;
+      min-height: 68px;
+      padding: 14px 16px 10px;
+      background: oklch(1 0 0 / 0.94);
       border-bottom: 1px solid var(--line);
-      background: color-mix(in oklch, var(--bg), transparent 5%);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(10px);
     }
 
     .brand {
-      min-width: 0;
       display: flex;
       align-items: center;
       gap: 10px;
+      flex: 1 1 auto;
+      min-width: 0;
     }
 
     .brand-mark {
-      width: 36px;
-      height: 36px;
       display: grid;
       place-items: center;
+      width: 40px;
+      height: 40px;
       border-radius: 10px;
-      background: var(--primary);
-      color: white;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
       font-weight: 800;
     }
 
-    .brand-title {
-      display: grid;
-      gap: 1px;
-      min-width: 0;
-    }
-
-    .brand-title strong {
-      font-size: 16px;
-      line-height: 1.1;
-    }
-
-    .status-line {
-      max-width: 42vw;
-      overflow: hidden;
-      color: var(--muted);
-      font-size: 12px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .primary-btn {
-      border-color: transparent;
-      background: var(--primary);
-      color: white;
-      font-weight: 700;
-      padding: 0 14px;
-    }
-
-    .primary-btn:hover {
-      border-color: transparent;
-      background: var(--primary-strong);
-    }
-
-    .ghost-btn {
-      padding: 0 12px;
-    }
-
-    .workspace {
-      flex: 1;
-      display: grid;
-      grid-template-columns: minmax(230px, 280px) minmax(0, 1fr) minmax(260px, 320px);
-      gap: 12px;
-      padding: 12px;
-      min-height: 0;
-    }
-
-    .panel {
-      min-width: 0;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      background: color-mix(in oklch, var(--bg), var(--surface) 54%);
-      overflow: hidden;
-    }
-
-    .panel-inner {
-      display: grid;
-      gap: 14px;
-      padding: 14px;
-    }
-
-    .panel-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .panel-title h2 {
+    .brand h1 {
       margin: 0;
-      font-size: 14px;
-      line-height: 1.2;
-    }
-
-    .panel-title span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .upload-card {
-      position: relative;
-      display: grid;
-      gap: 9px;
-      padding: 14px;
-      border: 1px dashed var(--line-strong);
-      border-radius: var(--radius);
-      background: var(--surface);
-    }
-
-    .upload-card strong {
-      font-size: 14px;
-    }
-
-    .upload-card small {
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .upload-card input {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    .project-list {
-      display: grid;
-      gap: 8px;
-      max-height: calc(100svh - 286px);
-      overflow: auto;
-      padding-right: 2px;
-    }
-
-    .project-item {
-      display: grid;
-      grid-template-columns: 44px minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 9px;
-      width: 100%;
-      padding: 8px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--bg);
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .project-item.active {
-      border-color: color-mix(in oklch, var(--primary), white 38%);
-      background: var(--primary-soft);
-    }
-
-    .project-thumb {
-      width: 44px;
-      height: 56px;
-      border-radius: 7px;
-      background: var(--surface-2);
-      object-fit: cover;
-    }
-
-    .project-copy {
-      min-width: 0;
-      display: grid;
-      gap: 3px;
-    }
-
-    .project-copy strong,
-    .project-copy small {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .project-copy small {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .delete-project {
-      width: 34px;
-      min-height: 34px;
-      color: var(--danger);
-    }
-
-    .canvas-zone {
-      min-width: 0;
-      min-height: 0;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-      gap: 10px;
-    }
-
-    .tool-strip {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 0;
-      padding: 8px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      background: color-mix(in oklch, var(--bg), var(--surface) 60%);
-      overflow-x: auto;
-    }
-
-    .tool-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex: 0 0 auto;
-    }
-
-    .tool-btn {
-      min-height: 36px;
-      padding: 0 10px;
-      white-space: nowrap;
-    }
-
-    .tool-btn.active {
-      border-color: color-mix(in oklch, var(--primary), white 45%);
-      background: var(--primary-soft);
-      color: var(--primary-strong);
-      font-weight: 800;
-    }
-
-    .analyze-btn {
-      border-color: color-mix(in oklch, var(--accent), white 62%);
-      background: var(--accent-soft);
-      color: color-mix(in oklch, var(--accent), black 22%);
-      font-weight: 700;
-    }
-
-    .canvas-scroll {
-      min-height: 0;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      overflow: auto;
-      padding: 10px 4px 24px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      background:
-        linear-gradient(90deg, color-mix(in oklch, var(--line), transparent 72%) 1px, transparent 1px),
-        linear-gradient(0deg, color-mix(in oklch, var(--line), transparent 72%) 1px, transparent 1px),
-        var(--surface-2);
-      background-size: 24px 24px;
-    }
-
-    .stage-viewport {
-      position: relative;
-      width: 390px;
-      height: 844px;
-      flex: 0 0 auto;
-    }
-
-    .phone-stage {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 390px;
-      height: 844px;
-      overflow: hidden;
-      border: 1px solid oklch(0.2 0 0);
-      border-radius: 22px;
-      background: white;
-      transform: scale(var(--stage-scale));
-      transform-origin: top left;
-    }
-
-    .reference-image {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      pointer-events: none;
-      transform-origin: center center;
-      user-select: none;
-    }
-
-    .grid-layer {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(color-mix(in oklch, var(--accent), transparent 72%) 1px, transparent 1px),
-        linear-gradient(90deg, color-mix(in oklch, var(--accent), transparent 72%) 1px, transparent 1px);
-      background-size: 16px 16px;
-    }
-
-    .grid-layer.visible {
-      opacity: 1;
-    }
-
-    .blocks-layer {
-      position: absolute;
-      inset: 0;
-    }
-
-    .slice-overlay {
-      position: absolute;
-      display: none;
-      border: 2px solid var(--accent);
-      background: color-mix(in oklch, var(--accent), transparent 82%);
-      pointer-events: none;
-      z-index: 30;
-    }
-
-    .slice-overlay.visible {
-      display: block;
-    }
-
-    .empty-stage {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      padding: 32px;
-      color: var(--muted);
-      text-align: center;
-      pointer-events: none;
-    }
-
-    .empty-stage strong {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--ink);
-      font-size: 18px;
-    }
-
-    .block {
-      position: absolute;
-      display: flex;
-      align-items: center;
-      min-width: 22px;
-      min-height: 22px;
-      padding: 6px 8px;
-      border: 1px solid transparent;
-      overflow: hidden;
-      color: var(--ink);
+      font-size: 1.1rem;
       line-height: 1.15;
-      touch-action: none;
-      user-select: none;
-      white-space: pre-wrap;
     }
 
-    .block.text {
-      padding: 0;
+    .brand > div:last-child,
+    .section-head > div {
+      min-width: 0;
     }
 
-    .block.button,
-    .block.badge {
-      justify-content: center;
-      font-weight: 800;
-      text-align: center;
-    }
-
-    .block.input {
-      align-items: center;
-      border-color: color-mix(in oklch, var(--ink), transparent 78%);
-    }
-
-    .block.image {
-      display: block;
-      padding: 0;
-      background: transparent;
-    }
-
-    .block.image img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: fill;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .block.selected {
-      border-color: var(--primary);
-      outline: 1px solid color-mix(in oklch, var(--primary), transparent 38%);
-      outline-offset: 1px;
-    }
-
-    .resize-handle {
-      position: absolute;
-      right: -5px;
-      bottom: -5px;
-      width: 14px;
-      height: 14px;
-      border: 2px solid white;
-      border-radius: 50%;
-      background: var(--primary);
-      cursor: nwse-resize;
-    }
-
-    .field-stack {
-      display: grid;
-      gap: 10px;
-    }
-
-    .field {
-      display: grid;
-      gap: 6px;
-    }
-
-    .field label,
-    .field-label {
+    .brand p {
+      margin: 2px 0 0;
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .field input,
-    .field textarea,
-    .field select {
-      width: 100%;
-      min-height: 40px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--bg);
-      color: var(--ink);
-      padding: 8px 10px;
-    }
-
-    .field textarea {
-      min-height: 74px;
-      resize: vertical;
-    }
-
-    .field input[type="range"] {
-      min-height: auto;
-      padding: 0;
-      accent-color: var(--primary);
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .three-col {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .segmented {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
+      font-size: 0.82rem;
+      white-space: nowrap;
       overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .segmented label {
-      position: relative;
-      display: grid;
-      place-items: center;
-      min-height: 38px;
-      color: var(--muted);
-      cursor: pointer;
+    .content {
+      padding: 16px;
+      min-width: 0;
     }
 
-    .segmented input {
-      position: absolute;
-      opacity: 0;
+    .view {
+      display: none;
     }
 
-    .segmented label:has(input:checked) {
-      background: var(--ink);
-      color: white;
-      font-weight: 800;
-    }
-
-    .palette {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 7px;
-    }
-
-    .swatch {
-      min-height: 34px;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-      padding: 0;
-    }
-
-    .action-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .action-row button {
-      flex: 1 1 110px;
-      padding: 0 10px;
-    }
-
-    .danger-btn {
-      color: var(--danger);
-    }
-
-    .empty-panel {
-      display: grid;
-      gap: 8px;
-      padding: 12px;
-      border-radius: var(--radius);
-      background: var(--surface);
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .empty-panel strong {
-      color: var(--ink);
-    }
-
-    .hint-list {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    @media (max-width: 1080px) {
-      .workspace {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .project-list {
-        max-height: 220px;
-      }
-
-      .canvas-zone {
-        min-height: 720px;
-      }
-    }
-
-    @media (max-width: 620px) {
-      .topbar {
-        align-items: flex-start;
-        padding: 9px 10px;
-      }
-
-      .brand-mark {
-        width: 32px;
-        height: 32px;
-      }
-
-      .status-line {
-        max-width: 48vw;
-      }
-
-      .top-actions .ghost-btn {
-        display: none;
-      }
-
-      .primary-btn {
-        padding: 0 10px;
-      }
-
-      .workspace {
-        padding: 8px;
-        gap: 8px;
-      }
-
-      .panel-inner {
-        padding: 12px;
-      }
-
-      .canvas-zone {
-        min-height: 640px;
-      }
-
-      .canvas-scroll {
-        padding-top: 8px;
-      }
-
-      .tool-strip {
-        padding: 7px;
-      }
-
-      .tool-btn {
-        min-height: 38px;
-        padding: 0 9px;
-      }
+    .view.active {
+      display: block;
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        transition-duration: 1ms !important;
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
         scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    .bottom-nav {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 30;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+      background: oklch(1 0 0 / 0.96);
+      border-top: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-btn {
+      display: grid;
+      gap: 2px;
+      place-items: center;
+      min-height: 56px;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      min-width: 0;
+    }
+
+    .nav-btn .icon {
+      font-size: 1.18rem;
+      line-height: 1;
+    }
+
+    .nav-btn.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 6px 0 10px;
+    }
+
+    .section-head h2,
+    .section-head h3 {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .section-head p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg);
+    }
+
+    .panel-inner {
+      padding: 14px;
+    }
+
+    .hero-panel {
+      background: linear-gradient(135deg, var(--primary-soft), oklch(0.98 0.012 95));
+      border: 1px solid oklch(0.88 0.04 76);
+    }
+
+    .hero-panel h2 {
+      margin: 0 0 6px;
+      font-size: 1.35rem;
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    .hero-panel p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+      min-width: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 10px;
+      padding: 10px 13px;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      font-weight: 750;
+      text-decoration: none;
+      text-align: center;
+      white-space: normal;
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      color: white;
+      border-color: transparent;
+    }
+
+    .btn.accent {
+      background: var(--accent);
+      color: white;
+      border-color: transparent;
+    }
+
+    .btn.danger {
+      background: var(--danger-soft);
+      color: var(--danger);
+      border-color: oklch(0.84 0.05 28);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      border-color: transparent;
+      color: var(--muted);
+    }
+
+    .btn.small {
+      min-height: 36px;
+      padding: 7px 10px;
+      border-radius: 9px;
+      font-size: 0.88rem;
+    }
+
+    .btn.full {
+      width: 100%;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .meal-today {
+      display: grid;
+      gap: 8px;
+    }
+
+    .meal-row,
+    .item-row,
+    .recipe-card,
+    .category-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg);
+    }
+
+    .meal-row {
+      align-items: flex-start;
+    }
+
+    .meal-label {
+      min-width: 72px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 750;
+    }
+
+    .row-main {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .row-main strong,
+    .recipe-card strong,
+    .category-row strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .row-main small,
+    .recipe-card small,
+    .category-row small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .badge.primary {
+      background: var(--primary-soft);
+      border-color: oklch(0.86 0.05 70);
+      color: var(--primary-dark);
+    }
+
+    .badge.accent {
+      background: var(--accent-soft);
+      border-color: oklch(0.84 0.05 155);
+      color: var(--accent);
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .empty {
+      padding: 18px;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--ink);
+      font-size: 0.88rem;
+      font-weight: 750;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: var(--tap);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: var(--bg);
+      color: var(--ink);
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 96px;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: oklch(0.45 0.02 78);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus,
+    button:focus-visible {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px oklch(0.7 0.12 155 / 0.18);
+    }
+
+    .inline-form {
+      display: none;
+    }
+
+    .inline-form.active {
+      display: block;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .category-dot {
+      width: 14px;
+      height: 14px;
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: var(--dot, var(--primary));
+      border: 1px solid oklch(0.2 0.02 78 / 0.12);
+    }
+
+    .recipe-meta {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .recipe-card {
+      align-items: flex-start;
+    }
+
+    .recipe-card.favorite {
+      border-color: oklch(0.84 0.07 75);
+      background: oklch(0.985 0.018 82);
+    }
+
+    .recipe-actions,
+    .row-actions {
+      display: flex;
+      gap: 6px;
+      flex: 0 0 auto;
+      align-items: center;
+    }
+
+    .icon-btn {
+      display: inline-grid;
+      place-items: center;
+      min-width: 38px;
+      width: 38px;
+      min-height: 38px;
+      border-radius: 9px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .detail-head {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .detail-title {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .detail-title h2 {
+      margin: 0;
+      font-size: 1.55rem;
+      line-height: 1.16;
+      text-wrap: balance;
+    }
+
+    .recipe-body {
+      display: grid;
+      gap: 12px;
+    }
+
+    .text-block {
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+    }
+
+    .planner-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .week-title {
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .planner {
+      display: grid;
+      gap: 12px;
+    }
+
+    .day-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    .day-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 11px 12px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      font-weight: 800;
+    }
+
+    .day-head span:last-child {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.86rem;
+    }
+
+    .meal-slot {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .meal-slot:last-child {
+      border-bottom: 0;
+    }
+
+    .slot-form {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 7px;
+    }
+
+    .slot-form select,
+    .slot-form input {
+      min-height: 38px;
+      padding: 7px 9px;
+      border-radius: 9px;
+      font-size: 0.92rem;
+    }
+
+    .shopping-head {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .shopping-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    .shopping-group h3 {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .check-row {
+      display: grid;
+      grid-template-columns: 30px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg);
+    }
+
+    .check-row input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      min-height: 22px;
+      accent-color: var(--accent);
+    }
+
+    .check-row.done .row-main {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .settings-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 16px;
+      bottom: 92px;
+      left: 16px;
+      z-index: 50;
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: var(--ink);
+      color: white;
+      box-shadow: var(--shadow);
+      transform: translateY(16px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms ease-out, transform 160ms ease-out;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (min-width: 720px) {
+      .app {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        padding-bottom: 0;
+      }
+
+      .topbar {
+        grid-column: 1 / -1;
+        padding-inline: 22px;
+      }
+
+      .bottom-nav {
+        position: sticky;
+        top: 68px;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        align-self: start;
+        display: flex;
+        flex-direction: column;
+        width: auto;
+        min-height: calc(100vh - 68px);
+        margin: 0;
+        padding: 14px;
+        border-top: 0;
+        border-right: 1px solid var(--line);
+      }
+
+      .nav-btn {
+        grid-template-columns: 28px 1fr;
+        justify-items: start;
+        padding-inline: 12px;
+      }
+
+      .content {
+        padding: 24px;
+        min-width: 0;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .quick-actions,
+      .search-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .planner {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
   </style>
 </head>
 <body>
-  <div class="app-shell">
+  <div class="app">
     <header class="topbar">
-      <div class="brand" aria-label="RefBlock">
-        <div class="brand-mark">R</div>
-        <div class="brand-title">
-          <strong>RefBlock</strong>
-          <span class="status-line" id="statusLine">พร้อมเริ่ม trace reference</span>
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">ครัว</div>
+        <div>
+          <h1>ครัวของฉัน</h1>
+          <p id="subtitle">สมุดสูตร ตารางอาหาร รายการซื้อของ</p>
         </div>
       </div>
-      <div class="top-actions">
-        <button class="ghost-btn" id="saveBtn" type="button">Save</button>
-        <button class="primary-btn" id="exportBtn" type="button">Export PNG</button>
-      </div>
+      <button class="btn small" type="button" data-tab="settings">ตั้งค่า</button>
     </header>
 
-    <div class="workspace">
-      <aside class="panel" aria-label="Projects">
-        <div class="panel-inner">
-          <div class="panel-title">
-            <h2>Projects</h2>
-            <span id="projectCount">0 saved</span>
-          </div>
+    <nav class="bottom-nav" aria-label="หน้าหลัก">
+      <button class="nav-btn active" type="button" data-tab="home"><span class="icon">⌂</span><span>หน้าแรก</span></button>
+      <button class="nav-btn" type="button" data-tab="categories"><span class="icon">▦</span><span>หมวด</span></button>
+      <button class="nav-btn" type="button" data-tab="recipes"><span class="icon">□</span><span>สูตร</span></button>
+      <button class="nav-btn" type="button" data-tab="planner"><span class="icon">▤</span><span>ตาราง</span></button>
+      <button class="nav-btn" type="button" data-tab="shopping"><span class="icon">✓</span><span>ซื้อของ</span></button>
+    </nav>
 
-          <label class="upload-card">
-            <strong>Upload reference</strong>
-            <small>รองรับ screenshot, mockup, รูปจากเว็บ หรือภาพที่วาดเอง</small>
-            <input id="imageInput" type="file" accept="image/*">
-          </label>
-
-          <div class="action-row">
-            <button id="newBlankBtn" type="button">New blank</button>
-            <button id="clearBlocksBtn" type="button">Clear blocks</button>
-          </div>
-
-          <div class="project-list" id="projectList" aria-label="Saved projects"></div>
-        </div>
-      </aside>
-
-      <main class="canvas-zone" aria-label="Editor">
-        <div class="tool-strip" aria-label="Tools">
-          <div class="tool-group">
-            <button class="tool-btn" data-add="card" type="button">Card</button>
-            <button class="tool-btn" data-add="text" type="button">Text</button>
-            <button class="tool-btn" data-add="button" type="button">Button</button>
-            <button class="tool-btn" data-add="badge" type="button">Badge</button>
-            <button class="tool-btn" data-add="input" type="button">Input</button>
-          </div>
-          <div class="tool-group">
-            <button class="tool-btn analyze-btn" id="analyzeBtn" type="button">วิเคราะห์เป็นบล็อก</button>
-            <button class="tool-btn" id="moveRefBtn" type="button">Move ref</button>
-            <button class="tool-btn" id="sliceBtn" type="button">Slice ref</button>
-            <button class="tool-btn" id="duplicateBtn" type="button">Duplicate</button>
-            <button class="tool-btn" id="gridBtn" type="button">Grid on</button>
-          </div>
-        </div>
-
-        <div class="canvas-scroll" id="canvasScroll">
-          <div class="stage-viewport" id="stageViewport">
-            <div class="phone-stage" id="stage" aria-label="Mobile canvas">
-              <img class="reference-image" id="referenceImage" alt="">
-              <div class="grid-layer" id="gridLayer"></div>
-              <div class="blocks-layer" id="blocksLayer"></div>
-              <div class="slice-overlay" id="sliceOverlay"></div>
-              <div class="empty-stage" id="emptyStage">
-                <div>
-                  <strong>อัปโหลดรูปเพื่อเริ่ม</strong>
-                  <span>จากนั้นวางบล็อกทับ reference แล้ว export เป็น PNG</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      <aside class="panel" aria-label="Inspector">
-        <div class="panel-inner">
-          <div class="panel-title">
-            <h2>Inspector</h2>
-            <span id="selectedLabel">No block</span>
-          </div>
-
-          <div class="field-stack">
-            <div class="field">
-              <label for="projectName">Project name</label>
-              <input id="projectName" type="text" placeholder="RefBlock project">
-            </div>
-
-            <div class="two-col">
-              <div class="field">
-                <label for="refOpacity">Ref opacity</label>
-                <input id="refOpacity" type="range" min="0" max="1" step="0.01" value="0.55">
-              </div>
-              <div class="field">
-                <label for="imageFit">Image fit</label>
-                <select id="imageFit">
-                  <option value="cover">Cover</option>
-                  <option value="contain">Contain</option>
-                  <option value="fill">Fill</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="three-col">
-              <div class="field">
-                <label for="refX">Ref X</label>
-                <input id="refX" type="number" step="1">
-              </div>
-              <div class="field">
-                <label for="refY">Ref Y</label>
-                <input id="refY" type="number" step="1">
-              </div>
-              <div class="field">
-                <label for="refScale">Zoom</label>
-                <input id="refScale" type="number" min="0.5" max="3" step="0.05">
-              </div>
-            </div>
-
-            <div class="action-row">
-              <button id="resetRefBtn" type="button">Reset ref</button>
-            </div>
-          </div>
-
-          <div id="emptyInspector" class="empty-panel">
-            <strong>เลือกบล็อกเพื่อแก้ไข</strong>
-            <ul class="hint-list">
-              <li>ลากบล็อกเพื่อย้ายตำแหน่ง</li>
-              <li>จับจุดมุมขวาล่างเพื่อ resize</li>
-              <li>ใช้ palette จากรูปเพื่อเปลี่ยนสีไวขึ้น</li>
-            </ul>
-          </div>
-
-          <div id="blockInspector" class="field-stack hidden">
-            <div class="field">
-              <label for="blockText">Text</label>
-              <textarea id="blockText" placeholder="ข้อความบนบล็อก"></textarea>
-            </div>
-
-            <div class="three-col">
-              <div class="field">
-                <label for="blockX">X</label>
-                <input id="blockX" type="number" min="0" max="390" step="1">
-              </div>
-              <div class="field">
-                <label for="blockY">Y</label>
-                <input id="blockY" type="number" min="0" max="844" step="1">
-              </div>
-              <div class="field">
-                <label for="blockZ">Layer</label>
-                <input id="blockZ" type="number" step="1">
-              </div>
-            </div>
-
-            <div class="two-col">
-              <div class="field">
-                <label for="blockW">Width</label>
-                <input id="blockW" type="number" min="8" max="390" step="1">
-              </div>
-              <div class="field">
-                <label for="blockH">Height</label>
-                <input id="blockH" type="number" min="8" max="844" step="1">
-              </div>
-            </div>
-
-            <div class="two-col">
-              <div class="field">
-                <label for="fontSize">Font size</label>
-                <input id="fontSize" type="number" min="8" max="72" step="1">
-              </div>
-              <div class="field">
-                <label for="radius">Radius</label>
-                <input id="radius" type="range" min="0" max="36" step="1">
-              </div>
-            </div>
-
-            <div class="two-col">
-              <div class="field">
-                <label for="bgColor">Fill</label>
-                <input id="bgColor" type="color" value="#ffffff">
-              </div>
-              <div class="field">
-                <label for="textColor">Text color</label>
-                <input id="textColor" type="color" value="#111111">
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="blockOpacity">Block opacity</label>
-              <input id="blockOpacity" type="range" min="0.1" max="1" step="0.01">
-            </div>
-
-            <div class="field">
-              <div class="field-label">Palette target</div>
-              <div class="segmented">
-                <label><input type="radio" name="colorTarget" value="bg" checked> Fill</label>
-                <label><input type="radio" name="colorTarget" value="text"> Text</label>
-              </div>
-            </div>
-
-            <div class="field">
-              <div class="field-label">Colors from reference</div>
-              <div class="palette" id="palette"></div>
-            </div>
-
-            <div class="action-row">
-              <button id="eyeDropperBtn" type="button">Pick screen color</button>
-              <button id="sendBackBtn" type="button">Send back</button>
-              <button id="bringFrontBtn" type="button">Bring front</button>
-              <button class="danger-btn" id="deleteBlockBtn" type="button">Delete</button>
-            </div>
-          </div>
-        </div>
-      </aside>
-    </div>
+    <main class="content">
+      <section class="view active" id="view-home"></section>
+      <section class="view" id="view-categories"></section>
+      <section class="view" id="view-recipes"></section>
+      <section class="view" id="view-detail"></section>
+      <section class="view" id="view-planner"></section>
+      <section class="view" id="view-shopping"></section>
+      <section class="view" id="view-settings"></section>
+    </main>
   </div>
 
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <script>
-    const CANVAS_W = 390;
-    const CANVAS_H = 844;
-    const DB_NAME = "refblock-db";
-    const DB_VERSION = 1;
-    const STORE = "projects";
-    const DEFAULT_PALETTE = ["#ffffff", "#111111", "#d85b3b", "#1d8b8f", "#ece7e3", "#667085"];
+    const STORAGE_KEY = "my-kitchen-app-v1";
+    const mealSlots = [
+      ["breakfast", "เช้า"],
+      ["lunch", "กลางวัน"],
+      ["dinner", "เย็น"]
+    ];
+    const dayNames = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
+    const shoppingGroups = ["ผัก", "เนื้อสัตว์", "เครื่องปรุง", "ของแห้ง", "อื่น ๆ"];
+    const categoryColors = [
+      "oklch(0.70 0.13 60)",
+      "oklch(0.64 0.12 155)",
+      "oklch(0.66 0.11 32)",
+      "oklch(0.66 0.10 235)",
+      "oklch(0.72 0.12 95)",
+      "oklch(0.62 0.13 335)"
+    ];
 
-    const els = {
-      statusLine: document.getElementById("statusLine"),
-      saveBtn: document.getElementById("saveBtn"),
-      exportBtn: document.getElementById("exportBtn"),
-      imageInput: document.getElementById("imageInput"),
-      newBlankBtn: document.getElementById("newBlankBtn"),
-      clearBlocksBtn: document.getElementById("clearBlocksBtn"),
-      projectList: document.getElementById("projectList"),
-      projectCount: document.getElementById("projectCount"),
-      canvasScroll: document.getElementById("canvasScroll"),
-      stageViewport: document.getElementById("stageViewport"),
-      stage: document.getElementById("stage"),
-      referenceImage: document.getElementById("referenceImage"),
-      gridLayer: document.getElementById("gridLayer"),
-      blocksLayer: document.getElementById("blocksLayer"),
-      emptyStage: document.getElementById("emptyStage"),
-      analyzeBtn: document.getElementById("analyzeBtn"),
-      moveRefBtn: document.getElementById("moveRefBtn"),
-      sliceBtn: document.getElementById("sliceBtn"),
-      sliceOverlay: document.getElementById("sliceOverlay"),
-      duplicateBtn: document.getElementById("duplicateBtn"),
-      gridBtn: document.getElementById("gridBtn"),
-      selectedLabel: document.getElementById("selectedLabel"),
-      projectName: document.getElementById("projectName"),
-      refOpacity: document.getElementById("refOpacity"),
-      imageFit: document.getElementById("imageFit"),
-      refX: document.getElementById("refX"),
-      refY: document.getElementById("refY"),
-      refScale: document.getElementById("refScale"),
-      resetRefBtn: document.getElementById("resetRefBtn"),
-      emptyInspector: document.getElementById("emptyInspector"),
-      blockInspector: document.getElementById("blockInspector"),
-      blockText: document.getElementById("blockText"),
-      blockX: document.getElementById("blockX"),
-      blockY: document.getElementById("blockY"),
-      blockW: document.getElementById("blockW"),
-      blockH: document.getElementById("blockH"),
-      blockZ: document.getElementById("blockZ"),
-      fontSize: document.getElementById("fontSize"),
-      radius: document.getElementById("radius"),
-      bgColor: document.getElementById("bgColor"),
-      textColor: document.getElementById("textColor"),
-      blockOpacity: document.getElementById("blockOpacity"),
-      palette: document.getElementById("palette"),
-      eyeDropperBtn: document.getElementById("eyeDropperBtn"),
-      sendBackBtn: document.getElementById("sendBackBtn"),
-      bringFrontBtn: document.getElementById("bringFrontBtn"),
-      deleteBlockBtn: document.getElementById("deleteBlockBtn")
-    };
+    let data = loadData();
+    let activeTab = "home";
+    let recipeFilter = "all";
+    let recipeSearch = "";
+    let editingRecipeId = null;
+    let editingCategoryId = null;
+    let editingShoppingId = null;
+    let detailRecipeId = null;
+    let weekStart = startOfWeek(new Date());
 
-    let dbPromise;
-    let projects = [];
-    let currentProject = null;
-    let selectedId = null;
-    let saveTimer = null;
-    let interaction = null;
-    let gridEnabled = true;
-    let refMoveMode = false;
-    let sliceMode = false;
-
-    function openDB() {
-      if (dbPromise) return dbPromise;
-      dbPromise = new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, DB_VERSION);
-        request.onupgradeneeded = () => {
-          const db = request.result;
-          if (!db.objectStoreNames.contains(STORE)) {
-            db.createObjectStore(STORE, { keyPath: "id" });
-          }
-        };
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-      return dbPromise;
-    }
-
-    async function dbPut(project) {
-      const db = await openDB();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(STORE, "readwrite");
-        tx.objectStore(STORE).put(project);
-        tx.oncomplete = resolve;
-        tx.onerror = () => reject(tx.error);
-      });
-    }
-
-    async function dbGetAll() {
-      const db = await openDB();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(STORE, "readonly");
-        const request = tx.objectStore(STORE).getAll();
-        request.onsuccess = () => resolve(request.result || []);
-        request.onerror = () => reject(request.error);
-      });
-    }
-
-    async function dbDelete(id) {
-      const db = await openDB();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(STORE, "readwrite");
-        tx.objectStore(STORE).delete(id);
-        tx.oncomplete = resolve;
-        tx.onerror = () => reject(tx.error);
-      });
-    }
-
-    function uid(prefix = "id") {
+    function uid(prefix) {
       return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     }
 
-    function clamp(value, min, max) {
-      return Math.max(min, Math.min(max, value));
+    function todayKey() {
+      return toDateKey(new Date());
     }
 
-    function pxToXPct(px) {
-      return (px / CANVAS_W) * 100;
+    function toDateKey(date) {
+      const d = new Date(date);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
     }
 
-    function pxToYPct(px) {
-      return (px / CANVAS_H) * 100;
+    function dateLabel(key) {
+      const d = new Date(`${key}T00:00:00`);
+      return `${d.getDate()}/${d.getMonth() + 1}`;
     }
 
-    function pctToX(px) {
-      return Math.round((px / 100) * CANVAS_W);
+    function fullDateLabel(key) {
+      const d = new Date(`${key}T00:00:00`);
+      return `${dayNames[d.getDay()]} ${d.getDate()}/${d.getMonth() + 1}`;
     }
 
-    function pctToY(px) {
-      return Math.round((px / 100) * CANVAS_H);
+    function startOfWeek(date) {
+      const d = new Date(date);
+      const diff = (d.getDay() + 6) % 7;
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() - diff);
+      return d;
     }
 
-    function snapPct(value, axis) {
-      if (!gridEnabled) return value;
-      const size = axis === "x" ? CANVAS_W : CANVAS_H;
-      const px = (value / 100) * size;
-      return (Math.round(px / 4) * 4 / size) * 100;
+    function addDays(date, days) {
+      const d = new Date(date);
+      d.setDate(d.getDate() + days);
+      return d;
     }
 
-    function getSelectedBlock() {
-      if (!currentProject || !selectedId) return null;
-      return currentProject.blocks.find((block) => block.id === selectedId) || null;
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
 
-    function nextZ() {
-      if (!currentProject || currentProject.blocks.length === 0) return 1;
-      return Math.max(...currentProject.blocks.map((block) => block.z || 1)) + 1;
+    function nl2br(value) {
+      return escapeHtml(value).replace(/\n/g, "<br>");
     }
 
-    function normalizeProject(project) {
-      if (!project) return project;
-      return {
-        ...project,
-        imageFit: project.imageFit || "cover",
-        refOpacity: typeof project.refOpacity === "number" ? project.refOpacity : (project.imageData ? 0.58 : 0),
-        refX: typeof project.refX === "number" ? project.refX : 0,
-        refY: typeof project.refY === "number" ? project.refY : 0,
-        refScale: typeof project.refScale === "number" ? project.refScale : 1,
-        palette: project.palette && project.palette.length ? project.palette : DEFAULT_PALETTE,
-        blocks: (project.blocks || []).map((block) => ({
-          radius: 0,
-          opacity: 1,
-          z: 1,
-          ...block
-        }))
-      };
-    }
-
-    function setStatus(message) {
-      els.statusLine.textContent = message;
-    }
-
-    function scheduleSave() {
-      if (!currentProject) return;
-      currentProject.updatedAt = new Date().toISOString();
-      setStatus("Saving...");
-      window.clearTimeout(saveTimer);
-      saveTimer = window.setTimeout(saveCurrentProject, 260);
-    }
-
-    async function saveCurrentProject() {
-      if (!currentProject) return;
-      try {
-        await dbPut(currentProject);
-        await loadProjects(currentProject.id);
-        setStatus("Saved locally");
-      } catch (error) {
-        console.error(error);
-        setStatus("Save failed");
-      }
-    }
-
-    function createProject({ name, imageData = "", palette = DEFAULT_PALETTE }) {
-      const now = new Date().toISOString();
-      return {
-        id: uid("project"),
-        name: name || "Untitled RefBlock",
-        imageData,
-        imageFit: "cover",
-        refOpacity: imageData ? 0.58 : 0,
-        refX: 0,
-        refY: 0,
-        refScale: 1,
-        palette,
-        blocks: [],
-        createdAt: now,
-        updatedAt: now
-      };
-    }
-
-    function createBlock(type) {
-      const base = {
-        id: uid("block"),
-        type,
-        x: pxToXPct(46),
-        y: pxToYPct(116),
-        w: pxToXPct(298),
-        h: pxToYPct(92),
-        text: "",
-        bg: "#ffffff",
-        color: "#171717",
-        fontSize: 16,
-        radius: 12,
-        opacity: 1,
-        z: nextZ(),
-        fontWeight: 600,
-        align: "center"
-      };
-
-      if (type === "text") {
-        return {
-          ...base,
-          w: pxToXPct(250),
-          h: pxToYPct(44),
-          text: "Headline text",
-          bg: "transparent",
-          color: "#181818",
-          fontSize: 22,
-          radius: 0,
-          fontWeight: 800,
-          align: "left"
-        };
-      }
-
-      if (type === "button") {
-        return {
-          ...base,
-          x: pxToXPct(86),
-          y: pxToYPct(590),
-          w: pxToXPct(218),
-          h: pxToYPct(52),
-          text: "Action button",
-          bg: "#d85b3b",
-          color: "#ffffff",
-          radius: 12,
-          fontWeight: 800
-        };
-      }
-
-      if (type === "badge") {
-        return {
-          ...base,
-          x: pxToXPct(42),
-          y: pxToYPct(78),
-          w: pxToXPct(124),
-          h: pxToYPct(34),
-          text: "Badge",
-          bg: "#eaf7f6",
-          color: "#146467",
-          fontSize: 13,
-          radius: 17,
-          fontWeight: 800
-        };
-      }
-
-      if (type === "input") {
-        return {
-          ...base,
-          x: pxToXPct(32),
-          y: pxToYPct(670),
-          w: pxToXPct(326),
-          h: pxToYPct(52),
-          text: "Input placeholder",
-          bg: "#ffffff",
-          color: "#686868",
-          radius: 10,
-          fontWeight: 500
-        };
-      }
-
-      return base;
-    }
-
-    function renderApp() {
-      renderProjectList();
-      renderStage();
-      renderInspector();
-      updateStageScale();
-    }
-
-    function renderProjectList() {
-      els.projectList.innerHTML = "";
-      els.projectCount.textContent = `${projects.length} saved`;
-
-      if (projects.length === 0) {
-        const empty = document.createElement("div");
-        empty.className = "empty-panel";
-        empty.innerHTML = "<strong>ยังไม่มีโปรเจกต์</strong><span>อัปโหลดรูป reference เพื่อสร้างงานแรก</span>";
-        els.projectList.appendChild(empty);
-        return;
-      }
-
-      projects
-        .slice()
-        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-        .forEach((project) => {
-          const row = document.createElement("div");
-          row.className = `project-item ${currentProject && project.id === currentProject.id ? "active" : ""}`;
-          row.role = "button";
-          row.tabIndex = 0;
-          row.addEventListener("click", () => selectProject(project.id));
-          row.addEventListener("keydown", (event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              selectProject(project.id);
-            }
-          });
-
-          const thumb = document.createElement("img");
-          thumb.className = "project-thumb";
-          thumb.alt = "";
-          if (project.imageData) thumb.src = project.imageData;
-
-          const copy = document.createElement("span");
-          copy.className = "project-copy";
-          const title = document.createElement("strong");
-          title.textContent = project.name || "Untitled RefBlock";
-          const meta = document.createElement("small");
-          meta.textContent = `${project.blocks.length} blocks · ${formatDate(project.updatedAt)}`;
-          copy.append(title, meta);
-
-          const del = document.createElement("button");
-          del.className = "delete-project";
-          del.type = "button";
-          del.textContent = "Del";
-          del.setAttribute("aria-label", `Delete ${project.name}`);
-          del.addEventListener("click", async (event) => {
-            event.stopPropagation();
-            await deleteProject(project.id);
-          });
-
-          row.append(thumb, copy, del);
-          els.projectList.appendChild(row);
-        });
-    }
-
-    function renderStage() {
-      const project = currentProject;
-      els.emptyStage.classList.toggle("hidden", !!project);
-      els.referenceImage.classList.toggle("hidden", !project || !project.imageData);
-      els.analyzeBtn.disabled = !project || !project.imageData;
-      els.moveRefBtn.disabled = !project || !project.imageData;
-      els.sliceBtn.disabled = !project || !project.imageData;
-      els.moveRefBtn.classList.toggle("active", refMoveMode);
-      els.sliceBtn.classList.toggle("active", sliceMode);
-      els.clearBlocksBtn.disabled = !project || project.blocks.length === 0;
-      els.duplicateBtn.disabled = !getSelectedBlock();
-      els.exportBtn.disabled = !project;
-      els.saveBtn.disabled = !project;
-
-      if (!project) {
-        els.referenceImage.removeAttribute("src");
-        els.referenceImage.style.transform = "";
-        els.sliceOverlay.classList.remove("visible");
-        els.blocksLayer.innerHTML = "";
-        return;
-      }
-
-      els.referenceImage.src = project.imageData || "";
-      els.referenceImage.style.opacity = String(project.refOpacity);
-      els.referenceImage.style.objectFit = project.imageFit;
-      els.referenceImage.style.transform = `translate(${project.refX}px, ${project.refY}px) scale(${project.refScale})`;
-      els.gridLayer.classList.toggle("visible", gridEnabled);
-      els.blocksLayer.innerHTML = "";
-
-      project.blocks
-        .slice()
-        .sort((a, b) => (a.z || 0) - (b.z || 0))
-        .forEach((block) => {
-          const el = document.createElement("div");
-          el.className = `block ${block.type} ${block.id === selectedId ? "selected" : ""}`;
-          el.dataset.id = block.id;
-          el.style.left = `${block.x}%`;
-          el.style.top = `${block.y}%`;
-          el.style.width = `${block.w}%`;
-          el.style.height = `${block.h}%`;
-          el.style.background = block.bg === "transparent" ? "transparent" : block.bg;
-          el.style.color = block.color;
-          el.style.borderRadius = `${block.radius}px`;
-          el.style.fontSize = `${block.fontSize}px`;
-          el.style.fontWeight = String(block.fontWeight || 600);
-          el.style.opacity = String(block.opacity);
-          el.style.zIndex = String(block.z || 1);
-          el.style.justifyContent = block.align === "left" ? "flex-start" : "center";
-          el.style.textAlign = block.align === "left" ? "left" : "center";
-
-          if (block.type === "image" && block.imageData) {
-            const image = document.createElement("img");
-            image.src = block.imageData;
-            image.alt = "";
-            el.appendChild(image);
-          } else {
-            el.textContent = block.text;
-          }
-
-          el.addEventListener("pointerdown", onBlockPointerDown);
-
-          if (block.id === selectedId) {
-            const handle = document.createElement("span");
-            handle.className = "resize-handle";
-            handle.title = "Resize";
-            el.appendChild(handle);
-          }
-
-          els.blocksLayer.appendChild(el);
-        });
-    }
-
-    function renderInspector() {
-      const project = currentProject;
-      const selected = getSelectedBlock();
-      els.projectName.disabled = !project;
-      els.refOpacity.disabled = !project || !project.imageData;
-      els.imageFit.disabled = !project || !project.imageData;
-      els.refX.disabled = !project || !project.imageData;
-      els.refY.disabled = !project || !project.imageData;
-      els.refScale.disabled = !project || !project.imageData;
-      els.resetRefBtn.disabled = !project || !project.imageData;
-      els.selectedLabel.textContent = selected ? `${selected.type} selected` : "No block";
-
-      if (project) {
-        els.projectName.value = project.name || "";
-        els.refOpacity.value = String(project.refOpacity);
-        els.imageFit.value = project.imageFit;
-        els.refX.value = String(Math.round(project.refX));
-        els.refY.value = String(Math.round(project.refY));
-        els.refScale.value = String(Number(project.refScale).toFixed(2));
-      } else {
-        els.projectName.value = "";
-        els.refX.value = "";
-        els.refY.value = "";
-        els.refScale.value = "";
-      }
-
-      els.emptyInspector.classList.toggle("hidden", !!selected);
-      els.blockInspector.classList.toggle("hidden", !selected);
-
-      renderPalette(project ? project.palette : DEFAULT_PALETTE);
-
-      if (!selected) return;
-
-      const imageSelected = selected.type === "image";
-      els.blockText.disabled = imageSelected;
-      els.fontSize.disabled = imageSelected;
-      els.bgColor.disabled = imageSelected;
-      els.textColor.disabled = imageSelected;
-      els.blockText.value = imageSelected ? "Image slice" : (selected.text || "");
-      els.blockX.value = String(pctToX(selected.x));
-      els.blockY.value = String(pctToY(selected.y));
-      els.blockW.value = String(pctToX(selected.w));
-      els.blockH.value = String(pctToY(selected.h));
-      els.blockZ.value = String(selected.z || 1);
-      els.fontSize.value = String(selected.fontSize || 16);
-      els.radius.value = String(selected.radius || 0);
-      els.bgColor.value = normalizeColorForInput(selected.bg);
-      els.textColor.value = normalizeColorForInput(selected.color);
-      els.blockOpacity.value = String(selected.opacity ?? 1);
-    }
-
-    function renderPalette(colors) {
-      els.palette.innerHTML = "";
-      (colors && colors.length ? colors : DEFAULT_PALETTE).slice(0, 12).forEach((color) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "swatch";
-        button.style.background = color;
-        button.title = color;
-        button.addEventListener("click", () => applyPaletteColor(color));
-        els.palette.appendChild(button);
-      });
-    }
-
-    function normalizeColorForInput(value) {
-      if (!value || value === "transparent") return "#ffffff";
-      return value.startsWith("#") ? value : "#ffffff";
-    }
-
-    function formatDate(value) {
-      if (!value) return "now";
-      return new Intl.DateTimeFormat("th-TH", {
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      }).format(new Date(value));
-    }
-
-    async function loadProjects(preferredId) {
-      projects = (await dbGetAll()).map(normalizeProject);
-      if (preferredId) {
-        currentProject = projects.find((project) => project.id === preferredId) || currentProject;
-      }
-      renderProjectList();
-    }
-
-    async function selectProject(id) {
-      const project = projects.find((item) => item.id === id);
-      if (!project) return;
-      currentProject = normalizeProject(structuredClone(project));
-      selectedId = null;
-      setStatus(`Opened ${currentProject.name}`);
-      renderApp();
-    }
-
-    async function deleteProject(id) {
-      await dbDelete(id);
-      if (currentProject && currentProject.id === id) {
-        currentProject = null;
-        selectedId = null;
-      }
-      projects = (await dbGetAll()).map(normalizeProject);
-      renderApp();
-      setStatus("Project deleted");
-    }
-
-    function getStagePoint(event, rect = els.stage.getBoundingClientRect()) {
-      return {
-        x: clamp(((event.clientX - rect.left) / rect.width) * CANVAS_W, 0, CANVAS_W),
-        y: clamp(((event.clientY - rect.top) / rect.height) * CANVAS_H, 0, CANVAS_H)
-      };
-    }
-
-    function getSliceRect(start, end) {
-      const x = Math.min(start.x, end.x);
-      const y = Math.min(start.y, end.y);
-      return {
-        x,
-        y,
-        w: Math.abs(end.x - start.x),
-        h: Math.abs(end.y - start.y)
-      };
-    }
-
-    function updateSliceOverlay(rect) {
-      els.sliceOverlay.style.left = `${rect.x}px`;
-      els.sliceOverlay.style.top = `${rect.y}px`;
-      els.sliceOverlay.style.width = `${rect.w}px`;
-      els.sliceOverlay.style.height = `${rect.h}px`;
-      els.sliceOverlay.classList.toggle("visible", rect.w > 0 && rect.h > 0);
-    }
-
-    function startRefMove(event) {
-      const rect = els.stage.getBoundingClientRect();
-      interaction = {
-        mode: "refmove",
-        startClientX: event.clientX,
-        startClientY: event.clientY,
-        start: {
-          refX: currentProject.refX,
-          refY: currentProject.refY
-        },
-        stageRect: rect
-      };
-      els.stage.setPointerCapture(event.pointerId);
-      window.addEventListener("pointermove", onPointerMove);
-      window.addEventListener("pointerup", onPointerUp, { once: true });
-      setStatus("Move reference");
-    }
-
-    function startSlice(event) {
-      const rect = els.stage.getBoundingClientRect();
-      const point = getStagePoint(event, rect);
-      interaction = {
-        mode: "slice",
-        startClientX: event.clientX,
-        startClientY: event.clientY,
-        start: point,
-        current: point,
-        stageRect: rect
-      };
-      updateSliceOverlay({ x: point.x, y: point.y, w: 0, h: 0 });
-      els.stage.setPointerCapture(event.pointerId);
-      window.addEventListener("pointermove", onPointerMove);
-      window.addEventListener("pointerup", onPointerUp, { once: true });
-      setStatus("Drag to slice reference");
-    }
-
-    function onBlockPointerDown(event) {
-      if (!currentProject) return;
-      event.preventDefault();
-      const blockEl = event.currentTarget;
-      const block = currentProject.blocks.find((item) => item.id === blockEl.dataset.id);
-      if (!block) return;
-      selectedId = block.id;
-      const mode = event.target.classList.contains("resize-handle") ? "resize" : "drag";
-      const rect = els.stage.getBoundingClientRect();
-      interaction = {
-        mode,
-        blockId: block.id,
-        startClientX: event.clientX,
-        startClientY: event.clientY,
-        start: { ...block },
-        stageRect: rect
-      };
-      blockEl.setPointerCapture(event.pointerId);
-      window.addEventListener("pointermove", onPointerMove);
-      window.addEventListener("pointerup", onPointerUp, { once: true });
-      renderStage();
-      renderInspector();
-    }
-
-    function onPointerMove(event) {
-      if (!interaction || !currentProject) return;
-      const dx = ((event.clientX - interaction.startClientX) / interaction.stageRect.width) * 100;
-      const dy = ((event.clientY - interaction.startClientY) / interaction.stageRect.height) * 100;
-
-      if (interaction.mode === "refmove") {
-        currentProject.refX = Math.round(interaction.start.refX + (dx / 100) * CANVAS_W);
-        currentProject.refY = Math.round(interaction.start.refY + (dy / 100) * CANVAS_H);
-        renderStage();
-        renderInspector();
-        return;
-      }
-
-      if (interaction.mode === "slice") {
-        interaction.current = getStagePoint(event, interaction.stageRect);
-        updateSliceOverlay(getSliceRect(interaction.start, interaction.current));
-        return;
-      }
-
-      const block = currentProject.blocks.find((item) => item.id === interaction.blockId);
-      if (!block) return;
-
-      if (interaction.mode === "drag") {
-        block.x = clamp(snapPct(interaction.start.x + dx, "x"), 0, 100 - block.w);
-        block.y = clamp(snapPct(interaction.start.y + dy, "y"), 0, 100 - block.h);
-      } else {
-        const minW = pxToXPct(22);
-        const minH = pxToYPct(22);
-        block.w = clamp(snapPct(interaction.start.w + dx, "x"), minW, 100 - block.x);
-        block.h = clamp(snapPct(interaction.start.h + dy, "y"), minH, 100 - block.y);
-      }
-
-      renderStage();
-      renderInspector();
-    }
-
-    async function onPointerUp() {
-      if (interaction) {
-        if (interaction.mode === "slice") {
-          const rect = getSliceRect(interaction.start, interaction.current || interaction.start);
-          els.sliceOverlay.classList.remove("visible");
-          if (rect.w >= 8 && rect.h >= 8) {
-            await createImageSliceBlock(rect);
-          } else {
-            setStatus("Slice too small");
-          }
-        } else {
-          scheduleSave();
-        }
-        interaction = null;
-      }
-      window.removeEventListener("pointermove", onPointerMove);
-    }
-
-    function addBlock(type) {
-      if (!currentProject) {
-        currentProject = createProject({ name: "Untitled RefBlock" });
-      }
-      const block = createBlock(type);
-      currentProject.blocks.push(block);
-      selectedId = block.id;
-      renderApp();
-      scheduleSave();
-    }
-
-    function updateSelected(patch) {
-      const selected = getSelectedBlock();
-      if (!selected) return;
-      Object.assign(selected, patch);
-      renderApp();
-      scheduleSave();
-    }
-
-    function applyPaletteColor(color) {
-      const selected = getSelectedBlock();
-      if (!selected) return;
-      const target = document.querySelector("input[name='colorTarget']:checked")?.value || "bg";
-      updateSelected(target === "text" ? { color } : { bg: color });
-    }
-
-    function duplicateSelected() {
-      const selected = getSelectedBlock();
-      if (!currentProject || !selected) return;
-      const clone = {
-        ...structuredClone(selected),
-        id: uid("block"),
-        x: clamp(selected.x + pxToXPct(12), 0, 100 - selected.w),
-        y: clamp(selected.y + pxToYPct(12), 0, 100 - selected.h),
-        z: nextZ()
-      };
-      currentProject.blocks.push(clone);
-      selectedId = clone.id;
-      renderApp();
-      scheduleSave();
-    }
-
-    function deleteSelected() {
-      if (!currentProject || !selectedId) return;
-      currentProject.blocks = currentProject.blocks.filter((block) => block.id !== selectedId);
-      selectedId = null;
-      renderApp();
-      scheduleSave();
-    }
-
-    function sendSelectedBack() {
-      const selected = getSelectedBlock();
-      if (!currentProject || !selected) return;
-      selected.z = Math.min(1, ...currentProject.blocks.map((block) => block.z || 1)) - 1;
-      renderApp();
-      scheduleSave();
-    }
-
-    function bringSelectedFront() {
-      const selected = getSelectedBlock();
-      if (!selected) return;
-      selected.z = nextZ();
-      renderApp();
-      scheduleSave();
-    }
-
-    function clearBlocks() {
-      if (!currentProject) return;
-      currentProject.blocks = [];
-      selectedId = null;
-      renderApp();
-      scheduleSave();
-    }
-
-    function updateStageScale() {
-      const available = els.canvasScroll.clientWidth - 14;
-      const scale = clamp(available / CANVAS_W, 0.62, 1);
-      document.documentElement.style.setProperty("--stage-scale", String(scale));
-      els.stageViewport.style.width = `${CANVAS_W * scale}px`;
-      els.stageViewport.style.height = `${CANVAS_H * scale}px`;
-    }
-
-    function readFileAsDataURL(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(String(reader.result));
-        reader.onerror = () => reject(reader.error);
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function loadImage(src) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.src = src;
-      });
-    }
-
-    async function handleImageUpload(file) {
-      if (!file) return;
-      setStatus("Reading image...");
-      const imageData = await readFileAsDataURL(file);
-      const palette = await extractPalette(imageData);
-      currentProject = createProject({
-        name: file.name.replace(/\.[^.]+$/, "") || "RefBlock reference",
-        imageData,
-        palette
-      });
-      selectedId = null;
-      renderApp();
-      await saveCurrentProject();
-      setStatus("Reference ready");
-      els.imageInput.value = "";
-    }
-
-    async function extractPalette(src) {
-      try {
-        const img = await loadImage(src);
-        const canvas = document.createElement("canvas");
-        const width = 96;
-        const height = Math.max(96, Math.round((img.height / img.width) * width));
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        ctx.drawImage(img, 0, 0, width, height);
-        const data = ctx.getImageData(0, 0, width, height).data;
-        const buckets = new Map();
-
-        for (let i = 0; i < data.length; i += 16) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          const a = data[i + 3];
-          if (a < 180) continue;
-          const key = `${r >> 4},${g >> 4},${b >> 4}`;
-          const item = buckets.get(key) || { count: 0, r: 0, g: 0, b: 0 };
-          item.count += 1;
-          item.r += r;
-          item.g += g;
-          item.b += b;
-          buckets.set(key, item);
-        }
-
-        const candidates = Array.from(buckets.values())
-          .map((item) => ({
-            count: item.count,
-            color: rgbToHex(
-              Math.round(item.r / item.count),
-              Math.round(item.g / item.count),
-              Math.round(item.b / item.count)
-            )
-          }))
-          .sort((a, b) => b.count - a.count);
-
-        const picked = [];
-        for (const candidate of candidates) {
-          if (picked.every((color) => colorDistance(color, candidate.color) > 38)) {
-            picked.push(candidate.color);
-          }
-          if (picked.length >= 10) break;
-        }
-        return picked.length ? picked : DEFAULT_PALETTE;
-      } catch (error) {
-        console.warn(error);
-        return DEFAULT_PALETTE;
-      }
-    }
-
-    function rgbToHex(r, g, b) {
-      return `#${[r, g, b].map((value) => value.toString(16).padStart(2, "0")).join("")}`;
-    }
-
-    function hexToRgb(hex) {
-      const clean = hex.replace("#", "");
-      const value = parseInt(clean.length === 3 ? clean.split("").map((x) => x + x).join("") : clean, 16);
-      return {
-        r: (value >> 16) & 255,
-        g: (value >> 8) & 255,
-        b: value & 255
-      };
-    }
-
-    function colorDistance(a, b) {
-      const ca = hexToRgb(a);
-      const cb = hexToRgb(b);
-      return Math.hypot(ca.r - cb.r, ca.g - cb.g, ca.b - cb.b);
-    }
-
-    function readableTextColor(bg) {
-      const { r, g, b } = hexToRgb(bg);
-      const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-      return luminance > 0.58 ? "#161616" : "#ffffff";
-    }
-
-    async function analyzeImageToBlocks() {
-      if (!currentProject || !currentProject.imageData) return;
-      setStatus("Analyzing reference...");
-      const img = await loadImage(currentProject.imageData);
-      const canvas = document.createElement("canvas");
-      canvas.width = CANVAS_W;
-      canvas.height = CANVAS_H;
-      const ctx = canvas.getContext("2d", { willReadFrequently: true });
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
-      drawTransformedReference(ctx, img, currentProject, 1);
-      const data = ctx.getImageData(0, 0, CANVAS_W, CANVAS_H).data;
-      const rows = [];
-
-      for (let y = 0; y < CANVAS_H; y += 4) {
-        let r = 0;
-        let g = 0;
-        let b = 0;
-        let count = 0;
-        for (let x = 0; x < CANVAS_W; x += 8) {
-          const i = (y * CANVAS_W + x) * 4;
-          r += data[i];
-          g += data[i + 1];
-          b += data[i + 2];
-          count += 1;
-        }
-        rows.push({ y, r: r / count, g: g / count, b: b / count });
-      }
-
-      const boundaries = [0];
-      for (let i = 1; i < rows.length; i += 1) {
-        const prev = rows[i - 1];
-        const row = rows[i];
-        const diff = Math.abs(row.r - prev.r) + Math.abs(row.g - prev.g) + Math.abs(row.b - prev.b);
-        const last = boundaries[boundaries.length - 1];
-        if (diff > 42 && row.y - last > 42) boundaries.push(row.y);
-      }
-      boundaries.push(CANVAS_H);
-
-      let bands = [];
-      for (let i = 0; i < boundaries.length - 1; i += 1) {
-        const y = boundaries[i];
-        const h = boundaries[i + 1] - y;
-        if (h >= 30) bands.push({ y, h });
-      }
-
-      if (bands.length < 4) {
-        bands = [
-          { y: 24, h: 64 },
-          { y: 118, h: 148 },
-          { y: 292, h: 94 },
-          { y: 410, h: 94 },
-          { y: 708, h: 82 }
-        ];
-      }
-
-      const blocks = bands.slice(0, 8).map((band, index) => {
-        const inset = band.h < 74 ? 18 : 24;
-        const avg = averageColor(data, inset, band.y + 4, CANVAS_W - inset * 2, Math.max(16, band.h - 8));
-        return {
-          id: uid("block"),
-          type: "card",
-          x: pxToXPct(inset),
-          y: pxToYPct(clamp(band.y + 4, 0, CANVAS_H - 24)),
-          w: pxToXPct(CANVAS_W - inset * 2),
-          h: pxToYPct(clamp(band.h - 8, 28, 180)),
-          text: "",
-          bg: avg,
-          color: readableTextColor(avg),
-          fontSize: 15,
-          radius: band.h < 60 ? 9 : 14,
-          opacity: 0.86,
-          z: index + 1,
-          fontWeight: 600,
-          align: "center"
-        };
-      });
-
-      currentProject.blocks = blocks;
-      selectedId = blocks[0]?.id || null;
-      renderApp();
-      scheduleSave();
-      setStatus("Starter blocks ready");
-    }
-
-    function averageColor(data, startX, startY, width, height) {
-      let r = 0;
-      let g = 0;
-      let b = 0;
-      let count = 0;
-      const endX = clamp(startX + width, 1, CANVAS_W);
-      const endY = clamp(startY + height, 1, CANVAS_H);
-
-      for (let y = clamp(startY, 0, CANVAS_H - 1); y < endY; y += 6) {
-        for (let x = clamp(startX, 0, CANVAS_W - 1); x < endX; x += 6) {
-          const i = (Math.floor(y) * CANVAS_W + Math.floor(x)) * 4;
-          r += data[i];
-          g += data[i + 1];
-          b += data[i + 2];
-          count += 1;
-        }
-      }
-
-      if (!count) return "#ffffff";
-      return rgbToHex(Math.round(r / count), Math.round(g / count), Math.round(b / count));
-    }
-
-    function drawImageFit(ctx, img, x, y, width, height, fit) {
-      if (fit === "fill") {
-        ctx.drawImage(img, x, y, width, height);
-        return;
-      }
-      const scale = fit === "contain"
-        ? Math.min(width / img.width, height / img.height)
-        : Math.max(width / img.width, height / img.height);
-      const drawW = img.width * scale;
-      const drawH = img.height * scale;
-      const dx = x + (width - drawW) / 2;
-      const dy = y + (height - drawH) / 2;
-      ctx.drawImage(img, dx, dy, drawW, drawH);
-    }
-
-    function drawTransformedReference(ctx, img, project, opacity = project.refOpacity) {
-      ctx.save();
-      ctx.globalAlpha = opacity;
-      ctx.translate(CANVAS_W / 2 + (project.refX || 0), CANVAS_H / 2 + (project.refY || 0));
-      ctx.scale(project.refScale || 1, project.refScale || 1);
-      drawImageFit(ctx, img, -CANVAS_W / 2, -CANVAS_H / 2, CANVAS_W, CANVAS_H, project.imageFit || "cover");
-      ctx.restore();
-    }
-
-    async function renderReferenceToCanvas(project, scale = 2, opacity = 1) {
-      const img = await loadImage(project.imageData);
-      const canvas = document.createElement("canvas");
-      canvas.width = CANVAS_W * scale;
-      canvas.height = CANVAS_H * scale;
-      const ctx = canvas.getContext("2d");
-      ctx.scale(scale, scale);
-      drawTransformedReference(ctx, img, project, opacity);
-      return canvas;
-    }
-
-    async function createImageSliceBlock(rect) {
-      if (!currentProject || !currentProject.imageData) return;
-      setStatus("Creating image slice...");
-      const scale = 2;
-      const source = await renderReferenceToCanvas(currentProject, scale, 1);
-      const crop = document.createElement("canvas");
-      crop.width = Math.max(1, Math.round(rect.w * scale));
-      crop.height = Math.max(1, Math.round(rect.h * scale));
-      const ctx = crop.getContext("2d");
-      ctx.drawImage(
-        source,
-        Math.round(rect.x * scale),
-        Math.round(rect.y * scale),
-        crop.width,
-        crop.height,
-        0,
-        0,
-        crop.width,
-        crop.height
-      );
-
-      const block = {
-        id: uid("block"),
-        type: "image",
-        imageData: crop.toDataURL("image/png"),
-        x: pxToXPct(rect.x),
-        y: pxToYPct(rect.y),
-        w: pxToXPct(rect.w),
-        h: pxToYPct(rect.h),
-        text: "",
-        bg: "transparent",
-        color: "#171717",
-        fontSize: 16,
-        radius: 0,
-        opacity: 1,
-        z: nextZ(),
-        fontWeight: 600,
-        align: "center"
-      };
-
-      currentProject.blocks.push(block);
-      selectedId = block.id;
-      renderApp();
-      scheduleSave();
-      setStatus("Image slice ready");
-    }
-
-    async function exportPNG() {
-      if (!currentProject) return;
-      setStatus("Rendering PNG...");
-      const canvas = await renderProjectToCanvas(currentProject);
-      const link = document.createElement("a");
-      link.href = canvas.toDataURL("image/png");
-      link.download = `${safeFileName(currentProject.name || "RefBlock")}.png`;
-      link.click();
-      setStatus("PNG exported");
-    }
-
-    async function renderProjectToCanvas(project) {
-      const scale = 2;
-      const canvas = document.createElement("canvas");
-      canvas.width = CANVAS_W * scale;
-      canvas.height = CANVAS_H * scale;
-      const ctx = canvas.getContext("2d");
-      ctx.scale(scale, scale);
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
-
-      if (project.imageData && project.refOpacity > 0) {
-        const img = await loadImage(project.imageData);
-        drawTransformedReference(ctx, img, project, project.refOpacity);
-      }
-
-      const sortedBlocks = project.blocks
-        .slice()
-        .sort((a, b) => (a.z || 0) - (b.z || 0));
-
-      for (const block of sortedBlocks) {
-        await drawBlock(ctx, block);
-      }
-
-      return canvas;
-    }
-
-    async function drawBlock(ctx, block) {
-      const x = (block.x / 100) * CANVAS_W;
-      const y = (block.y / 100) * CANVAS_H;
-      const w = (block.w / 100) * CANVAS_W;
-      const h = (block.h / 100) * CANVAS_H;
-      ctx.save();
-      ctx.globalAlpha = block.opacity ?? 1;
-
-      if (block.type === "image" && block.imageData) {
-        const img = await loadImage(block.imageData);
-        if (block.radius) {
-          roundRect(ctx, x, y, w, h, block.radius);
-          ctx.clip();
-        }
-        ctx.drawImage(img, x, y, w, h);
-        ctx.restore();
-        return;
-      }
-
-      if (block.bg && block.bg !== "transparent") {
-        ctx.fillStyle = block.bg;
-        roundRect(ctx, x, y, w, h, block.radius || 0);
-        ctx.fill();
-      }
-
-      if (block.type === "input") {
-        ctx.strokeStyle = "rgba(20, 20, 20, 0.18)";
-        ctx.lineWidth = 1;
-        roundRect(ctx, x, y, w, h, block.radius || 0);
-        ctx.stroke();
-      }
-
-      if (block.text) {
-        ctx.fillStyle = block.color || "#171717";
-        ctx.font = `${block.fontWeight || 600} ${block.fontSize || 16}px Inter, system-ui, sans-serif`;
-        ctx.textBaseline = "middle";
-        ctx.textAlign = block.align === "left" ? "left" : "center";
-        const padding = block.type === "text" ? 0 : 10;
-        const textX = block.align === "left" ? x + padding : x + w / 2;
-        wrapText(ctx, block.text, textX, y + h / 2, w - padding * 2, (block.fontSize || 16) * 1.25, h, block.align);
-      }
-
-      ctx.restore();
-    }
-
-    function roundRect(ctx, x, y, width, height, radius) {
-      const r = Math.min(radius, width / 2, height / 2);
-      ctx.beginPath();
-      ctx.moveTo(x + r, y);
-      ctx.lineTo(x + width - r, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + r);
-      ctx.lineTo(x + width, y + height - r);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
-      ctx.lineTo(x + r, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - r);
-      ctx.lineTo(x, y + r);
-      ctx.quadraticCurveTo(x, y, x + r, y);
-      ctx.closePath();
-    }
-
-    function wrapText(ctx, text, x, centerY, maxWidth, lineHeight, maxHeight, align) {
-      const words = String(text).split(/\s+/);
-      const lines = [];
-      let line = "";
-
-      words.forEach((word) => {
-        const test = line ? `${line} ${word}` : word;
-        if (ctx.measureText(test).width > maxWidth && line) {
-          lines.push(line);
-          line = word;
-        } else {
-          line = test;
-        }
-      });
-      if (line) lines.push(line);
-
-      const maxLines = Math.max(1, Math.floor(maxHeight / lineHeight));
-      const visible = lines.slice(0, maxLines);
-      if (lines.length > maxLines) {
-        visible[visible.length - 1] = `${visible[visible.length - 1].replace(/\s+\S*$/, "")}...`;
-      }
-
-      const startY = centerY - ((visible.length - 1) * lineHeight) / 2;
-      visible.forEach((lineText, index) => {
-        ctx.fillText(lineText, x, startY + index * lineHeight);
-      });
-    }
-
-    function safeFileName(value) {
-      return String(value)
-        .trim()
-        .replace(/[\\/:*?"<>|]+/g, "-")
-        .replace(/\s+/g, "_")
-        .slice(0, 80) || "RefBlock";
-    }
-
-    function bindControls() {
-      document.querySelectorAll("[data-add]").forEach((button) => {
-        button.addEventListener("click", () => addBlock(button.dataset.add));
-      });
-
-      els.stage.addEventListener("pointerdown", (event) => {
-        if (!currentProject || event.target.closest(".block")) return;
-
-        if (sliceMode && currentProject.imageData) {
-          event.preventDefault();
-          startSlice(event);
-          return;
-        }
-
-        if (refMoveMode && currentProject.imageData) {
-          event.preventDefault();
-          startRefMove(event);
-          return;
-        }
-
-        if (event.target === els.stage || event.target === els.blocksLayer) {
-          selectedId = null;
-          renderApp();
-        }
-      });
-
-      els.imageInput.addEventListener("change", (event) => handleImageUpload(event.target.files[0]));
-
-      els.newBlankBtn.addEventListener("click", () => {
-        currentProject = createProject({ name: "Blank RefBlock", imageData: "" });
-        selectedId = null;
-        renderApp();
-        scheduleSave();
-      });
-
-      els.clearBlocksBtn.addEventListener("click", clearBlocks);
-      els.analyzeBtn.addEventListener("click", analyzeImageToBlocks);
-      els.moveRefBtn.addEventListener("click", () => {
-        refMoveMode = !refMoveMode;
-        if (refMoveMode) sliceMode = false;
-        setStatus(refMoveMode ? "Drag canvas to move reference" : "Move ref off");
-        renderStage();
-      });
-      els.sliceBtn.addEventListener("click", () => {
-        sliceMode = !sliceMode;
-        if (sliceMode) refMoveMode = false;
-        setStatus(sliceMode ? "Drag on reference to create an image slice" : "Slice ref off");
-        renderStage();
-      });
-      els.duplicateBtn.addEventListener("click", duplicateSelected);
-      els.deleteBlockBtn.addEventListener("click", deleteSelected);
-      els.sendBackBtn.addEventListener("click", sendSelectedBack);
-      els.bringFrontBtn.addEventListener("click", bringSelectedFront);
-      els.exportBtn.addEventListener("click", exportPNG);
-      els.saveBtn.addEventListener("click", saveCurrentProject);
-
-      els.gridBtn.addEventListener("click", () => {
-        gridEnabled = !gridEnabled;
-        els.gridBtn.textContent = gridEnabled ? "Grid on" : "Grid off";
-        renderStage();
-      });
-
-      els.projectName.addEventListener("input", () => {
-        if (!currentProject) return;
-        currentProject.name = els.projectName.value || "Untitled RefBlock";
-        renderProjectList();
-        scheduleSave();
-      });
-
-      els.refOpacity.addEventListener("input", () => {
-        if (!currentProject) return;
-        currentProject.refOpacity = Number(els.refOpacity.value);
-        renderStage();
-        scheduleSave();
-      });
-
-      els.imageFit.addEventListener("change", () => {
-        if (!currentProject) return;
-        currentProject.imageFit = els.imageFit.value;
-        renderStage();
-        scheduleSave();
-      });
-
-      els.refX.addEventListener("change", () => {
-        if (!currentProject) return;
-        currentProject.refX = Number(els.refX.value) || 0;
-        renderStage();
-        scheduleSave();
-      });
-
-      els.refY.addEventListener("change", () => {
-        if (!currentProject) return;
-        currentProject.refY = Number(els.refY.value) || 0;
-        renderStage();
-        scheduleSave();
-      });
-
-      els.refScale.addEventListener("change", () => {
-        if (!currentProject) return;
-        currentProject.refScale = clamp(Number(els.refScale.value) || 1, 0.5, 3);
-        renderStage();
-        renderInspector();
-        scheduleSave();
-      });
-
-      els.resetRefBtn.addEventListener("click", () => {
-        if (!currentProject) return;
-        currentProject.refX = 0;
-        currentProject.refY = 0;
-        currentProject.refScale = 1;
-        renderApp();
-        scheduleSave();
-      });
-
-      els.blockText.addEventListener("input", () => updateSelected({ text: els.blockText.value }));
-      els.fontSize.addEventListener("input", () => updateSelected({ fontSize: Number(els.fontSize.value) }));
-      els.radius.addEventListener("input", () => updateSelected({ radius: Number(els.radius.value) }));
-      els.bgColor.addEventListener("input", () => updateSelected({ bg: els.bgColor.value }));
-      els.textColor.addEventListener("input", () => updateSelected({ color: els.textColor.value }));
-      els.blockOpacity.addEventListener("input", () => updateSelected({ opacity: Number(els.blockOpacity.value) }));
-      els.blockZ.addEventListener("input", () => updateSelected({ z: Number(els.blockZ.value) }));
-
-      [
-        [els.blockX, "x", CANVAS_W, "x"],
-        [els.blockY, "y", CANVAS_H, "y"],
-        [els.blockW, "w", CANVAS_W, "x"],
-        [els.blockH, "h", CANVAS_H, "y"]
-      ].forEach(([input, key, size, axis]) => {
-        input.addEventListener("change", () => {
-          const selected = getSelectedBlock();
-          if (!selected) return;
-          const value = clamp(Number(input.value), 0, size);
-          const pct = (value / size) * 100;
-          const patch = {};
-          patch[key] = snapPct(pct, axis);
-          if (key === "x") patch.x = clamp(patch.x, 0, 100 - selected.w);
-          if (key === "y") patch.y = clamp(patch.y, 0, 100 - selected.h);
-          if (key === "w") patch.w = clamp(patch.w, pxToXPct(22), 100 - selected.x);
-          if (key === "h") patch.h = clamp(patch.h, pxToYPct(22), 100 - selected.y);
-          updateSelected(patch);
-        });
-      });
-
-      els.eyeDropperBtn.disabled = !("EyeDropper" in window);
-      els.eyeDropperBtn.addEventListener("click", async () => {
-        if (!("EyeDropper" in window)) return;
+    function loadData() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
         try {
-          const result = await new EyeDropper().open();
-          applyPaletteColor(result.sRGBHex);
+          return normalizeData(JSON.parse(stored));
         } catch (error) {
-          setStatus("Color picking canceled");
+          console.warn("Cannot parse stored data", error);
         }
-      });
-
-      window.addEventListener("resize", updateStageScale);
-      window.addEventListener("keydown", (event) => {
-        const active = document.activeElement;
-        const typing = active && ["INPUT", "TEXTAREA", "SELECT"].includes(active.tagName);
-        if (typing) return;
-        if (event.key === "Escape") {
-          refMoveMode = false;
-          sliceMode = false;
-          els.sliceOverlay.classList.remove("visible");
-          renderStage();
-          setStatus("Tool mode off");
-          return;
-        }
-        const selected = getSelectedBlock();
-        if (!selected) return;
-        if (event.key === "Delete" || event.key === "Backspace") {
-          deleteSelected();
-          return;
-        }
-        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "d") {
-          event.preventDefault();
-          duplicateSelected();
-          return;
-        }
-        const stepX = pxToXPct(event.shiftKey ? 8 : 1);
-        const stepY = pxToYPct(event.shiftKey ? 8 : 1);
-        if (event.key === "ArrowLeft") updateSelected({ x: clamp(selected.x - stepX, 0, 100 - selected.w) });
-        if (event.key === "ArrowRight") updateSelected({ x: clamp(selected.x + stepX, 0, 100 - selected.w) });
-        if (event.key === "ArrowUp") updateSelected({ y: clamp(selected.y - stepY, 0, 100 - selected.h) });
-        if (event.key === "ArrowDown") updateSelected({ y: clamp(selected.y + stepY, 0, 100 - selected.h) });
-      });
-    }
-
-    async function init() {
-      bindControls();
-      try {
-        projects = (await dbGetAll()).map(normalizeProject);
-        const latest = projects.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))[0];
-        if (latest) currentProject = normalizeProject(structuredClone(latest));
-        renderApp();
-        setStatus(latest ? `Opened ${latest.name}` : "พร้อมเริ่ม trace reference");
-      } catch (error) {
-        console.error(error);
-        setStatus("IndexedDB unavailable");
-        renderApp();
       }
+      return seedData();
     }
 
-    init();
+    function seedData() {
+      const now = new Date().toISOString();
+      const categories = [
+        { id: uid("cat"), name: "กับข้าว", color: categoryColors[0], createdAt: now },
+        { id: uid("cat"), name: "อาหารจานเดียว", color: categoryColors[1], createdAt: now },
+        { id: uid("cat"), name: "ของหวาน", color: categoryColors[2], createdAt: now }
+      ];
+      const recipes = [
+        {
+          id: uid("recipe"),
+          title: "กะเพราไก่ไข่ดาว",
+          categoryId: categories[1].id,
+          videoUrl: "",
+          ingredients: "ไก่สับ 200 กรัม\nใบกะเพรา 1 กำมือ\nกระเทียม พริก\nซอสปรุงรส น้ำปลา น้ำตาลเล็กน้อย\nไข่ไก่ 1 ฟอง",
+          steps: "1. ผัดกระเทียมพริกให้หอม\n2. ใส่ไก่สับ ผัดจนสุก\n3. ปรุงรสแล้วใส่ใบกะเพรา\n4. ทอดไข่ดาว เสิร์ฟกับข้าว",
+          notes: "ทำเผ็ดน้อยไว้ก่อน แล้วเติมพริกตอนกินได้",
+          favorite: true,
+          createdAt: now,
+          updatedAt: now
+        },
+        {
+          id: uid("recipe"),
+          title: "ไข่เจียวหมูสับ",
+          categoryId: categories[0].id,
+          videoUrl: "",
+          ingredients: "ไข่ไก่ 2 ฟอง\nหมูสับ 80 กรัม\nน้ำปลาเล็กน้อย\nน้ำมันสำหรับทอด",
+          steps: "1. ตีไข่กับหมูสับและน้ำปลา\n2. ตั้งน้ำมันให้ร้อน\n3. เทไข่ลงทอดจนเหลืองทั้งสองด้าน",
+          notes: "เหมาะกับวันที่อยากทำเร็ว",
+          favorite: false,
+          createdAt: now,
+          updatedAt: now
+        }
+      ];
+      const today = todayKey();
+      return {
+        categories,
+        recipes,
+        mealPlan: {
+          [today]: {
+            breakfast: { recipeId: "", custom: "กาแฟ + ขนมปัง" },
+            lunch: { recipeId: recipes[0].id, custom: "" },
+            dinner: { recipeId: recipes[1].id, custom: "" }
+          }
+        },
+        shoppingItems: [
+          { id: uid("shop"), name: "ใบกะเพรา", qty: "1", unit: "กำ", group: "ผัก", done: false, createdAt: now },
+          { id: uid("shop"), name: "ไข่ไก่", qty: "10", unit: "ฟอง", group: "ของแห้ง", done: false, createdAt: now },
+          { id: uid("shop"), name: "น้ำปลา", qty: "1", unit: "ขวด", group: "เครื่องปรุง", done: true, createdAt: now }
+        ],
+        settings: {
+          cycleDays: 7,
+          cycleStart: today,
+          seeded: true
+        }
+      };
+    }
+
+    function normalizeData(raw) {
+      const seeded = seedData();
+      return {
+        categories: Array.isArray(raw.categories) ? raw.categories : seeded.categories,
+        recipes: Array.isArray(raw.recipes) ? raw.recipes : [],
+        mealPlan: raw.mealPlan && typeof raw.mealPlan === "object" ? raw.mealPlan : {},
+        shoppingItems: Array.isArray(raw.shoppingItems) ? raw.shoppingItems : [],
+        settings: { ...seeded.settings, ...(raw.settings || {}) }
+      };
+    }
+
+    function saveData(message) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      render();
+      if (message) showToast(message);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 1900);
+    }
+
+    function setTab(tab) {
+      activeTab = tab;
+      if (tab !== "detail") detailRecipeId = null;
+      document.querySelectorAll(".nav-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.tab === tab);
+      });
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function getCategory(id) {
+      return data.categories.find((category) => category.id === id);
+    }
+
+    function getRecipe(id) {
+      return data.recipes.find((recipe) => recipe.id === id);
+    }
+
+    function mealName(entry) {
+      if (!entry) return "ยังไม่ได้วางแผน";
+      const recipe = entry.recipeId ? getRecipe(entry.recipeId) : null;
+      return recipe ? recipe.title : entry.custom || "ยังไม่ได้วางแผน";
+    }
+
+    function cycleSummary() {
+      const start = new Date(`${data.settings.cycleStart || todayKey()}T00:00:00`);
+      const days = Number(data.settings.cycleDays || 7);
+      const now = new Date();
+      let next = new Date(start);
+      while (next < startOfDay(now)) {
+        next.setDate(next.getDate() + days);
+      }
+      const diff = Math.ceil((next - startOfDay(now)) / 86400000);
+      return { next: toDateKey(next), daysLeft: Math.max(diff, 0), days };
+    }
+
+    function startOfDay(date) {
+      const d = new Date(date);
+      d.setHours(0, 0, 0, 0);
+      return d;
+    }
+
+    function render() {
+      document.querySelectorAll(".view").forEach((view) => view.classList.remove("active"));
+      const target = document.getElementById(`view-${activeTab}`);
+      if (target) target.classList.add("active");
+      renderHome();
+      renderCategories();
+      renderRecipes();
+      renderDetail();
+      renderPlanner();
+      renderShopping();
+      renderSettings();
+    }
+
+    function renderHome() {
+      const today = todayKey();
+      const plan = data.mealPlan[today] || {};
+      const pending = data.shoppingItems.filter((item) => !item.done);
+      const recent = [...data.recipes].sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt))).slice(0, 3);
+      const cycle = cycleSummary();
+      document.getElementById("view-home").innerHTML = `
+        <div class="stack">
+          <section class="panel hero-panel">
+            <div class="panel-inner">
+              <h2>วันนี้กินอะไรดี</h2>
+              <p>${fullDateLabel(today)} · รอบซื้อของถัดไป ${dateLabel(cycle.next)} (${cycle.daysLeft} วัน)</p>
+              <div class="quick-actions">
+                <button class="btn primary" type="button" data-action="quick-recipe">เพิ่มเมนู</button>
+                <button class="btn accent" type="button" data-action="quick-shopping">เพิ่มของ</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="stats-grid" aria-label="ภาพรวม">
+            <div class="stat"><strong>${data.recipes.length}</strong><span>สูตรทั้งหมด</span></div>
+            <div class="stat"><strong>${data.categories.length}</strong><span>หมวดอาหาร</span></div>
+            <div class="stat"><strong>${pending.length}</strong><span>ของที่ยังไม่ซื้อ</span></div>
+            <div class="stat"><strong>${data.recipes.filter((r) => r.favorite).length}</strong><span>เมนูโปรด</span></div>
+          </section>
+
+          <section>
+            <div class="section-head">
+              <div><h2>มื้อวันนี้</h2><p>แตะตารางเพื่อแก้แผนทั้งสัปดาห์</p></div>
+              <button class="btn small" type="button" data-tab="planner">ดูตาราง</button>
+            </div>
+            <div class="meal-today">
+              ${mealSlots.map(([key, label]) => `
+                <div class="meal-row">
+                  <div class="meal-label">${label}</div>
+                  <div class="row-main"><strong>${escapeHtml(mealName(plan[key]))}</strong><small>${plan[key]?.recipeId ? "จากสูตรที่บันทึกไว้" : "พิมพ์เองหรือยังไม่ได้ตั้ง"}</small></div>
+                </div>
+              `).join("")}
+            </div>
+          </section>
+
+          <section>
+            <div class="section-head">
+              <div><h2>เมนูล่าสุด</h2><p>กลับไปดูสูตรที่เพิ่งจด</p></div>
+              <button class="btn small" type="button" data-tab="recipes">สูตรทั้งหมด</button>
+            </div>
+            <div class="list">
+              ${recent.length ? recent.map(recipeCardHtml).join("") : `<div class="empty">ยังไม่มีสูตรอาหาร กดเพิ่มเมนูเพื่อเริ่มจดสูตรแรก</div>`}
+            </div>
+          </section>
+        </div>
+      `;
+    }
+
+    function renderCategories() {
+      const counts = new Map();
+      data.recipes.forEach((recipe) => counts.set(recipe.categoryId, (counts.get(recipe.categoryId) || 0) + 1));
+      document.getElementById("view-categories").innerHTML = `
+        <div class="stack">
+          <div class="section-head">
+            <div><h2>หมวดหมู่</h2><p>จัดสูตรตามแบบที่คุณเรียกเอง</p></div>
+            <button class="btn primary small" type="button" data-action="new-category">เพิ่มหมวด</button>
+          </div>
+          ${categoryFormHtml()}
+          <div class="list">
+            ${data.categories.map((category) => `
+              <div class="category-row">
+                <div class="category-dot" style="--dot: ${category.color}"></div>
+                <div class="row-main">
+                  <strong>${escapeHtml(category.name)}</strong>
+                  <small>${counts.get(category.id) || 0} เมนู</small>
+                </div>
+                <div class="row-actions">
+                  <button class="icon-btn" type="button" title="ดูเมนู" data-action="filter-category" data-id="${category.id}">→</button>
+                  <button class="icon-btn" type="button" title="แก้ไข" data-action="edit-category" data-id="${category.id}">แก้</button>
+                  <button class="icon-btn" type="button" title="ลบ" data-action="delete-category" data-id="${category.id}">ลบ</button>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function categoryFormHtml() {
+      const category = editingCategoryId ? getCategory(editingCategoryId) : null;
+      const active = editingCategoryId === "new" || category;
+      return `
+        <section class="panel inline-form ${active ? "active" : ""}" id="category-form-panel">
+          <form class="panel-inner form-grid" id="category-form">
+            <label>ชื่อหมวด
+              <input name="name" required maxlength="36" placeholder="เช่น เมนูคลีน" value="${escapeHtml(category?.name || "")}">
+            </label>
+            <label>สีประจำหมวด
+              <select name="color">
+                ${categoryColors.map((color, index) => `<option value="${color}" ${category?.color === color ? "selected" : ""}>สี ${index + 1}</option>`).join("")}
+              </select>
+            </label>
+            <div class="form-actions">
+              <button class="btn ghost" type="button" data-action="cancel-category">ยกเลิก</button>
+              <button class="btn primary" type="submit">บันทึกหมวด</button>
+            </div>
+          </form>
+        </section>
+      `;
+    }
+
+    function renderRecipes() {
+      const filtered = data.recipes.filter((recipe) => {
+        const matchCategory = recipeFilter === "all" || recipe.categoryId === recipeFilter;
+        const q = recipeSearch.trim().toLowerCase();
+        const matchSearch = !q || [recipe.title, recipe.ingredients, recipe.steps, recipe.notes].join(" ").toLowerCase().includes(q);
+        return matchCategory && matchSearch;
+      });
+      document.getElementById("view-recipes").innerHTML = `
+        <div class="stack">
+          <div class="section-head">
+            <div><h2>สูตรอาหาร</h2><p>จดจากวิดีโอแล้วเปิดดูตอนทำจริง</p></div>
+            <button class="btn primary small" type="button" data-action="new-recipe">เพิ่มเมนู</button>
+          </div>
+          ${recipeFormHtml()}
+          <div class="search-row">
+            <input id="recipe-search" type="search" placeholder="ค้นหาเมนู ส่วนผสม หรือโน้ต" value="${escapeHtml(recipeSearch)}">
+            <select id="recipe-filter" aria-label="กรองตามหมวด">
+              <option value="all">ทุกหมวด</option>
+              ${data.categories.map((cat) => `<option value="${cat.id}" ${recipeFilter === cat.id ? "selected" : ""}>${escapeHtml(cat.name)}</option>`).join("")}
+            </select>
+          </div>
+          <div class="list">
+            ${filtered.length ? filtered.map(recipeCardHtml).join("") : `<div class="empty">ไม่พบเมนูที่ตรงกับเงื่อนไข</div>`}
+          </div>
+        </div>
+      `;
+    }
+
+    function recipeCardHtml(recipe) {
+      const category = getCategory(recipe.categoryId);
+      return `
+        <article class="recipe-card ${recipe.favorite ? "favorite" : ""}">
+          <div class="row-main">
+            <strong>${recipe.favorite ? "★ " : ""}${escapeHtml(recipe.title)}</strong>
+            <small>${escapeHtml(category?.name || "ไม่ระบุหมวด")}${recipe.videoUrl ? " · มีลิงก์วิดีโอ" : ""}</small>
+            <div class="recipe-meta">
+              <span class="badge primary">${escapeHtml(category?.name || "ไม่มีหมวด")}</span>
+              ${recipe.favorite ? `<span class="badge accent">เมนูโปรด</span>` : ""}
+            </div>
+          </div>
+          <div class="recipe-actions">
+            <button class="icon-btn" type="button" title="เปิดสูตร" data-action="open-recipe" data-id="${recipe.id}">เปิด</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function recipeFormHtml() {
+      const recipe = editingRecipeId && editingRecipeId !== "new" ? getRecipe(editingRecipeId) : null;
+      const active = editingRecipeId === "new" || recipe;
+      return `
+        <section class="panel inline-form ${active ? "active" : ""}" id="recipe-form-panel">
+          <form class="panel-inner form-grid" id="recipe-form">
+            <label>ชื่อเมนู
+              <input name="title" required maxlength="80" placeholder="เช่น ต้มจืดเต้าหู้หมูสับ" value="${escapeHtml(recipe?.title || "")}">
+            </label>
+            <label>หมวดหมู่
+              <select name="categoryId" required>
+                ${data.categories.map((cat) => `<option value="${cat.id}" ${recipe?.categoryId === cat.id ? "selected" : ""}>${escapeHtml(cat.name)}</option>`).join("")}
+              </select>
+            </label>
+            <label>ลิงก์วิดีโอ
+              <input name="videoUrl" type="url" placeholder="วางลิงก์ YouTube หรือ TikTok" value="${escapeHtml(recipe?.videoUrl || "")}">
+            </label>
+            <label>ส่วนผสม
+              <textarea name="ingredients" placeholder="ใส่ทีละบรรทัด เช่น ไข่ไก่ 2 ฟอง">${escapeHtml(recipe?.ingredients || "")}</textarea>
+            </label>
+            <label>ขั้นตอน
+              <textarea name="steps" placeholder="ใส่ขั้นตอนแบบสั้น ๆ เพื่อเปิดดูตอนทำ">${escapeHtml(recipe?.steps || "")}</textarea>
+            </label>
+            <label>โน้ตส่วนตัว
+              <textarea name="notes" placeholder="รสชาติที่ชอบ จุดที่ต้องระวัง หรือปรับสูตร">${escapeHtml(recipe?.notes || "")}</textarea>
+            </label>
+            <label>
+              <span><input name="favorite" type="checkbox" ${recipe?.favorite ? "checked" : ""} style="width:auto; min-height:auto;"> บันทึกเป็นเมนูโปรด</span>
+            </label>
+            <div class="form-actions">
+              <button class="btn ghost" type="button" data-action="cancel-recipe">ยกเลิก</button>
+              <button class="btn primary" type="submit">บันทึกเมนู</button>
+            </div>
+          </form>
+        </section>
+      `;
+    }
+
+    function renderDetail() {
+      const recipe = detailRecipeId ? getRecipe(detailRecipeId) : null;
+      const view = document.getElementById("view-detail");
+      if (!recipe) {
+        view.innerHTML = "";
+        return;
+      }
+      const category = getCategory(recipe.categoryId);
+      view.innerHTML = `
+        <div class="detail-head">
+          <button class="btn small" type="button" data-tab="recipes">กลับไปสูตรทั้งหมด</button>
+          <div class="detail-title">
+            <div>
+              <h2>${escapeHtml(recipe.title)}</h2>
+              <div class="recipe-meta">
+                <span class="badge primary">${escapeHtml(category?.name || "ไม่ระบุหมวด")}</span>
+                ${recipe.favorite ? `<span class="badge accent">เมนูโปรด</span>` : ""}
+              </div>
+            </div>
+            <button class="icon-btn" type="button" title="โปรด" data-action="toggle-favorite" data-id="${recipe.id}">${recipe.favorite ? "★" : "☆"}</button>
+          </div>
+          <div class="toolbar">
+            <button class="btn small" type="button" data-action="edit-recipe" data-id="${recipe.id}">แก้สูตร</button>
+            <button class="btn small" type="button" data-action="add-recipe-shopping" data-id="${recipe.id}">ส่งส่วนผสมไปซื้อของ</button>
+            <button class="btn small danger" type="button" data-action="delete-recipe" data-id="${recipe.id}">ลบสูตร</button>
+          </div>
+        </div>
+        <div class="recipe-body">
+          ${recipe.videoUrl ? `<section class="panel"><div class="panel-inner"><h3>วิดีโอต้นทาง</h3><p><a href="${escapeHtml(recipe.videoUrl)}" target="_blank" rel="noopener">เปิดลิงก์สูตร</a></p></div></section>` : ""}
+          <section class="panel"><div class="panel-inner"><h3>ส่วนผสม</h3><p class="text-block">${recipe.ingredients ? nl2br(recipe.ingredients) : "ยังไม่ได้ใส่ส่วนผสม"}</p></div></section>
+          <section class="panel"><div class="panel-inner"><h3>ขั้นตอน</h3><p class="text-block">${recipe.steps ? nl2br(recipe.steps) : "ยังไม่ได้ใส่ขั้นตอน"}</p></div></section>
+          <section class="panel"><div class="panel-inner"><h3>โน้ต</h3><p class="text-block">${recipe.notes ? nl2br(recipe.notes) : "ยังไม่มีโน้ต"}</p></div></section>
+        </div>
+      `;
+    }
+
+    function renderPlanner() {
+      const days = Array.from({ length: 7 }, (_, index) => addDays(weekStart, index));
+      const title = `${dateLabel(toDateKey(days[0]))} ถึง ${dateLabel(toDateKey(days[6]))}`;
+      document.getElementById("view-planner").innerHTML = `
+        <div class="stack">
+          <div class="section-head">
+            <div><h2>ตารางอาหารรายสัปดาห์</h2><p>วางแผนให้พอดีกับรอบซื้อของ</p></div>
+          </div>
+          <div class="planner-controls">
+            <button class="btn small" type="button" data-action="prev-week">สัปดาห์ก่อน</button>
+            <div class="week-title">${title}</div>
+            <button class="btn small" type="button" data-action="next-week">สัปดาห์หน้า</button>
+          </div>
+          <div class="planner">
+            ${days.map((day) => dayPlannerHtml(toDateKey(day))).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function dayPlannerHtml(dateKey) {
+      const plan = data.mealPlan[dateKey] || {};
+      return `
+        <section class="day-card">
+          <div class="day-head"><span>${fullDateLabel(dateKey)}</span><span>${dateKey === todayKey() ? "วันนี้" : ""}</span></div>
+          ${mealSlots.map(([slot, label]) => {
+            const entry = plan[slot] || { recipeId: "", custom: "" };
+            return `
+              <div class="meal-slot">
+                <div class="meal-label">${label}</div>
+                <div class="slot-form">
+                  <select data-action="plan-recipe" data-date="${dateKey}" data-slot="${slot}">
+                    <option value="">เลือกจากสูตร</option>
+                    ${data.recipes.map((recipe) => `<option value="${recipe.id}" ${entry.recipeId === recipe.id ? "selected" : ""}>${escapeHtml(recipe.title)}</option>`).join("")}
+                  </select>
+                  <input data-action="plan-custom" data-date="${dateKey}" data-slot="${slot}" placeholder="หรือพิมพ์เอง" value="${escapeHtml(entry.custom || "")}">
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </section>
+      `;
+    }
+
+    function renderShopping() {
+      const pending = data.shoppingItems.filter((item) => !item.done).length;
+      const cycle = cycleSummary();
+      const grouped = shoppingGroups.map((group) => ({
+        group,
+        items: data.shoppingItems.filter((item) => item.group === group)
+      })).filter((group) => group.items.length);
+      document.getElementById("view-shopping").innerHTML = `
+        <div class="stack">
+          <div class="section-head">
+            <div><h2>รายการซื้อของ</h2><p>เหลือ ${pending} รายการ · รอบถัดไป ${dateLabel(cycle.next)}</p></div>
+            <button class="btn primary small" type="button" data-action="new-shopping">เพิ่มของ</button>
+          </div>
+          ${shoppingFormHtml()}
+          <div class="toolbar">
+            <button class="btn small" type="button" data-action="clear-done">ล้างที่ซื้อแล้ว</button>
+            <button class="btn small" type="button" data-action="mark-all-undone">เริ่มเช็กรอบใหม่</button>
+          </div>
+          <div class="shopping-group">
+            ${grouped.length ? grouped.map(({ group, items }) => `
+              <h3>${escapeHtml(group)}</h3>
+              ${items.map(shoppingItemHtml).join("")}
+            `).join("") : `<div class="empty">ยังไม่มีรายการซื้อของ กดเพิ่มของเพื่อเริ่มรอบซื้อครั้งต่อไป</div>`}
+          </div>
+        </div>
+      `;
+    }
+
+    function shoppingFormHtml() {
+      const item = editingShoppingId && editingShoppingId !== "new" ? data.shoppingItems.find((entry) => entry.id === editingShoppingId) : null;
+      const active = editingShoppingId === "new" || item;
+      return `
+        <section class="panel inline-form ${active ? "active" : ""}">
+          <form class="panel-inner form-grid" id="shopping-form">
+            <label>ชื่อของที่ต้องซื้อ
+              <input name="name" required maxlength="70" placeholder="เช่น หมูสับ" value="${escapeHtml(item?.name || "")}">
+            </label>
+            <div class="field-row">
+              <label>จำนวน
+                <input name="qty" maxlength="20" placeholder="1" value="${escapeHtml(item?.qty || "")}">
+              </label>
+              <label>หน่วย
+                <input name="unit" maxlength="20" placeholder="แพ็ก" value="${escapeHtml(item?.unit || "")}">
+              </label>
+            </div>
+            <label>หมวดซื้อของ
+              <select name="group">
+                ${shoppingGroups.map((group) => `<option value="${group}" ${item?.group === group ? "selected" : ""}>${group}</option>`).join("")}
+              </select>
+            </label>
+            <div class="form-actions">
+              <button class="btn ghost" type="button" data-action="cancel-shopping">ยกเลิก</button>
+              <button class="btn primary" type="submit">บันทึกรายการ</button>
+            </div>
+          </form>
+        </section>
+      `;
+    }
+
+    function shoppingItemHtml(item) {
+      return `
+        <div class="check-row ${item.done ? "done" : ""}">
+          <input type="checkbox" ${item.done ? "checked" : ""} data-action="toggle-shopping" data-id="${item.id}" aria-label="ติ๊กซื้อแล้ว">
+          <div class="row-main">
+            <strong>${escapeHtml(item.name)}</strong>
+            <small>${[item.qty, item.unit].filter(Boolean).map(escapeHtml).join(" ") || "ไม่ระบุจำนวน"}</small>
+          </div>
+          <div class="row-actions">
+            <button class="icon-btn" type="button" title="แก้ไข" data-action="edit-shopping" data-id="${item.id}">แก้</button>
+            <button class="icon-btn" type="button" title="ลบ" data-action="delete-shopping" data-id="${item.id}">ลบ</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSettings() {
+      document.getElementById("view-settings").innerHTML = `
+        <div class="stack">
+          <div class="section-head">
+            <div><h2>ตั้งค่าและสำรองข้อมูล</h2><p>ข้อมูลทั้งหมดเก็บใน browser เครื่องนี้</p></div>
+          </div>
+          <section class="panel">
+            <form class="panel-inner settings-grid" id="settings-form">
+              <label>รอบซื้อของ
+                <select name="cycleDays">
+                  <option value="7" ${Number(data.settings.cycleDays) === 7 ? "selected" : ""}>ทุก 7 วัน</option>
+                  <option value="14" ${Number(data.settings.cycleDays) === 14 ? "selected" : ""}>ทุก 14 วัน</option>
+                </select>
+              </label>
+              <label>วันที่เริ่มรอบล่าสุด
+                <input name="cycleStart" type="date" value="${escapeHtml(data.settings.cycleStart || todayKey())}">
+              </label>
+              <button class="btn primary" type="submit">บันทึกตั้งค่า</button>
+            </form>
+          </section>
+          <section class="panel">
+            <div class="panel-inner stack">
+              <div>
+                <h3>สำรองข้อมูล</h3>
+                <p>Export เป็นไฟล์ JSON แล้ว Import กลับมาได้เมื่อต้องย้ายเครื่องหรือกันข้อมูลหาย</p>
+              </div>
+              <div class="toolbar">
+                <button class="btn" type="button" data-action="export-json">Export JSON</button>
+                <label class="btn" for="import-json">Import JSON</label>
+                <input id="import-json" type="file" accept="application/json" hidden>
+              </div>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="panel-inner stack">
+              <div>
+                <h3>เริ่มใหม่</h3>
+                <p>รีเซ็ตกลับเป็นข้อมูลตัวอย่างเริ่มต้น เหมาะสำหรับทดลองแอปใหม่อีกครั้ง</p>
+              </div>
+              <button class="btn danger full" type="button" data-action="reset-data">รีเซ็ตข้อมูลทั้งหมด</button>
+            </div>
+          </section>
+        </div>
+      `;
+    }
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("button, label.btn");
+      if (!button) return;
+      const action = button.dataset.action;
+      const tab = button.dataset.tab;
+      const id = button.dataset.id;
+
+      if (tab) {
+        setTab(tab);
+        return;
+      }
+
+      if (!action) return;
+      if (action === "quick-recipe" || action === "new-recipe") {
+        editingRecipeId = "new";
+        setTab("recipes");
+      }
+      if (action === "quick-shopping" || action === "new-shopping") {
+        editingShoppingId = "new";
+        setTab("shopping");
+      }
+      if (action === "new-category") {
+        editingCategoryId = "new";
+        render();
+      }
+      if (action === "cancel-category") {
+        editingCategoryId = null;
+        render();
+      }
+      if (action === "edit-category") {
+        editingCategoryId = id;
+        render();
+      }
+      if (action === "delete-category") deleteCategory(id);
+      if (action === "filter-category") {
+        recipeFilter = id;
+        setTab("recipes");
+      }
+      if (action === "cancel-recipe") {
+        editingRecipeId = null;
+        render();
+      }
+      if (action === "open-recipe") {
+        detailRecipeId = id;
+        activeTab = "detail";
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      if (action === "edit-recipe") {
+        editingRecipeId = id;
+        setTab("recipes");
+      }
+      if (action === "delete-recipe") deleteRecipe(id);
+      if (action === "toggle-favorite") toggleFavorite(id);
+      if (action === "add-recipe-shopping") addRecipeToShopping(id);
+      if (action === "prev-week") {
+        weekStart = addDays(weekStart, -7);
+        render();
+      }
+      if (action === "next-week") {
+        weekStart = addDays(weekStart, 7);
+        render();
+      }
+      if (action === "cancel-shopping") {
+        editingShoppingId = null;
+        render();
+      }
+      if (action === "edit-shopping") {
+        editingShoppingId = id;
+        render();
+      }
+      if (action === "delete-shopping") deleteShopping(id);
+      if (action === "clear-done") clearDoneShopping();
+      if (action === "mark-all-undone") markAllUndone();
+      if (action === "export-json") exportJson();
+      if (action === "reset-data") resetData();
+    });
+
+    document.addEventListener("change", (event) => {
+      const target = event.target;
+      if (target.id === "recipe-filter") {
+        recipeFilter = target.value;
+        render();
+      }
+      if (target.dataset.action === "plan-recipe") {
+        updatePlan(target.dataset.date, target.dataset.slot, { recipeId: target.value, custom: target.value ? "" : getPlanEntry(target.dataset.date, target.dataset.slot).custom });
+      }
+      if (target.dataset.action === "toggle-shopping") {
+        const item = data.shoppingItems.find((entry) => entry.id === target.dataset.id);
+        if (item) {
+          item.done = target.checked;
+          saveData(item.done ? "ติ๊กซื้อแล้ว" : "ย้ายกลับไปรายการที่ต้องซื้อ");
+        }
+      }
+      if (target.id === "import-json") {
+        importJson(target.files[0]);
+        target.value = "";
+      }
+    });
+
+    document.addEventListener("input", (event) => {
+      const target = event.target;
+      if (target.id === "recipe-search") {
+        recipeSearch = target.value;
+        renderRecipes();
+      }
+      if (target.dataset.action === "plan-custom") {
+        updatePlan(target.dataset.date, target.dataset.slot, { recipeId: "", custom: target.value }, false);
+      }
+    });
+
+    document.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (event.target.id === "category-form") saveCategory(new FormData(event.target));
+      if (event.target.id === "recipe-form") saveRecipe(new FormData(event.target));
+      if (event.target.id === "shopping-form") saveShopping(new FormData(event.target));
+      if (event.target.id === "settings-form") saveSettings(new FormData(event.target));
+    });
+
+    function saveCategory(form) {
+      const name = form.get("name").trim();
+      const color = form.get("color");
+      if (!name) return;
+      if (editingCategoryId && editingCategoryId !== "new") {
+        const category = getCategory(editingCategoryId);
+        category.name = name;
+        category.color = color;
+      } else {
+        data.categories.push({ id: uid("cat"), name, color, createdAt: new Date().toISOString() });
+      }
+      editingCategoryId = null;
+      saveData("บันทึกหมวดแล้ว");
+    }
+
+    function deleteCategory(id) {
+      const used = data.recipes.some((recipe) => recipe.categoryId === id);
+      if (used) {
+        showToast("หมวดนี้ยังมีเมนูอยู่ ย้ายหรือลบเมนูก่อน");
+        return;
+      }
+      if (!confirm("ลบหมวดนี้ใช่ไหม")) return;
+      data.categories = data.categories.filter((category) => category.id !== id);
+      saveData("ลบหมวดแล้ว");
+    }
+
+    function saveRecipe(form) {
+      if (!data.categories.length) {
+        showToast("ต้องมีหมวดก่อนเพิ่มสูตร");
+        return;
+      }
+      const payload = {
+        title: form.get("title").trim(),
+        categoryId: form.get("categoryId"),
+        videoUrl: form.get("videoUrl").trim(),
+        ingredients: form.get("ingredients").trim(),
+        steps: form.get("steps").trim(),
+        notes: form.get("notes").trim(),
+        favorite: Boolean(form.get("favorite")),
+        updatedAt: new Date().toISOString()
+      };
+      if (!payload.title) return;
+      if (editingRecipeId && editingRecipeId !== "new") {
+        Object.assign(getRecipe(editingRecipeId), payload);
+      } else {
+        data.recipes.push({ id: uid("recipe"), ...payload, createdAt: new Date().toISOString() });
+      }
+      editingRecipeId = null;
+      saveData("บันทึกเมนูแล้ว");
+    }
+
+    function deleteRecipe(id) {
+      if (!confirm("ลบสูตรนี้ใช่ไหม")) return;
+      data.recipes = data.recipes.filter((recipe) => recipe.id !== id);
+      Object.values(data.mealPlan).forEach((day) => {
+        mealSlots.forEach(([slot]) => {
+          if (day[slot]?.recipeId === id) day[slot].recipeId = "";
+        });
+      });
+      if (detailRecipeId === id) {
+        detailRecipeId = null;
+        activeTab = "recipes";
+      }
+      saveData("ลบสูตรแล้ว");
+    }
+
+    function toggleFavorite(id) {
+      const recipe = getRecipe(id);
+      if (!recipe) return;
+      recipe.favorite = !recipe.favorite;
+      recipe.updatedAt = new Date().toISOString();
+      saveData(recipe.favorite ? "เพิ่มเป็นเมนูโปรดแล้ว" : "เอาออกจากเมนูโปรดแล้ว");
+    }
+
+    function addRecipeToShopping(id) {
+      const recipe = getRecipe(id);
+      if (!recipe || !recipe.ingredients) {
+        showToast("สูตรนี้ยังไม่มีส่วนผสม");
+        return;
+      }
+      const lines = recipe.ingredients.split("\n").map((line) => line.trim()).filter(Boolean);
+      const now = new Date().toISOString();
+      lines.forEach((line) => {
+        data.shoppingItems.push({ id: uid("shop"), name: line, qty: "", unit: "", group: "อื่น ๆ", done: false, createdAt: now });
+      });
+      saveData("เพิ่มส่วนผสมไปที่รายการซื้อของแล้ว");
+    }
+
+    function getPlanEntry(date, slot) {
+      return data.mealPlan[date]?.[slot] || { recipeId: "", custom: "" };
+    }
+
+    function updatePlan(date, slot, entry, notify = true) {
+      if (!data.mealPlan[date]) data.mealPlan[date] = {};
+      data.mealPlan[date][slot] = { ...getPlanEntry(date, slot), ...entry };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      if (notify) saveData("อัปเดตตารางแล้ว");
+    }
+
+    function saveShopping(form) {
+      const payload = {
+        name: form.get("name").trim(),
+        qty: form.get("qty").trim(),
+        unit: form.get("unit").trim(),
+        group: form.get("group"),
+        done: false
+      };
+      if (!payload.name) return;
+      if (editingShoppingId && editingShoppingId !== "new") {
+        const item = data.shoppingItems.find((entry) => entry.id === editingShoppingId);
+        Object.assign(item, payload);
+      } else {
+        data.shoppingItems.push({ id: uid("shop"), ...payload, createdAt: new Date().toISOString() });
+      }
+      editingShoppingId = null;
+      saveData("บันทึกรายการซื้อของแล้ว");
+    }
+
+    function deleteShopping(id) {
+      if (!confirm("ลบรายการนี้ใช่ไหม")) return;
+      data.shoppingItems = data.shoppingItems.filter((item) => item.id !== id);
+      saveData("ลบรายการแล้ว");
+    }
+
+    function clearDoneShopping() {
+      const count = data.shoppingItems.filter((item) => item.done).length;
+      if (!count) {
+        showToast("ยังไม่มีรายการที่ซื้อแล้ว");
+        return;
+      }
+      if (!confirm(`ล้างรายการที่ซื้อแล้ว ${count} รายการใช่ไหม`)) return;
+      data.shoppingItems = data.shoppingItems.filter((item) => !item.done);
+      saveData("ล้างรายการที่ซื้อแล้ว");
+    }
+
+    function markAllUndone() {
+      data.shoppingItems.forEach((item) => item.done = false);
+      saveData("เริ่มเช็กรอบใหม่แล้ว");
+    }
+
+    function saveSettings(form) {
+      data.settings.cycleDays = Number(form.get("cycleDays"));
+      data.settings.cycleStart = form.get("cycleStart") || todayKey();
+      saveData("บันทึกตั้งค่าแล้ว");
+    }
+
+    function exportJson() {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `my-kitchen-${todayKey()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("Export ข้อมูลแล้ว");
+    }
+
+    function importJson(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const imported = normalizeData(JSON.parse(reader.result));
+          data = imported;
+          saveData("Import ข้อมูลแล้ว");
+        } catch (error) {
+          showToast("ไฟล์ JSON ไม่ถูกต้อง");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetData() {
+      if (!confirm("รีเซ็ตข้อมูลทั้งหมดกลับเป็นตัวอย่างเริ่มต้นใช่ไหม")) return;
+      data = seedData();
+      activeTab = "home";
+      saveData("รีเซ็ตข้อมูลแล้ว");
+    }
+
+    render();
   </script>
 </body>
 </html>
