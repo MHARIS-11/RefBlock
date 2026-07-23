@@ -2,34 +2,36 @@
 <html lang="th">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>ครัวของฉัน</title>
   <style>
     :root {
       color-scheme: light;
-      --bg: oklch(1 0 0);
-      --surface: oklch(0.974 0.006 80);
-      --surface-strong: oklch(0.94 0.012 78);
-      --ink: oklch(0.21 0.025 78);
-      --muted: oklch(0.48 0.025 78);
-      --line: oklch(0.88 0.014 78);
-      --primary: oklch(0.58 0.12 60);
-      --primary-dark: oklch(0.44 0.11 62);
-      --primary-soft: oklch(0.94 0.055 72);
-      --accent: oklch(0.48 0.12 155);
-      --accent-soft: oklch(0.93 0.052 155);
-      --danger: oklch(0.56 0.16 28);
-      --danger-soft: oklch(0.94 0.04 28);
-      --warning: oklch(0.78 0.12 85);
-      --shadow: 0 6px 14px oklch(0.24 0.03 80 / 0.08);
-      --radius: 12px;
+      --bg: oklch(0.985 0.003 150);
+      --surface: oklch(1 0 0);
+      --surface-2: oklch(0.965 0.004 150);
+      --ink: oklch(0.18 0.018 150);
+      --muted: oklch(0.48 0.018 150);
+      --faint: oklch(0.72 0.012 150);
+      --line: oklch(0.90 0.009 150);
+      --green: oklch(0.52 0.145 148);
+      --green-dark: oklch(0.38 0.12 148);
+      --green-soft: oklch(0.94 0.052 148);
+      --red: oklch(0.56 0.18 28);
+      --red-soft: oklch(0.95 0.04 28);
+      --orange: oklch(0.72 0.14 62);
+      --yellow-soft: oklch(0.96 0.055 86);
+      --blue-soft: oklch(0.95 0.035 245);
+      --shadow: 0 10px 22px oklch(0.2 0.02 150 / 0.08);
+      --shadow-sm: 0 4px 10px oklch(0.2 0.02 150 / 0.06);
+      --radius: 14px;
       --tap: 44px;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
+
+    html { background: var(--bg); }
 
     body {
       margin: 0;
@@ -51,6 +53,8 @@
     button {
       min-height: var(--tap);
       border: 0;
+      background: none;
+      color: inherit;
       cursor: pointer;
     }
 
@@ -59,22 +63,54 @@
       opacity: 0.55;
     }
 
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: var(--tap);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: var(--surface);
+      color: var(--ink);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: oklch(0.48 0.018 150);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus,
+    button:focus-visible {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px oklch(0.52 0.145 148 / 0.18);
+      outline: none;
+    }
+
     a {
-      color: var(--primary-dark);
+      color: var(--green-dark);
       text-decoration-thickness: 0.08em;
       text-underline-offset: 0.18em;
     }
 
     .app {
       width: 100%;
-      max-width: 980px;
-      margin: 0 auto;
+      max-width: 480px;
       min-height: 100vh;
-      padding-bottom: 92px;
-      overflow-x: hidden;
+      margin: 0 auto;
+      background: var(--bg);
+      padding-bottom: calc(84px + env(safe-area-inset-bottom));
     }
 
-    .topbar {
+    .top {
       position: sticky;
       top: 0;
       z-index: 20;
@@ -82,73 +118,50 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      width: 100%;
-      min-height: 68px;
-      padding: 14px 16px 10px;
-      background: oklch(1 0 0 / 0.94);
-      border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(10px);
+      min-height: 76px;
+      padding: calc(12px + env(safe-area-inset-top)) 18px 12px;
+      background: oklch(0.985 0.003 150 / 0.94);
+      backdrop-filter: blur(14px);
     }
 
-    .brand {
+    .top h1 {
+      margin: 0;
+      font-size: 1.55rem;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .top p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .top-actions {
       display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1 1 auto;
-      min-width: 0;
+      gap: 8px;
+      flex: 0 0 auto;
     }
 
-    .brand-mark {
-      display: grid;
+    .icon-btn {
+      display: inline-grid;
       place-items: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: var(--primary-soft);
-      color: var(--primary-dark);
+      width: 42px;
+      min-width: 42px;
+      min-height: 42px;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
       font-weight: 800;
     }
 
-    .brand h1 {
-      margin: 0;
-      font-size: 1.1rem;
-      line-height: 1.15;
-    }
-
-    .brand > div:last-child,
-    .section-head > div {
-      min-width: 0;
-    }
-
-    .brand p {
-      margin: 2px 0 0;
-      color: var(--muted);
-      font-size: 0.82rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
     .content {
-      padding: 16px;
-      min-width: 0;
+      padding: 10px 18px 22px;
     }
 
-    .view {
-      display: none;
-    }
-
-    .view.active {
-      display: block;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
+    .view { display: none; }
+    .view.active { display: block; }
 
     .bottom-nav {
       position: fixed;
@@ -157,52 +170,53 @@
       left: 0;
       z-index: 30;
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 4px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 2px;
       width: 100%;
-      max-width: 980px;
+      max-width: 480px;
       margin: 0 auto;
       padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
       background: oklch(1 0 0 / 0.96);
       border-top: 1px solid var(--line);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(14px);
     }
 
     .nav-btn {
       display: grid;
-      gap: 2px;
+      gap: 3px;
       place-items: center;
-      min-height: 56px;
-      border-radius: 10px;
-      background: transparent;
+      min-width: 0;
+      min-height: 58px;
+      border-radius: 12px;
       color: var(--muted);
       font-size: 0.72rem;
-      font-weight: 700;
-      min-width: 0;
+      font-weight: 750;
     }
 
-    .nav-btn .icon {
-      font-size: 1.18rem;
-      line-height: 1;
+    .nav-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     .nav-btn.active {
-      background: var(--accent-soft);
-      color: var(--accent);
+      color: var(--green);
+      background: var(--green-soft);
     }
 
-    .stack {
-      display: grid;
-      gap: 14px;
-    }
+    .stack { display: grid; gap: 16px; }
+    .list { display: grid; gap: 10px; }
 
     .section-head {
       display: flex;
-      align-items: end;
+      align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin: 6px 0 10px;
+      gap: 10px;
+      margin: 2px 0 10px;
     }
 
     .section-head h2,
@@ -215,42 +229,22 @@
     .section-head p {
       margin: 2px 0 0;
       color: var(--muted);
-      font-size: 0.86rem;
+      font-size: 0.84rem;
     }
 
-    .panel {
+    .card {
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: var(--bg);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
     }
 
-    .panel-inner {
-      padding: 14px;
-    }
+    .card.pad { padding: 14px; }
 
-    .hero-panel {
-      background: linear-gradient(135deg, var(--primary-soft), oklch(0.98 0.012 95));
-      border: 1px solid oklch(0.88 0.04 76);
-    }
-
-    .hero-panel h2 {
-      margin: 0 0 6px;
-      font-size: 1.35rem;
-      line-height: 1.2;
-      text-wrap: balance;
-    }
-
-    .hero-panel p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .quick-actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 14px;
-      min-width: 0;
+    .soft {
+      background: linear-gradient(135deg, var(--green-soft), oklch(0.985 0.01 128));
+      border-color: oklch(0.88 0.04 148);
     }
 
     .btn {
@@ -258,229 +252,289 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      border-radius: 10px;
-      padding: 10px 13px;
-      color: var(--ink);
+      min-height: var(--tap);
+      padding: 10px 14px;
+      border-radius: 12px;
       background: var(--surface);
       border: 1px solid var(--line);
-      font-weight: 750;
-      text-decoration: none;
+      color: var(--ink);
+      font-weight: 800;
       text-align: center;
-      white-space: normal;
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
     }
 
     .btn.primary {
-      background: var(--primary);
-      color: white;
+      background: var(--green);
       border-color: transparent;
-    }
-
-    .btn.accent {
-      background: var(--accent);
       color: white;
-      border-color: transparent;
     }
 
     .btn.danger {
-      background: var(--danger-soft);
-      color: var(--danger);
-      border-color: oklch(0.84 0.05 28);
+      background: var(--red-soft);
+      border-color: oklch(0.86 0.05 28);
+      color: var(--red);
     }
 
     .btn.ghost {
       background: transparent;
       border-color: transparent;
+      box-shadow: none;
       color: var(--muted);
     }
 
     .btn.small {
       min-height: 36px;
       padding: 7px 10px;
-      border-radius: 9px;
+      border-radius: 10px;
       font-size: 0.88rem;
     }
 
-    .btn.full {
-      width: 100%;
-    }
+    .btn.full { width: 100%; }
 
-    .toolbar {
+    .pill-row {
       display: flex;
       gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
+      overflow-x: auto;
+      padding: 2px 0 4px;
+      scrollbar-width: none;
     }
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
+    .pill-row::-webkit-scrollbar { display: none; }
 
-    .stat {
-      padding: 12px;
+    .chip {
+      flex: 0 0 auto;
+      min-height: 36px;
+      padding: 8px 13px;
       border: 1px solid var(--line);
-      border-radius: 12px;
+      border-radius: 999px;
       background: var(--surface);
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 1.35rem;
-      line-height: 1;
-    }
-
-    .stat span {
-      display: block;
-      margin-top: 5px;
       color: var(--muted);
-      font-size: 0.82rem;
+      font-weight: 750;
+      box-shadow: none;
     }
 
-    .meal-today {
+    .chip.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: white;
+    }
+
+    .quick-grid {
       display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
     }
 
-    .meal-row,
-    .item-row,
-    .recipe-card,
-    .category-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px;
+    .quick-card {
+      display: grid;
+      place-items: center;
+      gap: 8px;
+      min-height: 92px;
+      padding: 10px;
       border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--bg);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      font-size: 0.82rem;
+      font-weight: 750;
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .quick-mark {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      background: var(--green-soft);
+      color: var(--green-dark);
+      font-weight: 900;
+    }
+
+    .youtube { background: oklch(0.95 0.045 28); color: var(--red); }
+    .tiktok { background: oklch(0.95 0.018 250); color: var(--ink); }
+
+    .meal-list {
+      display: grid;
     }
 
     .meal-row {
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: 94px 82px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
     }
+
+    .meal-row:last-child { border-bottom: 0; }
 
     .meal-label {
-      min-width: 72px;
-      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .meal-icon {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: var(--yellow-soft);
+      color: oklch(0.55 0.13 70);
       font-size: 0.86rem;
-      font-weight: 750;
     }
 
-    .row-main {
-      min-width: 0;
-      flex: 1;
+    .meal-icon.night {
+      background: var(--blue-soft);
+      color: oklch(0.48 0.12 260);
     }
 
-    .row-main strong,
+    .thumb {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 0.72;
+      border-radius: 12px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 70% 32%, oklch(0.82 0.12 48), transparent 17%),
+        radial-gradient(circle at 36% 56%, oklch(0.64 0.16 30), transparent 22%),
+        linear-gradient(135deg, oklch(0.92 0.055 82), oklch(0.74 0.08 42));
+      border: 1px solid oklch(0.2 0.02 150 / 0.08);
+      color: white;
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb::after {
+      content: attr(data-initial);
+      position: absolute;
+      right: 8px;
+      bottom: 6px;
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: oklch(0.18 0.018 150 / 0.5);
+      color: white;
+      font-weight: 900;
+      font-size: 0.86rem;
+    }
+
+    .thumb.has-img::after { display: none; }
+
+    .meal-main strong,
     .recipe-card strong,
-    .category-row strong {
+    .bill-card strong,
+    .item-row strong {
       display: block;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    .row-main small,
+    .meal-main small,
     .recipe-card small,
-    .category-row small {
+    .bill-card small,
+    .item-row small {
       display: block;
       margin-top: 3px;
       color: var(--muted);
       font-size: 0.8rem;
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      min-height: 28px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 0.78rem;
-      font-weight: 750;
-      white-space: nowrap;
-    }
-
-    .badge.primary {
-      background: var(--primary-soft);
-      border-color: oklch(0.86 0.05 70);
-      color: var(--primary-dark);
-    }
-
-    .badge.accent {
-      background: var(--accent-soft);
-      border-color: oklch(0.84 0.05 155);
-      color: var(--accent);
-    }
-
-    .list {
+    .recipe-strip {
       display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 142px;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .recipe-strip::-webkit-scrollbar { display: none; }
+
+    .recipe-mini {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .recipe-mini .body { padding: 8px; }
+
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
 
-    .empty {
-      padding: 18px;
-      border: 1px dashed var(--line);
-      border-radius: 12px;
+    .recipe-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
       background: var(--surface);
-      color: var(--muted);
-      text-align: center;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
     }
 
-    .form-grid {
+    .recipe-card .body {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+    }
+
+    .recipe-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green-dark);
+      font-size: 0.76rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag.muted {
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--line);
+    }
+
+    .form {
       display: grid;
       gap: 12px;
     }
 
-    label {
+    .field { display: grid; gap: 6px; font-weight: 800; font-size: 0.9rem; }
+    .field span { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+
+    .two-col {
       display: grid;
-      gap: 6px;
-      color: var(--ink);
-      font-size: 0.88rem;
-      font-weight: 750;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      min-height: var(--tap);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 12px;
-      background: var(--bg);
-      color: var(--ink);
-      outline: none;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 96px;
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-      color: oklch(0.45 0.02 78);
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus,
-    button:focus-visible {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px oklch(0.7 0.12 155 / 0.18);
-    }
-
-    .inline-form {
-      display: none;
-    }
-
-    .inline-form.active {
-      display: block;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
     .form-actions {
@@ -490,63 +544,228 @@
       justify-content: flex-end;
     }
 
-    .field-row {
+    .hidden { display: none !important; }
+
+    .empty {
+      display: grid;
+      gap: 10px;
+      place-items: center;
+      padding: 28px 18px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .empty strong {
+      color: var(--ink);
+      font-size: 1.05rem;
+    }
+
+    .week-days {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 7px;
+      margin-bottom: 14px;
+    }
+
+    .day-btn {
+      display: grid;
+      place-items: center;
+      gap: 4px;
+      min-height: 58px;
+      border-radius: 999px;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .day-btn span:first-child {
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    .day-btn.active {
+      background: var(--green);
+      color: white;
+    }
+
+    .day-btn.active span:first-child { color: white; }
+
+    .plan-section {
+      display: grid;
+      gap: 10px;
+    }
+
+    .plan-slot {
+      display: grid;
+      gap: 10px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .plan-slot:last-child { border-bottom: 0; }
+
+    .slot-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .slot-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 900;
+    }
+
+    .slot-cards {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
-    .search-row {
+    .slot-card {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .category-dot {
-      width: 14px;
-      height: 14px;
-      flex: 0 0 auto;
-      border-radius: 999px;
-      background: var(--dot, var(--primary));
-      border: 1px solid oklch(0.2 0.02 78 / 0.12);
-    }
-
-    .recipe-meta {
-      display: flex;
       gap: 6px;
+      min-height: 122px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .slot-card.add {
+      place-items: center;
+      border-style: dashed;
+      color: var(--muted);
+      box-shadow: none;
+    }
+
+    .bill-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .bill-card .summary {
+      display: flex;
+      gap: 8px;
       flex-wrap: wrap;
       margin-top: 8px;
     }
 
-    .recipe-card {
-      align-items: flex-start;
+    .progress {
+      height: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--surface-2);
     }
 
-    .recipe-card.favorite {
-      border-color: oklch(0.84 0.07 75);
-      background: oklch(0.985 0.018 82);
+    .progress span {
+      display: block;
+      width: var(--value, 0%);
+      height: 100%;
+      background: var(--green);
     }
 
-    .recipe-actions,
-    .row-actions {
-      display: flex;
-      gap: 6px;
-      flex: 0 0 auto;
-      align-items: center;
-    }
-
-    .icon-btn {
-      display: inline-grid;
+    .bill-photo {
+      display: grid;
       place-items: center;
-      min-width: 38px;
-      width: 38px;
-      min-height: 38px;
-      border-radius: 9px;
-      background: var(--surface);
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      background: var(--green-soft);
+      border: 1px solid oklch(0.84 0.045 148);
+      color: var(--green-dark);
+      font-weight: 900;
+      overflow: hidden;
+    }
+
+    .bill-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .photo-tile {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 14px;
+      overflow: hidden;
       border: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+
+    .photo-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-tile button {
+      position: absolute;
+      right: 4px;
+      top: 4px;
+      width: 28px;
+      min-width: 28px;
+      min-height: 28px;
+      border-radius: 999px;
+      background: oklch(0.18 0.018 150 / 0.72);
+      color: white;
+      font-size: 0.8rem;
+      box-shadow: none;
+    }
+
+    .item-row {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .item-row:last-child { border-bottom: 0; }
+
+    .item-row input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      min-height: 22px;
+      accent-color: var(--green);
+    }
+
+    .item-row.done .item-text {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .group-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 12px;
+      padding-bottom: 2px;
       color: var(--ink);
-      font-weight: 800;
+      font-weight: 900;
     }
 
     .detail-head {
@@ -564,299 +783,145 @@
 
     .detail-title h2 {
       margin: 0;
-      font-size: 1.55rem;
-      line-height: 1.16;
+      font-size: 1.5rem;
+      line-height: 1.15;
       text-wrap: balance;
     }
 
-    .recipe-body {
-      display: grid;
-      gap: 12px;
-    }
-
     .text-block {
+      margin: 0;
       white-space: pre-wrap;
       word-break: break-word;
-      margin: 0;
-    }
-
-    .planner-controls {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .week-title {
-      text-align: center;
-      font-weight: 800;
-    }
-
-    .planner {
-      display: grid;
-      gap: 12px;
-    }
-
-    .day-card {
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--bg);
-      overflow: hidden;
-    }
-
-    .day-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 11px 12px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--line);
-      font-weight: 800;
-    }
-
-    .day-head span:last-child {
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 0.86rem;
-    }
-
-    .meal-slot {
-      display: grid;
-      grid-template-columns: 74px 1fr;
-      gap: 10px;
-      align-items: center;
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .meal-slot:last-child {
-      border-bottom: 0;
-    }
-
-    .slot-form {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 7px;
-    }
-
-    .slot-form select,
-    .slot-form input {
-      min-height: 38px;
-      padding: 7px 9px;
-      border-radius: 9px;
-      font-size: 0.92rem;
-    }
-
-    .shopping-head {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .shopping-group {
-      display: grid;
-      gap: 8px;
-    }
-
-    .shopping-group h3 {
-      margin: 12px 0 0;
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    .check-row {
-      display: grid;
-      grid-template-columns: 30px 1fr auto;
-      gap: 10px;
-      align-items: center;
-      padding: 11px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--bg);
-    }
-
-    .check-row input[type="checkbox"] {
-      width: 22px;
-      height: 22px;
-      min-height: 22px;
-      accent-color: var(--accent);
-    }
-
-    .check-row.done .row-main {
-      color: var(--muted);
-      text-decoration: line-through;
-    }
-
-    .settings-grid {
-      display: grid;
-      gap: 12px;
     }
 
     .toast {
       position: fixed;
-      right: 16px;
-      bottom: 92px;
-      left: 16px;
-      z-index: 50;
-      max-width: 420px;
+      right: 18px;
+      bottom: calc(88px + env(safe-area-inset-bottom));
+      left: 18px;
+      z-index: 60;
+      max-width: 430px;
       margin: 0 auto;
       padding: 12px 14px;
-      border-radius: 12px;
+      border-radius: 14px;
       background: var(--ink);
       color: white;
       box-shadow: var(--shadow);
-      transform: translateY(16px);
       opacity: 0;
+      transform: translateY(14px);
       pointer-events: none;
-      transition: opacity 160ms ease-out, transform 160ms ease-out;
+      transition: opacity 160ms ease, transform 160ms ease;
     }
 
     .toast.show {
-      transform: translateY(0);
       opacity: 1;
+      transform: translateY(0);
     }
 
-    @media (min-width: 720px) {
+    @media (min-width: 820px) {
+      body {
+        background: linear-gradient(180deg, oklch(0.965 0.004 150), oklch(0.94 0.006 150));
+      }
+
       .app {
-        display: grid;
-        grid-template-columns: 220px 1fr;
-        padding-bottom: 0;
+        margin-top: 24px;
+        margin-bottom: 24px;
+        min-height: calc(100vh - 48px);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: 0 26px 70px oklch(0.2 0.02 150 / 0.13);
       }
 
-      .topbar {
-        grid-column: 1 / -1;
-        padding-inline: 22px;
-      }
-
-      .bottom-nav {
-        position: sticky;
-        top: 68px;
-        left: auto;
-        right: auto;
-        bottom: auto;
-        align-self: start;
-        display: flex;
-        flex-direction: column;
-        width: auto;
-        min-height: calc(100vh - 68px);
-        margin: 0;
-        padding: 14px;
-        border-top: 0;
-        border-right: 1px solid var(--line);
-      }
-
-      .nav-btn {
-        grid-template-columns: 28px 1fr;
-        justify-items: start;
-        padding-inline: 12px;
-      }
-
-      .content {
-        padding: 24px;
-        min-width: 0;
-      }
-
-      .stats-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-
-      .quick-actions,
-      .search-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .planner {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .bottom-nav { position: sticky; }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true">ครัว</div>
-        <div>
-          <h1>ครัวของฉัน</h1>
-          <p id="subtitle">สมุดสูตร ตารางอาหาร รายการซื้อของ</p>
-        </div>
-      </div>
-      <button class="btn small" type="button" data-tab="settings">ตั้งค่า</button>
-    </header>
-
-    <nav class="bottom-nav" aria-label="หน้าหลัก">
-      <button class="nav-btn active" type="button" data-tab="home"><span class="icon">⌂</span><span>หน้าแรก</span></button>
-      <button class="nav-btn" type="button" data-tab="categories"><span class="icon">▦</span><span>หมวด</span></button>
-      <button class="nav-btn" type="button" data-tab="recipes"><span class="icon">□</span><span>สูตร</span></button>
-      <button class="nav-btn" type="button" data-tab="planner"><span class="icon">▤</span><span>ตาราง</span></button>
-      <button class="nav-btn" type="button" data-tab="shopping"><span class="icon">✓</span><span>ซื้อของ</span></button>
-    </nav>
-
+    <header class="top" id="topbar"></header>
     <main class="content">
-      <section class="view active" id="view-home"></section>
-      <section class="view" id="view-categories"></section>
-      <section class="view" id="view-recipes"></section>
-      <section class="view" id="view-detail"></section>
-      <section class="view" id="view-planner"></section>
-      <section class="view" id="view-shopping"></section>
-      <section class="view" id="view-settings"></section>
+      <section id="view-home" class="view active"></section>
+      <section id="view-recipes" class="view"></section>
+      <section id="view-recipe-detail" class="view"></section>
+      <section id="view-planner" class="view"></section>
+      <section id="view-shopping" class="view"></section>
+      <section id="view-bill-detail" class="view"></section>
+      <section id="view-settings" class="view"></section>
     </main>
+    <nav class="bottom-nav" aria-label="เมนูหลัก">
+      <button class="nav-btn active" type="button" data-tab="home" aria-label="วันนี้">
+        <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"></path><path d="M5 10.5V20h14v-9.5"></path><path d="M9 20v-6h6v6"></path></svg>
+        <span>วันนี้</span>
+      </button>
+      <button class="nav-btn" type="button" data-tab="recipes" aria-label="สูตรอาหาร">
+        <svg viewBox="0 0 24 24"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H20v17H8.5A3.5 3.5 0 0 0 5 22z"></path><path d="M5 5.5V22"></path><path d="M9 6h7"></path><path d="M9 10h6"></path></svg>
+        <span>สูตรอาหาร</span>
+      </button>
+      <button class="nav-btn" type="button" data-tab="planner" aria-label="ตารางสัปดาห์">
+        <svg viewBox="0 0 24 24"><path d="M7 3v3"></path><path d="M17 3v3"></path><rect x="4" y="5" width="16" height="16" rx="2"></rect><path d="M4 10h16"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path></svg>
+        <span>ตารางสัปดาห์</span>
+      </button>
+      <button class="nav-btn" type="button" data-tab="shopping" aria-label="รายการซื้อของ">
+        <svg viewBox="0 0 24 24"><path d="M6 6h15l-2 8H8z"></path><path d="M6 6 5 3H2"></path><path d="M8 18a1.5 1.5 0 1 0 0 .01"></path><path d="M18 18a1.5 1.5 0 1 0 0 .01"></path></svg>
+        <span>รายการซื้อของ</span>
+      </button>
+    </nav>
   </div>
-
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    const STORAGE_KEY = "my-kitchen-app-v1";
-    const mealSlots = [
-      ["breakfast", "เช้า"],
-      ["lunch", "กลางวัน"],
-      ["dinner", "เย็น"]
+    const STORAGE_KEY = "my-kitchen-app-v2";
+    const OLD_KEY = "my-kitchen-app-v1";
+    const slots = [
+      { id: "breakfast", label: "มื้อเช้า", short: "เช้า", time: "07:30", tone: "day" },
+      { id: "lunch", label: "มื้อกลางวัน", short: "กลางวัน", time: "12:30", tone: "day" },
+      { id: "dinner", label: "มื้อเย็น", short: "เย็น", time: "18:30", tone: "night" }
     ];
+    const groups = ["ผัก", "เนื้อสัตว์", "เครื่องปรุง", "ของแห้ง", "อื่น ๆ"];
     const dayNames = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
-    const shoppingGroups = ["ผัก", "เนื้อสัตว์", "เครื่องปรุง", "ของแห้ง", "อื่น ๆ"];
-    const categoryColors = [
-      "oklch(0.70 0.13 60)",
-      "oklch(0.64 0.12 155)",
-      "oklch(0.66 0.11 32)",
-      "oklch(0.66 0.10 235)",
-      "oklch(0.72 0.12 95)",
-      "oklch(0.62 0.13 335)"
-    ];
+    const categorySeeds = ["กับข้าว", "อาหารจานเดียว", "ของหวาน", "เมนูโปรด"];
+    const sourceOptions = ["เพิ่มเอง", "YouTube", "TikTok"];
 
     let data = loadData();
-    let activeTab = "home";
-    let recipeFilter = "all";
+    let activeView = "home";
+    let activeRecipeFilter = "ทั้งหมด";
     let recipeSearch = "";
     let editingRecipeId = null;
     let editingCategoryId = null;
-    let editingShoppingId = null;
     let detailRecipeId = null;
-    let weekStart = startOfWeek(new Date());
+    let selectedDate = todayKey();
+    let activeBillId = null;
+    let editingBillId = null;
+    let editingItemId = null;
 
     function uid(prefix) {
       return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     }
 
     function todayKey() {
-      return toDateKey(new Date());
+      return dateKey(new Date());
     }
 
-    function toDateKey(date) {
-      const d = new Date(date);
+    function dateKey(input) {
+      const d = new Date(input);
       const y = d.getFullYear();
       const m = String(d.getMonth() + 1).padStart(2, "0");
       const day = String(d.getDate()).padStart(2, "0");
       return `${y}-${m}-${day}`;
     }
 
-    function dateLabel(key) {
-      const d = new Date(`${key}T00:00:00`);
+    function parseDate(key) {
+      return new Date(`${key}T00:00:00`);
+    }
+
+    function shortDate(key) {
+      const d = parseDate(key);
       return `${d.getDate()}/${d.getMonth() + 1}`;
     }
 
-    function fullDateLabel(key) {
-      const d = new Date(`${key}T00:00:00`);
+    function longDate(key) {
+      const d = parseDate(key);
       return `${dayNames[d.getDay()]} ${d.getDate()}/${d.getMonth() + 1}`;
     }
 
@@ -868,13 +933,13 @@
       return d;
     }
 
-    function addDays(date, days) {
+    function addDays(date, amount) {
       const d = new Date(date);
-      d.setDate(d.getDate() + days);
+      d.setDate(d.getDate() + amount);
       return d;
     }
 
-    function escapeHtml(value) {
+    function esc(value) {
       return String(value ?? "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
@@ -883,502 +948,676 @@
         .replaceAll("'", "&#039;");
     }
 
-    function nl2br(value) {
-      return escapeHtml(value).replace(/\n/g, "<br>");
+    function nl(value) {
+      return esc(value).replace(/\n/g, "<br>");
     }
 
     function loadData() {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
+        try { return normalize(JSON.parse(stored)); } catch (error) { console.warn(error); }
+      }
+      const old = localStorage.getItem(OLD_KEY);
+      if (old) {
         try {
-          return normalizeData(JSON.parse(stored));
-        } catch (error) {
-          console.warn("Cannot parse stored data", error);
-        }
+          const migrated = migrateOld(JSON.parse(old));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+          return migrated;
+        } catch (error) { console.warn(error); }
       }
       return seedData();
     }
 
     function seedData() {
       const now = new Date().toISOString();
-      const categories = [
-        { id: uid("cat"), name: "กับข้าว", color: categoryColors[0], createdAt: now },
-        { id: uid("cat"), name: "อาหารจานเดียว", color: categoryColors[1], createdAt: now },
-        { id: uid("cat"), name: "ของหวาน", color: categoryColors[2], createdAt: now }
-      ];
+      const categories = categorySeeds.map((name) => ({ id: uid("cat"), name, createdAt: now }));
+      const getCat = (name) => categories.find((cat) => cat.name === name).id;
       const recipes = [
-        {
-          id: uid("recipe"),
-          title: "กะเพราไก่ไข่ดาว",
-          categoryId: categories[1].id,
-          videoUrl: "",
-          ingredients: "ไก่สับ 200 กรัม\nใบกะเพรา 1 กำมือ\nกระเทียม พริก\nซอสปรุงรส น้ำปลา น้ำตาลเล็กน้อย\nไข่ไก่ 1 ฟอง",
-          steps: "1. ผัดกระเทียมพริกให้หอม\n2. ใส่ไก่สับ ผัดจนสุก\n3. ปรุงรสแล้วใส่ใบกะเพรา\n4. ทอดไข่ดาว เสิร์ฟกับข้าว",
-          notes: "ทำเผ็ดน้อยไว้ก่อน แล้วเติมพริกตอนกินได้",
-          favorite: true,
-          createdAt: now,
-          updatedAt: now
-        },
-        {
-          id: uid("recipe"),
-          title: "ไข่เจียวหมูสับ",
-          categoryId: categories[0].id,
-          videoUrl: "",
-          ingredients: "ไข่ไก่ 2 ฟอง\nหมูสับ 80 กรัม\nน้ำปลาเล็กน้อย\nน้ำมันสำหรับทอด",
-          steps: "1. ตีไข่กับหมูสับและน้ำปลา\n2. ตั้งน้ำมันให้ร้อน\n3. เทไข่ลงทอดจนเหลืองทั้งสองด้าน",
-          notes: "เหมาะกับวันที่อยากทำเร็ว",
-          favorite: false,
-          createdAt: now,
-          updatedAt: now
-        }
+        makeRecipe("ข้าวต้มหมูสับ", getCat("อาหารจานเดียว"), "YouTube", true, "ข้าวสวย 1 ถ้วย\nหมูสับ 150 กรัม\nกระเทียมเจียว\nต้นหอม ผักชี", "ต้มน้ำซุป ใส่หมูสับ ใส่ข้าว ปรุงรส แล้วโรยกระเทียมเจียว", ""),
+        makeRecipe("กะเพราหมูสับ", getCat("กับข้าว"), "TikTok", true, "หมูสับ 200 กรัม\nกะเพรา 1 กำ\nพริก กระเทียม\nซอสปรุงรส", "ผัดพริกกระเทียม ใส่หมู ปรุงรส ใส่กะเพราปิดท้าย", ""),
+        makeRecipe("ต้มยำกุ้งน้ำข้น", getCat("กับข้าว"), "เพิ่มเอง", false, "กุ้งสด\nข่า ตะไคร้ ใบมะกรูด\nเห็ด\nนมข้นจืด น้ำพริกเผา", "ต้มน้ำสมุนไพร ใส่เห็ดและกุ้ง ปรุงรส ใส่นมข้นจืดท้ายสุด", ""),
+        makeRecipe("ผัดไทยกุ้งสด", getCat("อาหารจานเดียว"), "YouTube", false, "เส้นจันท์\nกุ้งสด\nไข่\nถั่วงอก กุยช่าย\nน้ำซอสผัดไทย", "ผัดเส้นกับซอส ใส่ไข่และกุ้ง คลุกผัก เสิร์ฟกับถั่วลิสง", "")
       ];
-      const today = todayKey();
+      const mealPlan = {};
+      mealPlan[todayKey()] = {
+        breakfast: { recipeId: recipes[0].id, custom: "" },
+        lunch: { recipeId: recipes[1].id, custom: "" },
+        dinner: { recipeId: recipes[2].id, custom: "" }
+      };
       return {
         categories,
         recipes,
-        mealPlan: {
-          [today]: {
-            breakfast: { recipeId: "", custom: "กาแฟ + ขนมปัง" },
-            lunch: { recipeId: recipes[0].id, custom: "" },
-            dinner: { recipeId: recipes[1].id, custom: "" }
-          }
-        },
-        shoppingItems: [
-          { id: uid("shop"), name: "ใบกะเพรา", qty: "1", unit: "กำ", group: "ผัก", done: false, createdAt: now },
-          { id: uid("shop"), name: "ไข่ไก่", qty: "10", unit: "ฟอง", group: "ของแห้ง", done: false, createdAt: now },
-          { id: uid("shop"), name: "น้ำปลา", qty: "1", unit: "ขวด", group: "เครื่องปรุง", done: true, createdAt: now }
-        ],
-        settings: {
-          cycleDays: 7,
-          cycleStart: today,
-          seeded: true
-        }
+        mealPlan,
+        shoppingBills: [],
+        settings: { cycleDays: 7, cycleStart: todayKey() }
       };
     }
 
-    function normalizeData(raw) {
+    function makeRecipe(title, categoryId, source, favorite, ingredients, steps, image) {
+      const now = new Date().toISOString();
+      return {
+        id: uid("recipe"),
+        title,
+        categoryId,
+        source,
+        videoUrl: "",
+        image: image || "",
+        ingredients,
+        steps,
+        notes: "",
+        favorite,
+        createdAt: now,
+        updatedAt: now
+      };
+    }
+
+    function migrateOld(old) {
+      const seeded = seedData();
+      const categories = Array.isArray(old.categories) && old.categories.length
+        ? old.categories.map((cat) => ({ id: cat.id || uid("cat"), name: cat.name || "หมวด", createdAt: cat.createdAt || new Date().toISOString() }))
+        : seeded.categories;
+      const recipes = Array.isArray(old.recipes) ? old.recipes.map((recipe) => ({
+        id: recipe.id || uid("recipe"),
+        title: recipe.title || "เมนูไม่มีชื่อ",
+        categoryId: recipe.categoryId || categories[0]?.id,
+        source: recipe.videoUrl ? "YouTube" : "เพิ่มเอง",
+        videoUrl: recipe.videoUrl || "",
+        image: recipe.image || "",
+        ingredients: recipe.ingredients || "",
+        steps: recipe.steps || "",
+        notes: recipe.notes || "",
+        favorite: Boolean(recipe.favorite),
+        createdAt: recipe.createdAt || new Date().toISOString(),
+        updatedAt: recipe.updatedAt || new Date().toISOString()
+      })) : seeded.recipes;
+      const billItems = Array.isArray(old.shoppingItems) ? old.shoppingItems.map((item) => ({
+        id: item.id || uid("item"),
+        name: item.name || "",
+        qty: item.qty || "",
+        unit: item.unit || "",
+        group: groups.includes(item.group) ? item.group : "อื่น ๆ",
+        done: Boolean(item.done)
+      })) : [];
+      return {
+        categories,
+        recipes,
+        mealPlan: old.mealPlan && typeof old.mealPlan === "object" ? old.mealPlan : {},
+        shoppingBills: billItems.length ? [{
+          id: uid("bill"),
+          title: "รายการซื้อของเดิม",
+          date: todayKey(),
+          budget: "",
+          photos: [],
+          items: billItems,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }] : [],
+        settings: { ...seeded.settings, ...(old.settings || {}) }
+      };
+    }
+
+    function normalize(raw) {
       const seeded = seedData();
       return {
         categories: Array.isArray(raw.categories) ? raw.categories : seeded.categories,
-        recipes: Array.isArray(raw.recipes) ? raw.recipes : [],
+        recipes: Array.isArray(raw.recipes) ? raw.recipes.map((recipe) => ({ image: "", source: "เพิ่มเอง", ...recipe })) : seeded.recipes,
         mealPlan: raw.mealPlan && typeof raw.mealPlan === "object" ? raw.mealPlan : {},
-        shoppingItems: Array.isArray(raw.shoppingItems) ? raw.shoppingItems : [],
+        shoppingBills: Array.isArray(raw.shoppingBills) ? raw.shoppingBills.map((bill) => ({ photos: [], items: [], ...bill })) : [],
         settings: { ...seeded.settings, ...(raw.settings || {}) }
       };
     }
 
-    function saveData(message) {
+    function save(message) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       render();
-      if (message) showToast(message);
+      if (message) toast(message);
     }
 
-    function showToast(message) {
-      const toast = document.getElementById("toast");
-      toast.textContent = message;
-      toast.classList.add("show");
-      clearTimeout(showToast.timer);
-      showToast.timer = setTimeout(() => toast.classList.remove("show"), 1900);
+    function toast(message) {
+      const el = document.getElementById("toast");
+      el.textContent = message;
+      el.classList.add("show");
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => el.classList.remove("show"), 1800);
     }
 
-    function setTab(tab) {
-      activeTab = tab;
-      if (tab !== "detail") detailRecipeId = null;
-      document.querySelectorAll(".nav-btn").forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.tab === tab);
-      });
+    function category(id) {
+      return data.categories.find((cat) => cat.id === id);
+    }
+
+    function recipe(id) {
+      return data.recipes.find((item) => item.id === id);
+    }
+
+    function bill(id) {
+      return data.shoppingBills.find((item) => item.id === id);
+    }
+
+    function setView(view) {
+      activeView = view;
+      if (!["recipe-detail", "bill-detail", "settings"].includes(view)) {
+        detailRecipeId = null;
+        activeBillId = null;
+      }
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function getCategory(id) {
-      return data.categories.find((category) => category.id === id);
-    }
-
-    function getRecipe(id) {
-      return data.recipes.find((recipe) => recipe.id === id);
-    }
-
-    function mealName(entry) {
-      if (!entry) return "ยังไม่ได้วางแผน";
-      const recipe = entry.recipeId ? getRecipe(entry.recipeId) : null;
-      return recipe ? recipe.title : entry.custom || "ยังไม่ได้วางแผน";
-    }
-
-    function cycleSummary() {
-      const start = new Date(`${data.settings.cycleStart || todayKey()}T00:00:00`);
-      const days = Number(data.settings.cycleDays || 7);
-      const now = new Date();
-      let next = new Date(start);
-      while (next < startOfDay(now)) {
-        next.setDate(next.getDate() + days);
-      }
-      const diff = Math.ceil((next - startOfDay(now)) / 86400000);
-      return { next: toDateKey(next), daysLeft: Math.max(diff, 0), days };
-    }
-
-    function startOfDay(date) {
-      const d = new Date(date);
-      d.setHours(0, 0, 0, 0);
-      return d;
-    }
-
     function render() {
-      document.querySelectorAll(".view").forEach((view) => view.classList.remove("active"));
-      const target = document.getElementById(`view-${activeTab}`);
-      if (target) target.classList.add("active");
+      renderTopbar();
+      document.querySelectorAll(".view").forEach((el) => el.classList.remove("active"));
+      const el = document.getElementById(`view-${activeView}`);
+      if (el) el.classList.add("active");
+      document.querySelectorAll(".nav-btn").forEach((btn) => {
+        const tab = btn.dataset.tab;
+        const active =
+          activeView === tab ||
+          (activeView === "recipe-detail" && tab === "recipes") ||
+          (activeView === "bill-detail" && tab === "shopping");
+        btn.classList.toggle("active", active);
+      });
       renderHome();
-      renderCategories();
       renderRecipes();
-      renderDetail();
+      renderRecipeDetail();
       renderPlanner();
       renderShopping();
+      renderBillDetail();
       renderSettings();
     }
 
+    function titleForView() {
+      if (activeView === "home") return ["วันนี้", "ดูมื้ออาหารและบิลซื้อของ"];
+      if (activeView === "recipes") return ["สูตรอาหาร", "จดสูตรจาก YouTube, TikTok หรือเพิ่มเอง"];
+      if (activeView === "planner") return ["ตารางสัปดาห์", "วางแผนมื้ออาหารรายสัปดาห์"];
+      if (activeView === "shopping") return ["รายการซื้อของ", "แยกเป็นบิลซื้อของแต่ละรอบ"];
+      if (activeView === "settings") return ["ตั้งค่า", "สำรองและนำเข้าข้อมูล"];
+      if (activeView === "recipe-detail") return ["สูตรอาหาร", "รายละเอียดสูตร"];
+      if (activeView === "bill-detail") return ["บิลซื้อของ", "รายการและรูปหลังซื้อของ"];
+      return ["ครัวของฉัน", ""];
+    }
+
+    function renderTopbar() {
+      const [title, sub] = titleForView();
+      const back = activeView === "recipe-detail" || activeView === "bill-detail" || activeView === "settings";
+      const backTarget = activeView === "bill-detail" ? "shopping" : activeView === "recipe-detail" ? "recipes" : "home";
+      document.getElementById("topbar").innerHTML = `
+        <div>
+          ${back ? `<button class="btn small ghost" type="button" data-view="${backTarget}">กลับ</button>` : ""}
+          <h1>${esc(title)}</h1>
+          ${sub ? `<p>${esc(sub)}</p>` : ""}
+        </div>
+        <div class="top-actions">
+          ${activeView === "recipes" ? `<button class="icon-btn" type="button" data-action="new-recipe" title="เพิ่มสูตร">+</button>` : ""}
+          ${activeView === "shopping" ? `<button class="icon-btn" type="button" data-action="new-bill" title="เพิ่มบิล">+</button>` : ""}
+          <button class="icon-btn" type="button" data-view="settings" title="ตั้งค่า">⋯</button>
+        </div>
+      `;
+    }
+
+    function mealEntry(date, slotId) {
+      return data.mealPlan[date]?.[slotId] || { recipeId: "", custom: "" };
+    }
+
+    function mealTitle(date, slotId) {
+      const entry = mealEntry(date, slotId);
+      const item = entry.recipeId ? recipe(entry.recipeId) : null;
+      return item?.title || entry.custom || "ยังไม่ได้วางแผน";
+    }
+
+    function mealRecipe(date, slotId) {
+      const entry = mealEntry(date, slotId);
+      return entry.recipeId ? recipe(entry.recipeId) : null;
+    }
+
+    function thumbHtml(item, className = "thumb") {
+      const initial = (item?.title || item?.name || "เมนู").trim().slice(0, 1);
+      const image = item?.image || "";
+      return `<div class="${className} ${image ? "has-img" : ""}" data-initial="${esc(initial)}">${image ? `<img src="${esc(image)}" alt="">` : ""}</div>`;
+    }
+
     function renderHome() {
-      const today = todayKey();
-      const plan = data.mealPlan[today] || {};
-      const pending = data.shoppingItems.filter((item) => !item.done);
-      const recent = [...data.recipes].sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt))).slice(0, 3);
-      const cycle = cycleSummary();
+      const latest = [...data.recipes].sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt))).slice(0, 6);
+      const bills = [...data.shoppingBills].sort((a, b) => String(b.updatedAt || b.createdAt).localeCompare(String(a.updatedAt || a.createdAt)));
+      const nextBill = bills[0];
       document.getElementById("view-home").innerHTML = `
         <div class="stack">
-          <section class="panel hero-panel">
-            <div class="panel-inner">
-              <h2>วันนี้กินอะไรดี</h2>
-              <p>${fullDateLabel(today)} · รอบซื้อของถัดไป ${dateLabel(cycle.next)} (${cycle.daysLeft} วัน)</p>
-              <div class="quick-actions">
-                <button class="btn primary" type="button" data-action="quick-recipe">เพิ่มเมนู</button>
-                <button class="btn accent" type="button" data-action="quick-shopping">เพิ่มของ</button>
+          <section>
+            <div class="section-head">
+              <div><h2>มื้ออาหารวันนี้</h2><p>${longDate(todayKey())}</p></div>
+              <button class="btn small ghost" type="button" data-view="planner">ดูทั้งหมด</button>
+            </div>
+            <div class="card pad">
+              <div class="meal-list">
+                ${slots.map((slot) => {
+                  const item = mealRecipe(todayKey(), slot.id);
+                  return `
+                    <button class="meal-row" type="button" data-view="planner">
+                      <div class="meal-label"><span class="meal-icon ${slot.tone === "night" ? "night" : ""}">${slot.tone === "night" ? "◐" : "○"}</span>${slot.short}</div>
+                      ${item ? thumbHtml(item) : `<div class="thumb" data-initial="+"></div>`}
+                      <div class="meal-main">
+                        <strong>${esc(mealTitle(todayKey(), slot.id))}</strong>
+                        <small>${slot.time}</small>
+                      </div>
+                    </button>
+                  `;
+                }).join("")}
               </div>
             </div>
           </section>
 
-          <section class="stats-grid" aria-label="ภาพรวม">
-            <div class="stat"><strong>${data.recipes.length}</strong><span>สูตรทั้งหมด</span></div>
-            <div class="stat"><strong>${data.categories.length}</strong><span>หมวดอาหาร</span></div>
-            <div class="stat"><strong>${pending.length}</strong><span>ของที่ยังไม่ซื้อ</span></div>
-            <div class="stat"><strong>${data.recipes.filter((r) => r.favorite).length}</strong><span>เมนูโปรด</span></div>
-          </section>
-
           <section>
-            <div class="section-head">
-              <div><h2>มื้อวันนี้</h2><p>แตะตารางเพื่อแก้แผนทั้งสัปดาห์</p></div>
-              <button class="btn small" type="button" data-tab="planner">ดูตาราง</button>
-            </div>
-            <div class="meal-today">
-              ${mealSlots.map(([key, label]) => `
-                <div class="meal-row">
-                  <div class="meal-label">${label}</div>
-                  <div class="row-main"><strong>${escapeHtml(mealName(plan[key]))}</strong><small>${plan[key]?.recipeId ? "จากสูตรที่บันทึกไว้" : "พิมพ์เองหรือยังไม่ได้ตั้ง"}</small></div>
-                </div>
-              `).join("")}
+            <div class="section-head"><h2>เพิ่มเมนูด่วน</h2></div>
+            <div class="quick-grid">
+              <button class="quick-card" type="button" data-action="quick-recipe" data-source="YouTube"><span class="quick-mark youtube">▶</span>จาก YouTube</button>
+              <button class="quick-card" type="button" data-action="quick-recipe" data-source="TikTok"><span class="quick-mark tiktok">♪</span>จาก TikTok</button>
+              <button class="quick-card" type="button" data-action="quick-recipe" data-source="เพิ่มเอง"><span class="quick-mark">+</span>เพิ่มเมนูเอง</button>
             </div>
           </section>
 
           <section>
             <div class="section-head">
-              <div><h2>เมนูล่าสุด</h2><p>กลับไปดูสูตรที่เพิ่งจด</p></div>
-              <button class="btn small" type="button" data-tab="recipes">สูตรทั้งหมด</button>
+              <div><h2>สูตรอาหารล่าสุด</h2><p>กลับไปสูตรที่เพิ่งจด</p></div>
+              <button class="btn small ghost" type="button" data-view="recipes">ดูทั้งหมด</button>
             </div>
-            <div class="list">
-              ${recent.length ? recent.map(recipeCardHtml).join("") : `<div class="empty">ยังไม่มีสูตรอาหาร กดเพิ่มเมนูเพื่อเริ่มจดสูตรแรก</div>`}
-            </div>
+            ${latest.length ? `<div class="recipe-strip">${latest.map(recipeMiniHtml).join("")}</div>` : `<div class="empty"><strong>ยังไม่มีสูตรอาหาร</strong><span>กดเพิ่มเมนูเพื่อเริ่มจดสูตรแรก</span></div>`}
+          </section>
+
+          <section>
+            <div class="section-head"><h2>บิลซื้อของล่าสุด</h2></div>
+            ${nextBill ? billCardHtml(nextBill) : `<div class="empty"><strong>ยังไม่มีบิลซื้อของ</strong><span>สร้างบิลซื้อของแต่ละรอบ แล้วจดรายการไว้ในบิลนั้น</span><button class="btn primary" type="button" data-action="new-bill">เพิ่มบิลซื้อของ</button></div>`}
           </section>
         </div>
       `;
     }
 
-    function renderCategories() {
-      const counts = new Map();
-      data.recipes.forEach((recipe) => counts.set(recipe.categoryId, (counts.get(recipe.categoryId) || 0) + 1));
-      document.getElementById("view-categories").innerHTML = `
-        <div class="stack">
-          <div class="section-head">
-            <div><h2>หมวดหมู่</h2><p>จัดสูตรตามแบบที่คุณเรียกเอง</p></div>
-            <button class="btn primary small" type="button" data-action="new-category">เพิ่มหมวด</button>
-          </div>
-          ${categoryFormHtml()}
-          <div class="list">
-            ${data.categories.map((category) => `
-              <div class="category-row">
-                <div class="category-dot" style="--dot: ${category.color}"></div>
-                <div class="row-main">
-                  <strong>${escapeHtml(category.name)}</strong>
-                  <small>${counts.get(category.id) || 0} เมนู</small>
-                </div>
-                <div class="row-actions">
-                  <button class="icon-btn" type="button" title="ดูเมนู" data-action="filter-category" data-id="${category.id}">→</button>
-                  <button class="icon-btn" type="button" title="แก้ไข" data-action="edit-category" data-id="${category.id}">แก้</button>
-                  <button class="icon-btn" type="button" title="ลบ" data-action="delete-category" data-id="${category.id}">ลบ</button>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        </div>
-      `;
-    }
-
-    function categoryFormHtml() {
-      const category = editingCategoryId ? getCategory(editingCategoryId) : null;
-      const active = editingCategoryId === "new" || category;
+    function recipeMiniHtml(item) {
       return `
-        <section class="panel inline-form ${active ? "active" : ""}" id="category-form-panel">
-          <form class="panel-inner form-grid" id="category-form">
-            <label>ชื่อหมวด
-              <input name="name" required maxlength="36" placeholder="เช่น เมนูคลีน" value="${escapeHtml(category?.name || "")}">
-            </label>
-            <label>สีประจำหมวด
-              <select name="color">
-                ${categoryColors.map((color, index) => `<option value="${color}" ${category?.color === color ? "selected" : ""}>สี ${index + 1}</option>`).join("")}
-              </select>
-            </label>
-            <div class="form-actions">
-              <button class="btn ghost" type="button" data-action="cancel-category">ยกเลิก</button>
-              <button class="btn primary" type="submit">บันทึกหมวด</button>
-            </div>
-          </form>
-        </section>
+        <button class="recipe-mini" type="button" data-action="open-recipe" data-id="${item.id}">
+          ${thumbHtml(item)}
+          <div class="body">
+            <strong>${esc(item.title)}</strong>
+            <small>จาก ${esc(item.source || "เพิ่มเอง")}</small>
+          </div>
+        </button>
       `;
     }
 
     function renderRecipes() {
-      const filtered = data.recipes.filter((recipe) => {
-        const matchCategory = recipeFilter === "all" || recipe.categoryId === recipeFilter;
-        const q = recipeSearch.trim().toLowerCase();
-        const matchSearch = !q || [recipe.title, recipe.ingredients, recipe.steps, recipe.notes].join(" ").toLowerCase().includes(q);
-        return matchCategory && matchSearch;
+      const chips = ["ทั้งหมด", ...data.categories.map((cat) => cat.name), "เมนูโปรด"];
+      const q = recipeSearch.trim().toLowerCase();
+      const filtered = data.recipes.filter((item) => {
+        const cat = category(item.categoryId);
+        const matchChip =
+          activeRecipeFilter === "ทั้งหมด" ||
+          activeRecipeFilter === "เมนูโปรด" && item.favorite ||
+          cat?.name === activeRecipeFilter;
+        const matchSearch = !q || [item.title, item.ingredients, item.steps, item.notes, item.source].join(" ").toLowerCase().includes(q);
+        return matchChip && matchSearch;
       });
       document.getElementById("view-recipes").innerHTML = `
         <div class="stack">
-          <div class="section-head">
-            <div><h2>สูตรอาหาร</h2><p>จดจากวิดีโอแล้วเปิดดูตอนทำจริง</p></div>
-            <button class="btn primary small" type="button" data-action="new-recipe">เพิ่มเมนู</button>
+          <div class="card pad form ${editingRecipeId ? "" : "hidden"}" id="recipe-form-wrap">
+            ${recipeFormHtml()}
           </div>
-          ${recipeFormHtml()}
-          <div class="search-row">
-            <input id="recipe-search" type="search" placeholder="ค้นหาเมนู ส่วนผสม หรือโน้ต" value="${escapeHtml(recipeSearch)}">
-            <select id="recipe-filter" aria-label="กรองตามหมวด">
-              <option value="all">ทุกหมวด</option>
-              ${data.categories.map((cat) => `<option value="${cat.id}" ${recipeFilter === cat.id ? "selected" : ""}>${escapeHtml(cat.name)}</option>`).join("")}
-            </select>
+
+          <div class="card pad form ${editingCategoryId ? "" : "hidden"}" id="category-form-wrap">
+            ${categoryFormHtml()}
           </div>
-          <div class="list">
-            ${filtered.length ? filtered.map(recipeCardHtml).join("") : `<div class="empty">ไม่พบเมนูที่ตรงกับเงื่อนไข</div>`}
+
+          <label class="field">ค้นหาสูตร
+            <input id="recipe-search" type="search" placeholder="ค้นหาเมนู ส่วนผสม หรือแหล่งที่มา" value="${esc(recipeSearch)}">
+          </label>
+
+          <div class="pill-row">
+            ${chips.map((chip) => `<button class="chip ${activeRecipeFilter === chip ? "active" : ""}" type="button" data-action="filter-recipe" data-filter="${esc(chip)}">${esc(chip)}</button>`).join("")}
+            <button class="chip" type="button" data-action="new-category">+ หมวด</button>
+          </div>
+
+          <div class="recipe-grid">
+            ${filtered.length ? filtered.map(recipeCardHtml).join("") : `<div class="empty" style="grid-column:1/-1"><strong>ไม่พบสูตร</strong><span>ลองเปลี่ยนคำค้นหรือหมวดอาหาร</span></div>`}
           </div>
         </div>
       `;
     }
 
-    function recipeCardHtml(recipe) {
-      const category = getCategory(recipe.categoryId);
+    function recipeCardHtml(item) {
+      const cat = category(item.categoryId);
       return `
-        <article class="recipe-card ${recipe.favorite ? "favorite" : ""}">
-          <div class="row-main">
-            <strong>${recipe.favorite ? "★ " : ""}${escapeHtml(recipe.title)}</strong>
-            <small>${escapeHtml(category?.name || "ไม่ระบุหมวด")}${recipe.videoUrl ? " · มีลิงก์วิดีโอ" : ""}</small>
-            <div class="recipe-meta">
-              <span class="badge primary">${escapeHtml(category?.name || "ไม่มีหมวด")}</span>
-              ${recipe.favorite ? `<span class="badge accent">เมนูโปรด</span>` : ""}
+        <article class="recipe-card">
+          <button type="button" data-action="open-recipe" data-id="${item.id}">
+            ${thumbHtml(item)}
+          </button>
+          <div class="body">
+            <div>
+              <strong>${item.favorite ? "★ " : ""}${esc(item.title)}</strong>
+              <small>จาก ${esc(item.source || "เพิ่มเอง")}</small>
             </div>
-          </div>
-          <div class="recipe-actions">
-            <button class="icon-btn" type="button" title="เปิดสูตร" data-action="open-recipe" data-id="${recipe.id}">เปิด</button>
+            <div class="recipe-meta">
+              <span class="tag">${esc(cat?.name || "ไม่ระบุ")}</span>
+              <button class="btn small ghost" type="button" data-action="edit-recipe" data-id="${item.id}">แก้</button>
+            </div>
           </div>
         </article>
       `;
     }
 
     function recipeFormHtml() {
-      const recipe = editingRecipeId && editingRecipeId !== "new" ? getRecipe(editingRecipeId) : null;
-      const active = editingRecipeId === "new" || recipe;
+      const item = editingRecipeId && editingRecipeId !== "new" ? recipe(editingRecipeId) : null;
       return `
-        <section class="panel inline-form ${active ? "active" : ""}" id="recipe-form-panel">
-          <form class="panel-inner form-grid" id="recipe-form">
-            <label>ชื่อเมนู
-              <input name="title" required maxlength="80" placeholder="เช่น ต้มจืดเต้าหู้หมูสับ" value="${escapeHtml(recipe?.title || "")}">
+        <form class="form" id="recipe-form">
+          <div class="section-head">
+            <h2>${item ? "แก้สูตรอาหาร" : "เพิ่มสูตรใหม่"}</h2>
+            <button class="btn small ghost" type="button" data-action="cancel-recipe">ปิด</button>
+          </div>
+          <label class="field">ชื่อเมนู
+            <input name="title" required maxlength="80" placeholder="เช่น ข้าวต้มหมูสับ" value="${esc(item?.title || "")}">
+          </label>
+          <div class="two-col">
+            <label class="field">หมวด
+              <select name="categoryId" required>${data.categories.map((cat) => `<option value="${cat.id}" ${item?.categoryId === cat.id ? "selected" : ""}>${esc(cat.name)}</option>`).join("")}</select>
             </label>
-            <label>หมวดหมู่
-              <select name="categoryId" required>
-                ${data.categories.map((cat) => `<option value="${cat.id}" ${recipe?.categoryId === cat.id ? "selected" : ""}>${escapeHtml(cat.name)}</option>`).join("")}
-              </select>
+            <label class="field">แหล่งที่มา
+              <select name="source">${sourceOptions.map((src) => `<option value="${src}" ${(item?.source || "เพิ่มเอง") === src ? "selected" : ""}>${src}</option>`).join("")}</select>
             </label>
-            <label>ลิงก์วิดีโอ
-              <input name="videoUrl" type="url" placeholder="วางลิงก์ YouTube หรือ TikTok" value="${escapeHtml(recipe?.videoUrl || "")}">
-            </label>
-            <label>ส่วนผสม
-              <textarea name="ingredients" placeholder="ใส่ทีละบรรทัด เช่น ไข่ไก่ 2 ฟอง">${escapeHtml(recipe?.ingredients || "")}</textarea>
-            </label>
-            <label>ขั้นตอน
-              <textarea name="steps" placeholder="ใส่ขั้นตอนแบบสั้น ๆ เพื่อเปิดดูตอนทำ">${escapeHtml(recipe?.steps || "")}</textarea>
-            </label>
-            <label>โน้ตส่วนตัว
-              <textarea name="notes" placeholder="รสชาติที่ชอบ จุดที่ต้องระวัง หรือปรับสูตร">${escapeHtml(recipe?.notes || "")}</textarea>
-            </label>
-            <label>
-              <span><input name="favorite" type="checkbox" ${recipe?.favorite ? "checked" : ""} style="width:auto; min-height:auto;"> บันทึกเป็นเมนูโปรด</span>
-            </label>
-            <div class="form-actions">
-              <button class="btn ghost" type="button" data-action="cancel-recipe">ยกเลิก</button>
-              <button class="btn primary" type="submit">บันทึกเมนู</button>
-            </div>
-          </form>
-        </section>
+          </div>
+          <label class="field">ลิงก์วิดีโอ
+            <input name="videoUrl" type="url" placeholder="วางลิงก์ YouTube หรือ TikTok" value="${esc(item?.videoUrl || "")}">
+          </label>
+          <label class="field">รูปเมนู
+            <span>อัปโหลดจากเครื่อง หรือวาง URL รูปภาพก็ได้</span>
+            <input name="imageUrl" placeholder="URL รูปภาพ" value="${esc(item?.image && !item.image.startsWith("data:") ? item.image : "")}">
+          </label>
+          <input id="recipe-image-file" type="file" accept="image/*">
+          ${item?.image ? `<div class="photo-grid"><div class="photo-tile"><img src="${esc(item.image)}" alt=""></div></div>` : ""}
+          <label class="field">ส่วนผสม
+            <textarea name="ingredients" placeholder="ใส่ทีละบรรทัด">${esc(item?.ingredients || "")}</textarea>
+          </label>
+          <label class="field">ขั้นตอน
+            <textarea name="steps" placeholder="ใส่ขั้นตอนแบบสั้น ๆ">${esc(item?.steps || "")}</textarea>
+          </label>
+          <label class="field">โน้ต
+            <textarea name="notes" placeholder="ปรับสูตร ความเผ็ด หรือจุดที่ต้องจำ">${esc(item?.notes || "")}</textarea>
+          </label>
+          <label><input name="favorite" type="checkbox" ${item?.favorite ? "checked" : ""} style="width:auto;min-height:auto"> เมนูโปรด</label>
+          <div class="form-actions">
+            ${item ? `<button class="btn danger" type="button" data-action="delete-recipe" data-id="${item.id}">ลบสูตร</button>` : ""}
+            <button class="btn primary" type="submit">บันทึกสูตร</button>
+          </div>
+        </form>
       `;
     }
 
-    function renderDetail() {
-      const recipe = detailRecipeId ? getRecipe(detailRecipeId) : null;
-      const view = document.getElementById("view-detail");
-      if (!recipe) {
-        view.innerHTML = "";
-        return;
-      }
-      const category = getCategory(recipe.categoryId);
-      view.innerHTML = `
-        <div class="detail-head">
-          <button class="btn small" type="button" data-tab="recipes">กลับไปสูตรทั้งหมด</button>
-          <div class="detail-title">
-            <div>
-              <h2>${escapeHtml(recipe.title)}</h2>
-              <div class="recipe-meta">
-                <span class="badge primary">${escapeHtml(category?.name || "ไม่ระบุหมวด")}</span>
-                ${recipe.favorite ? `<span class="badge accent">เมนูโปรด</span>` : ""}
+    function categoryFormHtml() {
+      const item = editingCategoryId && editingCategoryId !== "new" ? category(editingCategoryId) : null;
+      return `
+        <form class="form" id="category-form">
+          <div class="section-head">
+            <h2>${item ? "แก้หมวด" : "เพิ่มหมวด"}</h2>
+            <button class="btn small ghost" type="button" data-action="cancel-category">ปิด</button>
+          </div>
+          <label class="field">ชื่อหมวด
+            <input name="name" required maxlength="36" placeholder="เช่น เมนูคลีน" value="${esc(item?.name || "")}">
+          </label>
+          <div class="form-actions">
+            ${item ? `<button class="btn danger" type="button" data-action="delete-category" data-id="${item.id}">ลบหมวด</button>` : ""}
+            <button class="btn primary" type="submit">บันทึกหมวด</button>
+          </div>
+        </form>
+      `;
+    }
+
+    function renderRecipeDetail() {
+      const item = detailRecipeId ? recipe(detailRecipeId) : null;
+      const el = document.getElementById("view-recipe-detail");
+      if (!item) { el.innerHTML = ""; return; }
+      const cat = category(item.categoryId);
+      el.innerHTML = `
+        <div class="stack">
+          <div class="detail-head">
+            ${thumbHtml(item)}
+            <div class="detail-title">
+              <div>
+                <h2>${esc(item.title)}</h2>
+                <div class="recipe-meta" style="justify-content:flex-start;margin-top:8px">
+                  <span class="tag">${esc(cat?.name || "ไม่ระบุหมวด")}</span>
+                  <span class="tag muted">จาก ${esc(item.source || "เพิ่มเอง")}</span>
+                  ${item.favorite ? `<span class="tag">เมนูโปรด</span>` : ""}
+                </div>
               </div>
+              <button class="icon-btn" type="button" data-action="toggle-favorite" data-id="${item.id}">${item.favorite ? "★" : "☆"}</button>
             </div>
-            <button class="icon-btn" type="button" title="โปรด" data-action="toggle-favorite" data-id="${recipe.id}">${recipe.favorite ? "★" : "☆"}</button>
+            <div class="form-actions">
+              <button class="btn small" type="button" data-action="edit-recipe" data-id="${item.id}">แก้สูตร</button>
+              <button class="btn small" type="button" data-action="ingredients-to-bill" data-id="${item.id}">เพิ่มลงบิล</button>
+            </div>
           </div>
-          <div class="toolbar">
-            <button class="btn small" type="button" data-action="edit-recipe" data-id="${recipe.id}">แก้สูตร</button>
-            <button class="btn small" type="button" data-action="add-recipe-shopping" data-id="${recipe.id}">ส่งส่วนผสมไปซื้อของ</button>
-            <button class="btn small danger" type="button" data-action="delete-recipe" data-id="${recipe.id}">ลบสูตร</button>
-          </div>
-        </div>
-        <div class="recipe-body">
-          ${recipe.videoUrl ? `<section class="panel"><div class="panel-inner"><h3>วิดีโอต้นทาง</h3><p><a href="${escapeHtml(recipe.videoUrl)}" target="_blank" rel="noopener">เปิดลิงก์สูตร</a></p></div></section>` : ""}
-          <section class="panel"><div class="panel-inner"><h3>ส่วนผสม</h3><p class="text-block">${recipe.ingredients ? nl2br(recipe.ingredients) : "ยังไม่ได้ใส่ส่วนผสม"}</p></div></section>
-          <section class="panel"><div class="panel-inner"><h3>ขั้นตอน</h3><p class="text-block">${recipe.steps ? nl2br(recipe.steps) : "ยังไม่ได้ใส่ขั้นตอน"}</p></div></section>
-          <section class="panel"><div class="panel-inner"><h3>โน้ต</h3><p class="text-block">${recipe.notes ? nl2br(recipe.notes) : "ยังไม่มีโน้ต"}</p></div></section>
+          ${item.videoUrl ? `<section class="card pad"><h3>วิดีโอต้นทาง</h3><p><a href="${esc(item.videoUrl)}" target="_blank" rel="noopener">เปิดลิงก์สูตร</a></p></section>` : ""}
+          <section class="card pad"><h3>ส่วนผสม</h3><p class="text-block">${item.ingredients ? nl(item.ingredients) : "ยังไม่ได้ใส่ส่วนผสม"}</p></section>
+          <section class="card pad"><h3>ขั้นตอน</h3><p class="text-block">${item.steps ? nl(item.steps) : "ยังไม่ได้ใส่ขั้นตอน"}</p></section>
+          <section class="card pad"><h3>โน้ต</h3><p class="text-block">${item.notes ? nl(item.notes) : "ยังไม่มีโน้ต"}</p></section>
         </div>
       `;
     }
 
     function renderPlanner() {
-      const days = Array.from({ length: 7 }, (_, index) => addDays(weekStart, index));
-      const title = `${dateLabel(toDateKey(days[0]))} ถึง ${dateLabel(toDateKey(days[6]))}`;
+      const start = startOfWeek(parseDate(selectedDate));
+      const days = Array.from({ length: 7 }, (_, i) => addDays(start, i));
       document.getElementById("view-planner").innerHTML = `
         <div class="stack">
-          <div class="section-head">
-            <div><h2>ตารางอาหารรายสัปดาห์</h2><p>วางแผนให้พอดีกับรอบซื้อของ</p></div>
+          <div class="week-days">
+            ${days.map((d) => {
+              const key = dateKey(d);
+              return `<button class="day-btn ${key === selectedDate ? "active" : ""}" type="button" data-action="select-day" data-date="${key}"><span>${dayNames[d.getDay()]}</span><strong>${d.getDate()}</strong></button>`;
+            }).join("")}
           </div>
-          <div class="planner-controls">
-            <button class="btn small" type="button" data-action="prev-week">สัปดาห์ก่อน</button>
-            <div class="week-title">${title}</div>
-            <button class="btn small" type="button" data-action="next-week">สัปดาห์หน้า</button>
-          </div>
-          <div class="planner">
-            ${days.map((day) => dayPlannerHtml(toDateKey(day))).join("")}
+          <div class="card pad">
+            <div class="section-head">
+              <div><h2>${longDate(selectedDate)}</h2><p>เลือกเมนูหรือพิมพ์เองในแต่ละมื้อ</p></div>
+              <button class="btn small primary" type="button" data-action="auto-plan">วางแผนอัตโนมัติ</button>
+            </div>
+            <div class="plan-section">
+              ${slots.map((slot) => planSlotHtml(slot)).join("")}
+            </div>
           </div>
         </div>
       `;
     }
 
-    function dayPlannerHtml(dateKey) {
-      const plan = data.mealPlan[dateKey] || {};
+    function planSlotHtml(slot) {
+      const entry = mealEntry(selectedDate, slot.id);
+      const item = entry.recipeId ? recipe(entry.recipeId) : null;
       return `
-        <section class="day-card">
-          <div class="day-head"><span>${fullDateLabel(dateKey)}</span><span>${dateKey === todayKey() ? "วันนี้" : ""}</span></div>
-          ${mealSlots.map(([slot, label]) => {
-            const entry = plan[slot] || { recipeId: "", custom: "" };
-            return `
-              <div class="meal-slot">
-                <div class="meal-label">${label}</div>
-                <div class="slot-form">
-                  <select data-action="plan-recipe" data-date="${dateKey}" data-slot="${slot}">
-                    <option value="">เลือกจากสูตร</option>
-                    ${data.recipes.map((recipe) => `<option value="${recipe.id}" ${entry.recipeId === recipe.id ? "selected" : ""}>${escapeHtml(recipe.title)}</option>`).join("")}
-                  </select>
-                  <input data-action="plan-custom" data-date="${dateKey}" data-slot="${slot}" placeholder="หรือพิมพ์เอง" value="${escapeHtml(entry.custom || "")}">
-                </div>
-              </div>
-            `;
-          }).join("")}
+        <section class="plan-slot">
+          <div class="slot-head">
+            <div class="slot-title"><span class="meal-icon ${slot.tone === "night" ? "night" : ""}">${slot.tone === "night" ? "◐" : "○"}</span>${slot.label}</div>
+            <span class="tag muted">${slot.time}</span>
+          </div>
+          <div class="slot-cards">
+            ${item ? `
+              <button class="slot-card" type="button" data-action="open-recipe" data-id="${item.id}">
+                ${thumbHtml(item)}
+                <strong>${esc(item.title)}</strong>
+              </button>
+            ` : `
+              <button class="slot-card add" type="button" data-action="focus-plan" data-slot="${slot.id}">+<span>เพิ่มเมนู</span></button>
+            `}
+            <div class="slot-card">
+              <select data-action="plan-recipe" data-slot="${slot.id}">
+                <option value="">เลือกจากสูตร</option>
+                ${data.recipes.map((recipeItem) => `<option value="${recipeItem.id}" ${entry.recipeId === recipeItem.id ? "selected" : ""}>${esc(recipeItem.title)}</option>`).join("")}
+              </select>
+              <input data-action="plan-custom" data-slot="${slot.id}" placeholder="หรือพิมพ์เอง" value="${esc(entry.custom || "")}">
+            </div>
+          </div>
         </section>
       `;
     }
 
     function renderShopping() {
-      const pending = data.shoppingItems.filter((item) => !item.done).length;
-      const cycle = cycleSummary();
-      const grouped = shoppingGroups.map((group) => ({
-        group,
-        items: data.shoppingItems.filter((item) => item.group === group)
-      })).filter((group) => group.items.length);
+      const bills = [...data.shoppingBills].sort((a, b) => String(b.updatedAt || b.createdAt).localeCompare(String(a.updatedAt || a.createdAt)));
       document.getElementById("view-shopping").innerHTML = `
         <div class="stack">
-          <div class="section-head">
-            <div><h2>รายการซื้อของ</h2><p>เหลือ ${pending} รายการ · รอบถัดไป ${dateLabel(cycle.next)}</p></div>
-            <button class="btn primary small" type="button" data-action="new-shopping">เพิ่มของ</button>
+          <div class="card pad form ${editingBillId ? "" : "hidden"}">
+            ${billFormHtml()}
           </div>
-          ${shoppingFormHtml()}
-          <div class="toolbar">
-            <button class="btn small" type="button" data-action="clear-done">ล้างที่ซื้อแล้ว</button>
-            <button class="btn small" type="button" data-action="mark-all-undone">เริ่มเช็กรอบใหม่</button>
-          </div>
-          <div class="shopping-group">
-            ${grouped.length ? grouped.map(({ group, items }) => `
-              <h3>${escapeHtml(group)}</h3>
-              ${items.map(shoppingItemHtml).join("")}
-            `).join("") : `<div class="empty">ยังไม่มีรายการซื้อของ กดเพิ่มของเพื่อเริ่มรอบซื้อครั้งต่อไป</div>`}
-          </div>
+          ${bills.length ? `
+            <section class="soft card pad">
+              <div class="section-head">
+                <div><h2>บิลซื้อของ</h2><p>สร้างบิลแยกตามรอบซื้อของแต่ละครั้ง</p></div>
+                <button class="btn small primary" type="button" data-action="new-bill">เพิ่มบิล</button>
+              </div>
+            </section>
+            <div class="list">${bills.map(billCardHtml).join("")}</div>
+          ` : `
+            <div class="empty">
+              <strong>ยังไม่มีบิลซื้อของ</strong>
+              <span>เริ่มจากสร้างบิล ตั้งชื่อรอบซื้อของ แล้วค่อยเพิ่มรายการเข้าไปในบิลนั้น</span>
+              <button class="btn primary" type="button" data-action="new-bill">เพิ่มบิลซื้อของ</button>
+            </div>
+          `}
         </div>
       `;
     }
 
-    function shoppingFormHtml() {
-      const item = editingShoppingId && editingShoppingId !== "new" ? data.shoppingItems.find((entry) => entry.id === editingShoppingId) : null;
-      const active = editingShoppingId === "new" || item;
+    function billFormHtml() {
+      const item = editingBillId && editingBillId !== "new" ? bill(editingBillId) : null;
       return `
-        <section class="panel inline-form ${active ? "active" : ""}">
-          <form class="panel-inner form-grid" id="shopping-form">
-            <label>ชื่อของที่ต้องซื้อ
-              <input name="name" required maxlength="70" placeholder="เช่น หมูสับ" value="${escapeHtml(item?.name || "")}">
+        <form class="form" id="bill-form">
+          <div class="section-head">
+            <h2>${item ? "แก้บิลซื้อของ" : "เพิ่มบิลซื้อของ"}</h2>
+            <button class="btn small ghost" type="button" data-action="cancel-bill">ปิด</button>
+          </div>
+          <label class="field">ชื่อบิล
+            <input name="title" required maxlength="70" placeholder="เช่น รอบซื้อของเข้าบ้าน" value="${esc(item?.title || "")}">
+          </label>
+          <div class="two-col">
+            <label class="field">วันที่
+              <input name="date" type="date" value="${esc(item?.date || todayKey())}">
             </label>
-            <div class="field-row">
-              <label>จำนวน
-                <input name="qty" maxlength="20" placeholder="1" value="${escapeHtml(item?.qty || "")}">
-              </label>
-              <label>หน่วย
-                <input name="unit" maxlength="20" placeholder="แพ็ก" value="${escapeHtml(item?.unit || "")}">
-              </label>
-            </div>
-            <label>หมวดซื้อของ
-              <select name="group">
-                ${shoppingGroups.map((group) => `<option value="${group}" ${item?.group === group ? "selected" : ""}>${group}</option>`).join("")}
-              </select>
+            <label class="field">งบประมาณ
+              <input name="budget" inputmode="decimal" placeholder="เช่น 890" value="${esc(item?.budget || "")}">
             </label>
-            <div class="form-actions">
-              <button class="btn ghost" type="button" data-action="cancel-shopping">ยกเลิก</button>
-              <button class="btn primary" type="submit">บันทึกรายการ</button>
-            </div>
-          </form>
-        </section>
+          </div>
+          <div class="form-actions">
+            ${item ? `<button class="btn danger" type="button" data-action="delete-bill" data-id="${item.id}">ลบบิล</button>` : ""}
+            <button class="btn primary" type="submit">บันทึกบิล</button>
+          </div>
+        </form>
       `;
     }
 
-    function shoppingItemHtml(item) {
+    function billStats(item) {
+      const total = item.items?.length || 0;
+      const done = item.items?.filter((row) => row.done).length || 0;
+      const pct = total ? Math.round(done / total * 100) : 0;
+      return { total, done, pct };
+    }
+
+    function billCardHtml(item) {
+      const stats = billStats(item);
+      const firstPhoto = item.photos?.[0] || "";
       return `
-        <div class="check-row ${item.done ? "done" : ""}">
-          <input type="checkbox" ${item.done ? "checked" : ""} data-action="toggle-shopping" data-id="${item.id}" aria-label="ติ๊กซื้อแล้ว">
-          <div class="row-main">
-            <strong>${escapeHtml(item.name)}</strong>
-            <small>${[item.qty, item.unit].filter(Boolean).map(escapeHtml).join(" ") || "ไม่ระบุจำนวน"}</small>
+        <button class="bill-card" type="button" data-action="open-bill" data-id="${item.id}">
+          <div>
+            <strong>${esc(item.title)}</strong>
+            <small>${longDate(item.date)} · ${stats.total} รายการ · เช็กแล้ว ${stats.done}</small>
+            <div class="summary">
+              <span class="tag">${stats.pct}%</span>
+              ${item.budget ? `<span class="tag muted">ประมาณ ${esc(item.budget)} บาท</span>` : `<span class="tag muted">ยังไม่ตั้งงบ</span>`}
+            </div>
+            <div class="progress" style="--value:${stats.pct}%"><span></span></div>
           </div>
-          <div class="row-actions">
-            <button class="icon-btn" type="button" title="แก้ไข" data-action="edit-shopping" data-id="${item.id}">แก้</button>
-            <button class="icon-btn" type="button" title="ลบ" data-action="delete-shopping" data-id="${item.id}">ลบ</button>
+          <div class="bill-photo">${firstPhoto ? `<img src="${esc(firstPhoto)}" alt="">` : "บิล"}</div>
+        </button>
+      `;
+    }
+
+    function renderBillDetail() {
+      const item = activeBillId ? bill(activeBillId) : null;
+      const el = document.getElementById("view-bill-detail");
+      if (!item) { el.innerHTML = ""; return; }
+      const stats = billStats(item);
+      const grouped = groups.map((group) => ({ group, items: (item.items || []).filter((row) => row.group === group) })).filter((group) => group.items.length);
+      el.innerHTML = `
+        <div class="stack">
+          <section class="card pad soft">
+            <div class="section-head">
+              <div><h2>${esc(item.title)}</h2><p>${longDate(item.date)} · ${stats.total} รายการ · เช็กแล้ว ${stats.done}</p></div>
+              <button class="btn small" type="button" data-action="edit-bill" data-id="${item.id}">แก้บิล</button>
+            </div>
+            <div class="summary">
+              <span class="tag">${stats.pct}% เสร็จแล้ว</span>
+              ${item.budget ? `<span class="tag muted">ประมาณ ${esc(item.budget)} บาท</span>` : `<span class="tag muted">ยังไม่ตั้งงบ</span>`}
+            </div>
+            <div class="progress" style="--value:${stats.pct}%"><span></span></div>
+          </section>
+
+          <section class="card pad">
+            <div class="section-head">
+              <div><h2>รูปหลังซื้อของ</h2><p>ถ่ายรูปของที่ซื้อหรือใบเสร็จเก็บไว้ในบิลนี้</p></div>
+              <label class="btn small primary" for="bill-photo-input">เพิ่มรูป</label>
+              <input id="bill-photo-input" class="hidden" type="file" accept="image/*" multiple>
+            </div>
+            ${item.photos?.length ? `<div class="photo-grid">${item.photos.map((photo, index) => `<div class="photo-tile"><img src="${esc(photo)}" alt=""><button type="button" data-action="delete-bill-photo" data-index="${index}">×</button></div>`).join("")}</div>` : `<div class="empty"><strong>ยังไม่มีรูป</strong><span>ซื้อของเสร็จแล้วค่อยอัปโหลดรูปเข้าบิลนี้</span></div>`}
+          </section>
+
+          <section class="card pad form ${editingItemId ? "" : "hidden"}">
+            ${itemFormHtml(item)}
+          </section>
+
+          <section class="card pad">
+            <div class="section-head">
+              <div><h2>รายการในบิล</h2><p>แยกหมวดและติ๊กเมื่อซื้อแล้ว</p></div>
+              <button class="btn small primary" type="button" data-action="new-item">เพิ่มรายการ</button>
+            </div>
+            ${grouped.length ? grouped.map((group) => `
+              <div class="group-head"><span>${esc(group.group)}</span><span class="tag muted">${group.items.length} รายการ</span></div>
+              ${group.items.map((row) => itemRowHtml(row)).join("")}
+            `).join("") : `<div class="empty"><strong>บิลนี้ยังไม่มีรายการ</strong><span>กดเพิ่มรายการเพื่อเริ่มจดของที่ต้องซื้อ</span></div>`}
+          </section>
+        </div>
+      `;
+    }
+
+    function itemFormHtml(parentBill) {
+      const item = editingItemId && editingItemId !== "new" ? parentBill.items.find((row) => row.id === editingItemId) : null;
+      return `
+        <form class="form" id="item-form">
+          <div class="section-head">
+            <h2>${item ? "แก้รายการ" : "เพิ่มรายการ"}</h2>
+            <button class="btn small ghost" type="button" data-action="cancel-item">ปิด</button>
           </div>
+          <label class="field">ชื่อรายการ
+            <input name="name" required maxlength="70" placeholder="เช่น กะเพรา" value="${esc(item?.name || "")}">
+          </label>
+          <div class="two-col">
+            <label class="field">จำนวน
+              <input name="qty" maxlength="20" placeholder="2" value="${esc(item?.qty || "")}">
+            </label>
+            <label class="field">หน่วย
+              <input name="unit" maxlength="20" placeholder="กำ" value="${esc(item?.unit || "")}">
+            </label>
+          </div>
+          <label class="field">หมวด
+            <select name="group">${groups.map((group) => `<option value="${group}" ${item?.group === group ? "selected" : ""}>${group}</option>`).join("")}</select>
+          </label>
+          <div class="form-actions">
+            ${item ? `<button class="btn danger" type="button" data-action="delete-item" data-id="${item.id}">ลบรายการ</button>` : ""}
+            <button class="btn primary" type="submit">บันทึกรายการ</button>
+          </div>
+        </form>
+      `;
+    }
+
+    function itemRowHtml(row) {
+      return `
+        <div class="item-row ${row.done ? "done" : ""}">
+          <input type="checkbox" ${row.done ? "checked" : ""} data-action="toggle-item" data-id="${row.id}" aria-label="ซื้อแล้ว">
+          <div class="item-text">
+            <strong>${esc(row.name)}</strong>
+            <small>${[row.qty, row.unit].filter(Boolean).map(esc).join(" ") || "ไม่ระบุจำนวน"}</small>
+          </div>
+          <button class="btn small ghost" type="button" data-action="edit-item" data-id="${row.id}">แก้</button>
         </div>
       `;
     }
@@ -1386,147 +1625,81 @@
     function renderSettings() {
       document.getElementById("view-settings").innerHTML = `
         <div class="stack">
-          <div class="section-head">
-            <div><h2>ตั้งค่าและสำรองข้อมูล</h2><p>ข้อมูลทั้งหมดเก็บใน browser เครื่องนี้</p></div>
-          </div>
-          <section class="panel">
-            <form class="panel-inner settings-grid" id="settings-form">
-              <label>รอบซื้อของ
+          <section class="card pad">
+            <form class="form" id="settings-form">
+              <label class="field">รอบซื้อของ
                 <select name="cycleDays">
                   <option value="7" ${Number(data.settings.cycleDays) === 7 ? "selected" : ""}>ทุก 7 วัน</option>
                   <option value="14" ${Number(data.settings.cycleDays) === 14 ? "selected" : ""}>ทุก 14 วัน</option>
                 </select>
               </label>
-              <label>วันที่เริ่มรอบล่าสุด
-                <input name="cycleStart" type="date" value="${escapeHtml(data.settings.cycleStart || todayKey())}">
+              <label class="field">วันที่เริ่มรอบล่าสุด
+                <input name="cycleStart" type="date" value="${esc(data.settings.cycleStart || todayKey())}">
               </label>
               <button class="btn primary" type="submit">บันทึกตั้งค่า</button>
             </form>
           </section>
-          <section class="panel">
-            <div class="panel-inner stack">
-              <div>
-                <h3>สำรองข้อมูล</h3>
-                <p>Export เป็นไฟล์ JSON แล้ว Import กลับมาได้เมื่อต้องย้ายเครื่องหรือกันข้อมูลหาย</p>
-              </div>
-              <div class="toolbar">
-                <button class="btn" type="button" data-action="export-json">Export JSON</button>
-                <label class="btn" for="import-json">Import JSON</label>
-                <input id="import-json" type="file" accept="application/json" hidden>
-              </div>
+          <section class="card pad stack">
+            <div><h2>สำรองข้อมูล</h2><p>Export/Import JSON สำหรับย้ายเครื่องหรือกันข้อมูลหาย</p></div>
+            <div class="form-actions">
+              <button class="btn" type="button" data-action="export-json">Export JSON</button>
+              <label class="btn" for="import-json">Import JSON</label>
+              <input id="import-json" class="hidden" type="file" accept="application/json">
             </div>
           </section>
-          <section class="panel">
-            <div class="panel-inner stack">
-              <div>
-                <h3>เริ่มใหม่</h3>
-                <p>รีเซ็ตกลับเป็นข้อมูลตัวอย่างเริ่มต้น เหมาะสำหรับทดลองแอปใหม่อีกครั้ง</p>
-              </div>
-              <button class="btn danger full" type="button" data-action="reset-data">รีเซ็ตข้อมูลทั้งหมด</button>
-            </div>
+          <section class="card pad stack">
+            <div><h2>เริ่มใหม่</h2><p>รีเซ็ตกลับเป็นข้อมูลตัวอย่าง</p></div>
+            <button class="btn danger full" type="button" data-action="reset-data">รีเซ็ตข้อมูลทั้งหมด</button>
           </section>
         </div>
       `;
     }
 
     document.addEventListener("click", (event) => {
-      const button = event.target.closest("button, label.btn");
-      if (!button) return;
-      const action = button.dataset.action;
-      const tab = button.dataset.tab;
-      const id = button.dataset.id;
-
-      if (tab) {
-        setTab(tab);
-        return;
-      }
-
+      const target = event.target.closest("button, label.btn");
+      if (!target) return;
+      const view = target.dataset.view;
+      const tab = target.dataset.tab;
+      const action = target.dataset.action;
+      const id = target.dataset.id;
+      if (view) { setView(view); return; }
+      if (tab) { setView(tab); return; }
       if (!action) return;
-      if (action === "quick-recipe" || action === "new-recipe") {
+
+      if (action === "quick-recipe") {
         editingRecipeId = "new";
-        setTab("recipes");
+        setView("recipes");
+        setTimeout(() => {
+          const sourceSelect = document.querySelector("#recipe-form select[name='source']");
+          if (sourceSelect) sourceSelect.value = target.dataset.source || "เพิ่มเอง";
+        }, 0);
       }
-      if (action === "quick-shopping" || action === "new-shopping") {
-        editingShoppingId = "new";
-        setTab("shopping");
-      }
-      if (action === "new-category") {
-        editingCategoryId = "new";
-        render();
-      }
-      if (action === "cancel-category") {
-        editingCategoryId = null;
-        render();
-      }
-      if (action === "edit-category") {
-        editingCategoryId = id;
-        render();
-      }
-      if (action === "delete-category") deleteCategory(id);
-      if (action === "filter-category") {
-        recipeFilter = id;
-        setTab("recipes");
-      }
-      if (action === "cancel-recipe") {
-        editingRecipeId = null;
-        render();
-      }
-      if (action === "open-recipe") {
-        detailRecipeId = id;
-        activeTab = "detail";
-        render();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-      if (action === "edit-recipe") {
-        editingRecipeId = id;
-        setTab("recipes");
-      }
+      if (action === "new-recipe") { editingRecipeId = "new"; setView("recipes"); }
+      if (action === "cancel-recipe") { editingRecipeId = null; render(); }
+      if (action === "edit-recipe") { editingRecipeId = id; setView("recipes"); }
+      if (action === "open-recipe") { detailRecipeId = id; setView("recipe-detail"); }
       if (action === "delete-recipe") deleteRecipe(id);
       if (action === "toggle-favorite") toggleFavorite(id);
-      if (action === "add-recipe-shopping") addRecipeToShopping(id);
-      if (action === "prev-week") {
-        weekStart = addDays(weekStart, -7);
-        render();
-      }
-      if (action === "next-week") {
-        weekStart = addDays(weekStart, 7);
-        render();
-      }
-      if (action === "cancel-shopping") {
-        editingShoppingId = null;
-        render();
-      }
-      if (action === "edit-shopping") {
-        editingShoppingId = id;
-        render();
-      }
-      if (action === "delete-shopping") deleteShopping(id);
-      if (action === "clear-done") clearDoneShopping();
-      if (action === "mark-all-undone") markAllUndone();
+      if (action === "ingredients-to-bill") ingredientsToBill(id);
+      if (action === "new-category") { editingCategoryId = "new"; render(); }
+      if (action === "cancel-category") { editingCategoryId = null; render(); }
+      if (action === "delete-category") deleteCategory(id);
+      if (action === "filter-recipe") { activeRecipeFilter = target.dataset.filter; render(); }
+      if (action === "select-day") { selectedDate = target.dataset.date; render(); }
+      if (action === "auto-plan") autoPlan();
+      if (action === "focus-plan") toast("เลือกเมนูจากช่องด้านขวาได้เลย");
+      if (action === "new-bill") { editingBillId = "new"; setView("shopping"); }
+      if (action === "cancel-bill") { editingBillId = null; render(); }
+      if (action === "edit-bill") { editingBillId = id; setView("shopping"); }
+      if (action === "delete-bill") deleteBill(id);
+      if (action === "open-bill") { activeBillId = id; editingItemId = null; setView("bill-detail"); }
+      if (action === "new-item") { editingItemId = "new"; render(); }
+      if (action === "cancel-item") { editingItemId = null; render(); }
+      if (action === "edit-item") { editingItemId = id; render(); }
+      if (action === "delete-item") deleteBillItem(id);
+      if (action === "delete-bill-photo") deleteBillPhoto(Number(target.dataset.index));
       if (action === "export-json") exportJson();
       if (action === "reset-data") resetData();
-    });
-
-    document.addEventListener("change", (event) => {
-      const target = event.target;
-      if (target.id === "recipe-filter") {
-        recipeFilter = target.value;
-        render();
-      }
-      if (target.dataset.action === "plan-recipe") {
-        updatePlan(target.dataset.date, target.dataset.slot, { recipeId: target.value, custom: target.value ? "" : getPlanEntry(target.dataset.date, target.dataset.slot).custom });
-      }
-      if (target.dataset.action === "toggle-shopping") {
-        const item = data.shoppingItems.find((entry) => entry.id === target.dataset.id);
-        if (item) {
-          item.done = target.checked;
-          saveData(item.done ? "ติ๊กซื้อแล้ว" : "ย้ายกลับไปรายการที่ต้องซื้อ");
-        }
-      }
-      if (target.id === "import-json") {
-        importJson(target.files[0]);
-        target.value = "";
-      }
     });
 
     document.addEventListener("input", (event) => {
@@ -1536,162 +1709,248 @@
         renderRecipes();
       }
       if (target.dataset.action === "plan-custom") {
-        updatePlan(target.dataset.date, target.dataset.slot, { recipeId: "", custom: target.value }, false);
+        updatePlan(target.dataset.slot, { recipeId: "", custom: target.value }, false);
       }
     });
 
-    document.addEventListener("submit", (event) => {
+    document.addEventListener("change", (event) => {
+      const target = event.target;
+      if (target.dataset.action === "plan-recipe") {
+        updatePlan(target.dataset.slot, { recipeId: target.value, custom: "" });
+      }
+      if (target.dataset.action === "toggle-item") {
+        const parent = bill(activeBillId);
+        const item = parent?.items.find((row) => row.id === target.dataset.id);
+        if (item) {
+          item.done = target.checked;
+          parent.updatedAt = new Date().toISOString();
+          save(item.done ? "ติ๊กซื้อแล้ว" : "ย้ายกลับไปรายการที่ต้องซื้อ");
+        }
+      }
+      if (target.id === "bill-photo-input") {
+        addBillPhotos(target.files);
+        target.value = "";
+      }
+      if (target.id === "import-json") {
+        importJson(target.files[0]);
+        target.value = "";
+      }
+    });
+
+    document.addEventListener("submit", async (event) => {
       event.preventDefault();
+      if (event.target.id === "recipe-form") await saveRecipe(new FormData(event.target));
       if (event.target.id === "category-form") saveCategory(new FormData(event.target));
-      if (event.target.id === "recipe-form") saveRecipe(new FormData(event.target));
-      if (event.target.id === "shopping-form") saveShopping(new FormData(event.target));
+      if (event.target.id === "bill-form") saveBill(new FormData(event.target));
+      if (event.target.id === "item-form") saveBillItem(new FormData(event.target));
       if (event.target.id === "settings-form") saveSettings(new FormData(event.target));
     });
 
-    function saveCategory(form) {
-      const name = form.get("name").trim();
-      const color = form.get("color");
-      if (!name) return;
-      if (editingCategoryId && editingCategoryId !== "new") {
-        const category = getCategory(editingCategoryId);
-        category.name = name;
-        category.color = color;
-      } else {
-        data.categories.push({ id: uid("cat"), name, color, createdAt: new Date().toISOString() });
-      }
-      editingCategoryId = null;
-      saveData("บันทึกหมวดแล้ว");
+    async function readFirstImage(inputId) {
+      const input = document.getElementById(inputId);
+      const file = input?.files?.[0];
+      if (!file) return "";
+      return readFile(file);
     }
 
-    function deleteCategory(id) {
-      const used = data.recipes.some((recipe) => recipe.categoryId === id);
-      if (used) {
-        showToast("หมวดนี้ยังมีเมนูอยู่ ย้ายหรือลบเมนูก่อน");
-        return;
-      }
-      if (!confirm("ลบหมวดนี้ใช่ไหม")) return;
-      data.categories = data.categories.filter((category) => category.id !== id);
-      saveData("ลบหมวดแล้ว");
+    function readFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
     }
 
-    function saveRecipe(form) {
-      if (!data.categories.length) {
-        showToast("ต้องมีหมวดก่อนเพิ่มสูตร");
-        return;
-      }
+    async function saveRecipe(form) {
+      const title = form.get("title").trim();
+      if (!title) return;
+      const upload = await readFirstImage("recipe-image-file");
+      const imageUrl = form.get("imageUrl").trim();
+      const current = editingRecipeId && editingRecipeId !== "new" ? recipe(editingRecipeId) : null;
       const payload = {
-        title: form.get("title").trim(),
+        title,
         categoryId: form.get("categoryId"),
+        source: form.get("source"),
         videoUrl: form.get("videoUrl").trim(),
+        image: upload || imageUrl || current?.image || "",
         ingredients: form.get("ingredients").trim(),
         steps: form.get("steps").trim(),
         notes: form.get("notes").trim(),
         favorite: Boolean(form.get("favorite")),
         updatedAt: new Date().toISOString()
       };
-      if (!payload.title) return;
-      if (editingRecipeId && editingRecipeId !== "new") {
-        Object.assign(getRecipe(editingRecipeId), payload);
+      if (current) {
+        Object.assign(current, payload);
       } else {
-        data.recipes.push({ id: uid("recipe"), ...payload, createdAt: new Date().toISOString() });
+        data.recipes.unshift({ id: uid("recipe"), ...payload, createdAt: new Date().toISOString() });
       }
       editingRecipeId = null;
-      saveData("บันทึกเมนูแล้ว");
+      save("บันทึกสูตรแล้ว");
     }
 
     function deleteRecipe(id) {
       if (!confirm("ลบสูตรนี้ใช่ไหม")) return;
-      data.recipes = data.recipes.filter((recipe) => recipe.id !== id);
+      data.recipes = data.recipes.filter((item) => item.id !== id);
       Object.values(data.mealPlan).forEach((day) => {
-        mealSlots.forEach(([slot]) => {
-          if (day[slot]?.recipeId === id) day[slot].recipeId = "";
+        slots.forEach((slot) => {
+          if (day[slot.id]?.recipeId === id) day[slot.id].recipeId = "";
         });
       });
-      if (detailRecipeId === id) {
-        detailRecipeId = null;
-        activeTab = "recipes";
-      }
-      saveData("ลบสูตรแล้ว");
+      detailRecipeId = null;
+      activeView = "recipes";
+      save("ลบสูตรแล้ว");
     }
 
     function toggleFavorite(id) {
-      const recipe = getRecipe(id);
-      if (!recipe) return;
-      recipe.favorite = !recipe.favorite;
-      recipe.updatedAt = new Date().toISOString();
-      saveData(recipe.favorite ? "เพิ่มเป็นเมนูโปรดแล้ว" : "เอาออกจากเมนูโปรดแล้ว");
+      const item = recipe(id);
+      if (!item) return;
+      item.favorite = !item.favorite;
+      item.updatedAt = new Date().toISOString();
+      save(item.favorite ? "เพิ่มเป็นเมนูโปรดแล้ว" : "เอาออกจากเมนูโปรดแล้ว");
     }
 
-    function addRecipeToShopping(id) {
-      const recipe = getRecipe(id);
-      if (!recipe || !recipe.ingredients) {
-        showToast("สูตรนี้ยังไม่มีส่วนผสม");
+    function saveCategory(form) {
+      const name = form.get("name").trim();
+      if (!name) return;
+      if (editingCategoryId && editingCategoryId !== "new") {
+        category(editingCategoryId).name = name;
+      } else {
+        data.categories.push({ id: uid("cat"), name, createdAt: new Date().toISOString() });
+      }
+      editingCategoryId = null;
+      save("บันทึกหมวดแล้ว");
+    }
+
+    function deleteCategory(id) {
+      if (data.recipes.some((item) => item.categoryId === id)) {
+        toast("หมวดนี้ยังมีสูตรอยู่ ย้ายหรือลบสูตรก่อน");
         return;
       }
-      const lines = recipe.ingredients.split("\n").map((line) => line.trim()).filter(Boolean);
-      const now = new Date().toISOString();
-      lines.forEach((line) => {
-        data.shoppingItems.push({ id: uid("shop"), name: line, qty: "", unit: "", group: "อื่น ๆ", done: false, createdAt: now });
-      });
-      saveData("เพิ่มส่วนผสมไปที่รายการซื้อของแล้ว");
+      if (!confirm("ลบหมวดนี้ใช่ไหม")) return;
+      data.categories = data.categories.filter((item) => item.id !== id);
+      editingCategoryId = null;
+      save("ลบหมวดแล้ว");
     }
 
-    function getPlanEntry(date, slot) {
-      return data.mealPlan[date]?.[slot] || { recipeId: "", custom: "" };
-    }
-
-    function updatePlan(date, slot, entry, notify = true) {
-      if (!data.mealPlan[date]) data.mealPlan[date] = {};
-      data.mealPlan[date][slot] = { ...getPlanEntry(date, slot), ...entry };
+    function updatePlan(slotId, entry, notify = true) {
+      if (!data.mealPlan[selectedDate]) data.mealPlan[selectedDate] = {};
+      data.mealPlan[selectedDate][slotId] = { ...mealEntry(selectedDate, slotId), ...entry };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      if (notify) saveData("อัปเดตตารางแล้ว");
+      if (notify) save("อัปเดตตารางแล้ว");
     }
 
-    function saveShopping(form) {
+    function autoPlan() {
+      if (!data.recipes.length) {
+        toast("ยังไม่มีสูตรให้วางแผน");
+        return;
+      }
+      if (!data.mealPlan[selectedDate]) data.mealPlan[selectedDate] = {};
+      slots.forEach((slot, index) => {
+        const pick = data.recipes[(Math.floor(Math.random() * data.recipes.length) + index) % data.recipes.length];
+        data.mealPlan[selectedDate][slot.id] = { recipeId: pick.id, custom: "" };
+      });
+      save("วางแผนอัตโนมัติแล้ว");
+    }
+
+    function saveBill(form) {
+      const title = form.get("title").trim();
+      if (!title) return;
       const payload = {
-        name: form.get("name").trim(),
+        title,
+        date: form.get("date") || todayKey(),
+        budget: form.get("budget").trim(),
+        updatedAt: new Date().toISOString()
+      };
+      if (editingBillId && editingBillId !== "new") {
+        Object.assign(bill(editingBillId), payload);
+      } else {
+        data.shoppingBills.unshift({ id: uid("bill"), ...payload, photos: [], items: [], createdAt: new Date().toISOString() });
+      }
+      editingBillId = null;
+      save("บันทึกบิลแล้ว");
+    }
+
+    function deleteBill(id) {
+      if (!confirm("ลบบิลซื้อของนี้ใช่ไหม")) return;
+      data.shoppingBills = data.shoppingBills.filter((item) => item.id !== id);
+      editingBillId = null;
+      activeBillId = null;
+      activeView = "shopping";
+      save("ลบบิลแล้ว");
+    }
+
+    function saveBillItem(form) {
+      const parent = bill(activeBillId);
+      if (!parent) return;
+      const name = form.get("name").trim();
+      if (!name) return;
+      const payload = {
+        name,
         qty: form.get("qty").trim(),
         unit: form.get("unit").trim(),
         group: form.get("group"),
         done: false
       };
-      if (!payload.name) return;
-      if (editingShoppingId && editingShoppingId !== "new") {
-        const item = data.shoppingItems.find((entry) => entry.id === editingShoppingId);
-        Object.assign(item, payload);
+      if (editingItemId && editingItemId !== "new") {
+        Object.assign(parent.items.find((row) => row.id === editingItemId), payload);
       } else {
-        data.shoppingItems.push({ id: uid("shop"), ...payload, createdAt: new Date().toISOString() });
+        parent.items.push({ id: uid("item"), ...payload });
       }
-      editingShoppingId = null;
-      saveData("บันทึกรายการซื้อของแล้ว");
+      parent.updatedAt = new Date().toISOString();
+      editingItemId = null;
+      save("บันทึกรายการแล้ว");
     }
 
-    function deleteShopping(id) {
+    function deleteBillItem(id) {
+      const parent = bill(activeBillId);
+      if (!parent) return;
       if (!confirm("ลบรายการนี้ใช่ไหม")) return;
-      data.shoppingItems = data.shoppingItems.filter((item) => item.id !== id);
-      saveData("ลบรายการแล้ว");
+      parent.items = parent.items.filter((row) => row.id !== id);
+      parent.updatedAt = new Date().toISOString();
+      editingItemId = null;
+      save("ลบรายการแล้ว");
     }
 
-    function clearDoneShopping() {
-      const count = data.shoppingItems.filter((item) => item.done).length;
-      if (!count) {
-        showToast("ยังไม่มีรายการที่ซื้อแล้ว");
+    async function addBillPhotos(files) {
+      const parent = bill(activeBillId);
+      if (!parent || !files?.length) return;
+      const images = await Promise.all([...files].slice(0, 6).map(readFile));
+      parent.photos = [...(parent.photos || []), ...images].slice(0, 12);
+      parent.updatedAt = new Date().toISOString();
+      save("เพิ่มรูปในบิลแล้ว");
+    }
+
+    function deleteBillPhoto(index) {
+      const parent = bill(activeBillId);
+      if (!parent) return;
+      parent.photos.splice(index, 1);
+      parent.updatedAt = new Date().toISOString();
+      save("ลบรูปแล้ว");
+    }
+
+    function ingredientsToBill(recipeId) {
+      const item = recipe(recipeId);
+      if (!item?.ingredients) {
+        toast("สูตรนี้ยังไม่มีส่วนผสม");
         return;
       }
-      if (!confirm(`ล้างรายการที่ซื้อแล้ว ${count} รายการใช่ไหม`)) return;
-      data.shoppingItems = data.shoppingItems.filter((item) => !item.done);
-      saveData("ล้างรายการที่ซื้อแล้ว");
-    }
-
-    function markAllUndone() {
-      data.shoppingItems.forEach((item) => item.done = false);
-      saveData("เริ่มเช็กรอบใหม่แล้ว");
+      let parent = data.shoppingBills[0];
+      if (!parent) {
+        parent = { id: uid("bill"), title: "บิลจากสูตรอาหาร", date: todayKey(), budget: "", photos: [], items: [], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+        data.shoppingBills.unshift(parent);
+      }
+      item.ingredients.split("\n").map((line) => line.trim()).filter(Boolean).forEach((line) => {
+        parent.items.push({ id: uid("item"), name: line, qty: "", unit: "", group: "อื่น ๆ", done: false });
+      });
+      parent.updatedAt = new Date().toISOString();
+      save("เพิ่มส่วนผสมลงบิลล่าสุดแล้ว");
     }
 
     function saveSettings(form) {
       data.settings.cycleDays = Number(form.get("cycleDays"));
       data.settings.cycleStart = form.get("cycleStart") || todayKey();
-      saveData("บันทึกตั้งค่าแล้ว");
+      save("บันทึกตั้งค่าแล้ว");
     }
 
     function exportJson() {
@@ -1702,7 +1961,7 @@
       a.download = `my-kitchen-${todayKey()}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      showToast("Export ข้อมูลแล้ว");
+      toast("Export ข้อมูลแล้ว");
     }
 
     function importJson(file) {
@@ -1710,11 +1969,10 @@
       const reader = new FileReader();
       reader.onload = () => {
         try {
-          const imported = normalizeData(JSON.parse(reader.result));
-          data = imported;
-          saveData("Import ข้อมูลแล้ว");
+          data = normalize(JSON.parse(reader.result));
+          save("Import ข้อมูลแล้ว");
         } catch (error) {
-          showToast("ไฟล์ JSON ไม่ถูกต้อง");
+          toast("ไฟล์ JSON ไม่ถูกต้อง");
         }
       };
       reader.readAsText(file);
@@ -1723,8 +1981,8 @@
     function resetData() {
       if (!confirm("รีเซ็ตข้อมูลทั้งหมดกลับเป็นตัวอย่างเริ่มต้นใช่ไหม")) return;
       data = seedData();
-      activeTab = "home";
-      saveData("รีเซ็ตข้อมูลแล้ว");
+      activeView = "home";
+      save("รีเซ็ตข้อมูลแล้ว");
     }
 
     render();
